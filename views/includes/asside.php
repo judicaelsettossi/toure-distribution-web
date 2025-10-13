@@ -55,6 +55,8 @@
                             <div id="navbarVerticalMenuPagesUsersMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                 <a class="nav-link " href="/client/ajouter">Créer un client</a>
                                 <a class="nav-link " href="/liste-client">Liste des clients</a>
+                                <a class="nav-link " href="/clients/fidelite">Programme de fidélité</a>
+                                <a class="nav-link " href="/clients/statistiques">Statistiques</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
@@ -91,6 +93,36 @@
 
                         <!-- Collapse -->
                         <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesFournisseurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesFournisseurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesFournisseurs">
+                                <i class="bi-truck nav-icon"></i>
+                                <span class="nav-link-title">Fournisseurs</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesFournisseurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/fournisseurs">Liste des fournisseurs</a>
+                                <a class="nav-link " href="/fournisseur/ajouter">Créer un fournisseur</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesStock" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesStock" aria-expanded="false" aria-controls="navbarVerticalMenuPagesStock">
+                                <i class="bi-boxes nav-icon"></i>
+                                <span class="nav-link-title">Gestion de Stock</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesStock" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/entree-sortie-stock">Tableau de bord</a>
+                                <a class="nav-link " href="/stock/entree">Entrée de stock</a>
+                                <a class="nav-link " href="/stock/sortie">Sortie de stock</a>
+                                <a class="nav-link " href="/stock/mouvements">Mouvements</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
                             <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAccountMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAccountMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAccountMenu">
                                 <i class="bi-person-badge nav-icon"></i>
                                 <span class="nav-link-title">Paiement</span>
@@ -98,6 +130,71 @@
 
                             <div id="navbarVerticalMenuPagesAccountMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                 <a class="nav-link " href="/subscription-list">Liste des paiements</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesCommandes" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesCommandes" aria-expanded="false" aria-controls="navbarVerticalMenuPagesCommandes">
+                                <i class="bi-cart nav-icon"></i>
+                                <span class="nav-link-title">Commandes</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesCommandes" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/commandes">Liste des commandes</a>
+                                <a class="nav-link " href="/commande/creer">Nouvelle commande</a>
+                                <a class="nav-link " href="/commandes/attente">En attente</a>
+                                <a class="nav-link " href="/commandes/livrees">Livrées</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesFactures" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesFactures" aria-expanded="false" aria-controls="navbarVerticalMenuPagesFactures">
+                                <i class="bi-receipt nav-icon"></i>
+                                <span class="nav-link-title">Factures</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesFactures" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/factures">Liste des factures</a>
+                                <a class="nav-link " href="/facture/creer">Nouvelle facture</a>
+                                <a class="nav-link " href="/factures/impayees">Impayées</a>
+                                <a class="nav-link " href="/factures/relances">Relances</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesRapports" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesRapports" aria-expanded="false" aria-controls="navbarVerticalMenuPagesRapports">
+                                <i class="bi-graph-up nav-icon"></i>
+                                <span class="nav-link-title">Rapports</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesRapports" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/rapports/ventes">Rapport de ventes</a>
+                                <a class="nav-link " href="/rapports/stock">Rapport de stock</a>
+                                <a class="nav-link " href="/rapports/fournisseurs">Rapport fournisseurs</a>
+                                <a class="nav-link " href="/rapports/clients">Rapport clients</a>
+                                <a class="nav-link " href="/rapports/financier">Rapport financier</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesMaintenance" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesMaintenance" aria-expanded="false" aria-controls="navbarVerticalMenuPagesMaintenance">
+                                <i class="bi-tools nav-icon"></i>
+                                <span class="nav-link-title">Maintenance</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesMaintenance" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/maintenance/backup">Sauvegarde</a>
+                                <a class="nav-link " href="/maintenance/logs">Logs système</a>
+                                <a class="nav-link " href="/maintenance/cache">Cache</a>
+                                <a class="nav-link " href="/maintenance/optimisation">Optimisation</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
@@ -113,6 +210,42 @@
                                 <a class="nav-link " href="/offres-emploi/creer">Ajouter une offre</a>
                                 <a class="nav-link " href="/job-liste">Liste des offres</a>
                                 <a class="nav-link " href="/candidature-list">Candidatures</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <span class="dropdown-header mt-4">Paramètres</span>
+                        <small class="bi-three-dots nav-subtitle-replacer"></small>
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesParametres" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesParametres" aria-expanded="false" aria-controls="navbarVerticalMenuPagesParametres">
+                                <i class="bi-gear nav-icon"></i>
+                                <span class="nav-link-title">Paramètres</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesParametres" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/parametres/general">Général</a>
+                                <a class="nav-link " href="/parametres/entreprise">Entreprise</a>
+                                <a class="nav-link " href="/parametres/notifications">Notifications</a>
+                                <a class="nav-link " href="/parametres/securite">Sécurité</a>
+                                <a class="nav-link " href="/parametres/integrations">Intégrations</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUtilisateurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUtilisateurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUtilisateurs">
+                                <i class="bi-person-gear nav-icon"></i>
+                                <span class="nav-link-title">Utilisateurs</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesUtilisateurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/utilisateurs">Liste des utilisateurs</a>
+                                <a class="nav-link " href="/utilisateur/creer">Créer un utilisateur</a>
+                                <a class="nav-link " href="/roles">Rôles et permissions</a>
+                                <a class="nav-link " href="/activite">Activité utilisateurs</a>
                             </div>
                         </div>
                         <!-- End Collapse -->

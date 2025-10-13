@@ -36,6 +36,18 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/categorie-produit-add', 'ProduitController@categorieProduitAdd');
     $r->addRoute('GET', '/categories-produits-liste', 'ProduitController@categorieProduitList');
 
+    // Routes pour la gestion de stock
+    $r->addRoute('GET', '/entree-sortie-stock', 'StockController@stockEntry');
+    $r->addRoute('GET', '/stock/mouvements', 'StockController@stockMovements');
+    $r->addRoute('GET', '/stock/entree', 'StockController@stockIn');
+    $r->addRoute('GET', '/stock/sortie', 'StockController@stockOut');
+
+    // Routes pour la gestion des fournisseurs
+    $r->addRoute('GET', '/fournisseurs', 'FournisseurController@listeFournisseurs');
+    $r->addRoute('GET', '/fournisseur/ajouter', 'FournisseurController@addFournisseur');
+    $r->addRoute('GET', '/fournisseur/{id}/details', 'FournisseurController@detailsFournisseur');
+    $r->addRoute('GET', '/fournisseur/{id}/edit', 'FournisseurController@editFournisseur');
+
     // Routes pour l'authentification
     $r->addRoute('GET', '/login', 'AuthController@login');
     $r->addRoute('POST', '/login', 'AuthController@loginPost');
