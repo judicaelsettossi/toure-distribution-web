@@ -320,25 +320,145 @@
     let currentPage = 1;
     let perPage = 15;
     let debounceTimer;
+    let allProducts = []; // Stocker tous les produits
+    let filteredProducts = []; // Produits après filtrage
+    let totalPages = 1;
 
     document.addEventListener('DOMContentLoaded', function() {
         loadProducts();
         loadCategories();
 
         document.getElementById('searchInput').addEventListener('input', debounceSearch);
-        document.getElementById('categoryFilter').addEventListener('change', loadProducts);
-        document.getElementById('statusFilter').addEventListener('change', loadProducts);
-        document.getElementById('stockFilter').addEventListener('change', loadProducts);
+        document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('stockFilter').addEventListener('change', applyFilters);
         document.getElementById('perPageSelect').addEventListener('change', function() {
             perPage = parseInt(this.value);
             currentPage = 1;
-            loadProducts();
+            applyFilters();
         });
     });
 
     function debounceSearch() {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(loadProducts, 500);
+        debounceTimer = setTimeout(applyFilters, 500);
+    }
+
+    function applyFilters() {
+        currentPage = 1;
+        filterProducts();
+    }
+
+    function filterProducts() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        const stock = document.getElementById('stockFilter').value;
+
+        // Filtrer les produits
+        filteredProducts = allProducts.filter(product => {
+            // Filtre de recherche
+            if (searchInput && !product.name.toLowerCase().includes(searchInput) && 
+                !product.code.toLowerCase().includes(searchInput) &&
+                !(product.description && product.description.toLowerCase().includes(searchInput))) {
+                return false;
+            }
+
+            // Filtre par catégorie
+            if (category) {
+                // Support des deux structures possibles
+                const productCategoryId = product.category_id || (product.category && product.category.product_category_id);
+                if (!productCategoryId || productCategoryId != category) {
+                    return false;
+                }
+            }
+
+            // Filtre par statut
+            if (status !== '' && product.is_active.toString() !== status) {
+                return false;
+            }
+
+            // Filtre par stock
+            if (stock === 'low' && product.min_stock_level >= 10) {
+                return false;
+            }
+            if (stock === 'out' && product.min_stock_level > 0) {
+                return false;
+            }
+
+            return true;
+        });
+
+        // Mettre à jour la pagination
+        totalPages = Math.ceil(filteredProducts.length / perPage);
+        currentPage = Math.min(currentPage, totalPages);
+
+        // Afficher les produits paginés
+        displayFilteredProducts();
+        updatePaginationFromFiltered();
+        updateStatsFromFiltered();
+    }
+
+    function displayFilteredProducts() {
+        const startIndex = (currentPage - 1) * perPage;
+        const endIndex = startIndex + perPage;
+        const productsToShow = filteredProducts.slice(startIndex, endIndex);
+        
+        displayProducts(productsToShow);
+        document.getElementById('productCount').textContent = filteredProducts.length;
+    }
+
+    function updatePaginationFromFiltered() {
+        const pagination = document.getElementById('pagination');
+        
+        if (totalPages <= 1) {
+            pagination.innerHTML = '';
+            return;
+        }
+
+        let paginationHTML = '';
+
+        // Bouton précédent
+        paginationHTML += `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">
+                <i class="bi-chevron-left"></i>
+            </a>
+        </li>
+        `;
+
+        // Pages
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, currentPage + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+            </li>
+            `;
+        }
+
+        // Bouton suivant
+        paginationHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">
+                <i class="bi-chevron-right"></i>
+            </a>
+        </li>
+        `;
+
+        pagination.innerHTML = paginationHTML;
+    }
+
+    function updateStatsFromFiltered() {
+        const total = filteredProducts.length;
+        const active = filteredProducts.filter(p => p.is_active).length;
+        const lowStock = filteredProducts.filter(p => p.min_stock_level < 10).length;
+
+        document.getElementById('totalProducts').textContent = total;
+        document.getElementById('activeProducts').textContent = active;
+        document.getElementById('lowStockProducts').textContent = lowStock;
     }
 
     async function loadCategories() {
@@ -351,15 +471,26 @@
             });
 
             if (response.ok) {
-                const result = await response.json();
+                const categories = await response.json();
                 const select = document.getElementById('categoryFilter');
 
-                result.data.forEach(cat => {
+                // Debug: Afficher la structure des catégories
+                console.log('Structure des catégories reçues:', categories);
+
+                // La réponse est directement un tableau selon la documentation
+                const categoriesList = Array.isArray(categories) ? categories : (categories.data || []);
+                
+                console.log('Catégories traitées:', categoriesList);
+                
+                categoriesList.forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat.product_category_id;
                     option.textContent = cat.label;
                     select.appendChild(option);
                 });
+
+                // Mettre à jour le compteur de catégories
+                document.getElementById('totalCategories').textContent = categoriesList.length;
             }
         } catch (error) {
             console.error('Error loading categories:', error);
@@ -367,23 +498,9 @@
     }
 
     async function loadProducts() {
-        const searchInput = document.getElementById('searchInput').value;
-        const category = document.getElementById('categoryFilter').value;
-        const status = document.getElementById('statusFilter').value;
-        const stock = document.getElementById('stockFilter').value;
-
-        const params = new URLSearchParams({
-            page: currentPage,
-            per_page: perPage
-        });
-
-        if (searchInput) params.append('search', searchInput);
-        if (category) params.append('category_id', category);
-        if (status !== '') params.append('is_active', status);
-        if (stock) params.append('stock_status', stock);
-
         try {
-            const response = await fetch(`https://toure.gestiem.com/api/products?${params}`, {
+            // Charger tous les produits sans pagination pour le filtrage côté client
+            const response = await fetch('https://toure.gestiem.com/api/products?per_page=1000', {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Accept': 'application/json'
@@ -393,9 +510,17 @@
             const result = await response.json();
 
             if (response.ok) {
-                displayProducts(result.data);
-                updatePagination(result.meta);
-                updateStats(result);
+                allProducts = result.data || [];
+                filteredProducts = [...allProducts];
+                
+                // Debug: Afficher la structure des produits pour vérifier les catégories
+                if (allProducts.length > 0) {
+                    console.log('Structure du premier produit:', allProducts[0]);
+                    console.log('Structure de catégorie:', allProducts[0].category);
+                }
+                
+                // Appliquer les filtres initiaux
+                filterProducts();
             } else if (response.status === 401) {
                 window.location.href = '/login';
             } else {
@@ -427,7 +552,7 @@
         <tr onclick="viewProduct('${product.product_id}')">
             <td>
                 <div class="d-flex align-items-center">
-                    ${product.picture ?
+                    ${product.picture ? 
                         `<img src="${product.picture}" class="product-image me-3" alt="${product.name}">` :
                         `<div class="product-placeholder me-3"><i class="bi-box-seam"></i></div>`
                     }
@@ -439,10 +564,7 @@
             </td>
             <td><span class="badge bg-light text-dark">${product.code}</span></td>
             <td>
-                ${product.category ?
-                    `<span class="badge badge-category" style="background-color: #e3f2fd; color: #1976d2;">${product.category.label}</span>` :
-                    '<span class="text-muted">-</span>'
-                }
+                ${getCategoryLabel(product)}
             </td>
             <td class="fw-bold">${formatCurrency(product.unit_price)}</td>
             <td class="text-muted">${formatCurrency(product.cost || 0)}</td>
@@ -465,8 +587,6 @@
             </td>
         </tr>
     `).join('');
-
-        document.getElementById('productCount').textContent = products.length;
     }
 
     function getStockIndicator(stock) {
@@ -475,57 +595,29 @@
         return '<span class="stock-indicator stock-good"></span>';
     }
 
-    function updatePagination(meta) {
-        if (!meta) return;
-
-        const pagination = document.getElementById('pagination');
-        const totalPages = meta.last_page;
-
-        let paginationHTML = '';
-
-        paginationHTML += `
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">
-                <i class="bi-chevron-left"></i>
-            </a>
-        </li>
-    `;
-
-        for (let i = 1; i <= Math.min(totalPages, 5); i++) {
-            paginationHTML += `
-            <li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
-            </li>
-        `;
+    function getCategoryLabel(product) {
+        let categoryLabel = '';
+        
+        // Support des deux structures possibles
+        if (product.category && product.category.label) {
+            // Structure avec objet category
+            categoryLabel = product.category.label;
+        } else if (product.category_name) {
+            // Structure avec category_name direct
+            categoryLabel = product.category_name;
+        } else {
+            return '<span class="text-muted">-</span>';
         }
-
-        paginationHTML += `
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">
-                <i class="bi-chevron-right"></i>
-            </a>
-        </li>
-    `;
-
-        pagination.innerHTML = paginationHTML;
+        
+        return `<span class="badge badge-category" style="background-color: #e3f2fd; color: #1976d2;">${categoryLabel}</span>`;
     }
 
-    function updateStats(result) {
-        const products = result.data;
-        const total = result.meta?.total || products.length;
-        const active = products.filter(p => p.is_active).length;
-        const lowStock = products.filter(p => p.min_stock_level < 10).length;
-
-        document.getElementById('totalProducts').textContent = total;
-        document.getElementById('activeProducts').textContent = active;
-        document.getElementById('lowStockProducts').textContent = lowStock;
-
-        // Categories count will be updated when loaded
-    }
 
     function changePage(page) {
+        if (page < 1 || page > totalPages) return;
         currentPage = page;
-        loadProducts();
+        displayFilteredProducts();
+        updatePaginationFromFiltered();
     }
 
     function resetFilters() {
@@ -534,7 +626,7 @@
         document.getElementById('statusFilter').value = '';
         document.getElementById('stockFilter').value = '';
         currentPage = 1;
-        loadProducts();
+        filterProducts();
     }
 
     function formatCurrency(amount) {

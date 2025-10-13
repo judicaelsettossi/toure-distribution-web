@@ -1,4 +1,7 @@
-<?php ob_start(); ?>
+<?php
+ob_start();
+$product_id = $id ?? '';
+?>
 
 <style>
     :root {
@@ -7,156 +10,416 @@
         --accent-color: #010068;
         --light-primary: rgba(240, 4, 128, 0.1);
         --light-secondary: rgba(1, 7, 104, 0.1);
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
     }
 
     .font-public-sans {
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    .text-primary-custom {
-        color: var(--primary-color) !important;
+    /* Fix chevauchement */
+    .edit-product-wrapper {
+        margin-left: 250px;
+        margin-top: 70px;
+        padding: 2rem;
+        min-height: calc(100vh - 70px);
+        background: #f8f9fa;
     }
 
-    .text-secondary-custom {
-        color: var(--secondary-color) !important;
+    @media (max-width: 991px) {
+        .edit-product-wrapper {
+            margin-left: 0;
+            margin-top: 60px;
+            padding: 1rem;
+        }
     }
 
-    .bg-primary-custom {
-        background-color: var(--primary-color) !important;
+    /* Header sticky */
+    .edit-header {
+        position: sticky;
+        top: 70px;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        z-index: 100;
     }
 
-    .bg-secondary-custom {
-        background-color: var(--secondary-color) !important;
-    }
-
-    .bg-light-primary {
-        background-color: var(--light-primary) !important;
-    }
-
-    .btn-primary-custom {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-    }
-
-    .btn-primary-custom:hover {
-        background-color: #d1036d;
-        border-color: #d1036d;
-        color: white;
-    }
-
-    .btn-secondary-custom {
-        background-color: var(--secondary-color);
-        border-color: var(--secondary-color);
-        color: white;
-    }
-
-    .btn-secondary-custom:hover {
-        background-color: #020a7a;
-        border-color: #020a7a;
-        color: white;
-    }
-
-    /* Steps Indicator */
-    .steps-container {
+    .edit-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--secondary-color);
+        margin: 0;
         display: flex;
-        justify-content: center;
         align-items: center;
-        margin-bottom: 3rem;
-        position: relative;
+        gap: 1rem;
     }
 
-    .step-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        flex: 1;
-        max-width: 200px;
-    }
-
-    .step-number {
+    .edit-title-icon {
         width: 50px;
         height: 50px;
-        border-radius: 50%;
-        background-color: #e9ecef;
-        color: #6c757d;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        font-size: 1.2rem;
-        border: 3px solid #e9ecef;
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 2;
-    }
-
-    .step-item.active .step-number {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-        box-shadow: 0 0 0 4px rgba(240, 4, 128, 0.2);
-    }
-
-    .step-item.completed .step-number {
-        background-color: var(--secondary-color);
-        border-color: var(--secondary-color);
-        color: white;
-    }
-
-    .step-item.completed .step-number i {
         font-size: 1.5rem;
     }
 
-    .step-label {
-        margin-top: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #6c757d;
-        text-align: center;
+    /* Form container */
+    .form-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
     }
 
-    .step-item.active .step-label {
+    .form-section {
+        margin-bottom: 2.5rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--light-primary);
         color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
     }
 
-    .step-item.completed .step-label {
+    /* Form groups */
+    .form-group-modern {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label-modern {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .label-required {
+        color: var(--danger-color);
+        font-size: 1.2rem;
+    }
+
+    .form-control-modern {
+        width: 100%;
+        padding: 0.875rem 1.25rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .form-control-modern:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: white;
+        box-shadow: 0 0 0 4px var(--light-primary);
+    }
+
+    .form-control-modern:disabled {
+        background: #e9ecef;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    textarea.form-control-modern {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .form-select-modern {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 12px;
+        padding-right: 2.5rem;
+    }
+
+    /* Image upload */
+    .image-upload-section {
+        background: linear-gradient(135deg, var(--light-primary), var(--light-secondary));
+        border-radius: 16px;
+        padding: 2rem;
+        border: 2px dashed var(--primary-color);
+    }
+
+    .current-image-preview {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .preview-image {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 1rem;
+    }
+
+    .upload-area {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px dashed #d0d0d0;
+    }
+
+    .upload-area:hover {
+        border-color: var(--primary-color);
+        background: var(--light-primary);
+    }
+
+    .upload-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .upload-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-hint {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    #imagePreview {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        margin-top: 1rem;
+        display: none;
+    }
+
+    /* Price calculator */
+    .price-calculator {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .calculator-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .calculator-row:last-child {
+        border-bottom: none;
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+        border-top: 2px solid var(--primary-color);
+    }
+
+    .calculator-label {
+        font-weight: 600;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .calculator-value {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .profit-positive {
+        color: var(--success-color);
+    }
+
+    .profit-negative {
+        color: var(--danger-color);
+    }
+
+    /* Toggle switch */
+    .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 30px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+    input:checked+.toggle-slider {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+
+    input:checked+.toggle-slider:before {
+        transform: translateX(30px);
+    }
+
+    .toggle-label {
+        font-weight: 600;
         color: var(--secondary-color);
     }
 
-    .step-line {
-        position: absolute;
-        top: 25px;
-        left: 50%;
-        width: 100%;
-        height: 3px;
-        background-color: #e9ecef;
-        z-index: 1;
+    .toggle-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
     }
 
-    .step-item.completed .step-line {
-        background-color: var(--secondary-color);
+    .status-active {
+        background: rgba(40, 167, 69, 0.1);
+        color: var(--success-color);
     }
 
-    .step-item:last-child .step-line {
-        display: none;
+    .status-inactive {
+        background: rgba(220, 53, 69, 0.1);
+        color: var(--danger-color);
     }
 
-    /* Form Sections */
-    .form-step {
-        display: none;
-        animation: fadeIn 0.3s ease;
+    /* Buttons */
+    .btn-modern {
+        padding: 12px 32px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .form-step.active {
-        display: block;
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 4, 128, 0.3);
     }
 
-    @keyframes fadeIn {
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(240, 4, 128, 0.4);
+    }
+
+    .btn-primary-modern:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn-secondary-modern {
+        background: white;
+        color: var(--secondary-color);
+        border: 2px solid var(--secondary-color);
+    }
+
+    .btn-secondary-modern:hover {
+        background: var(--secondary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f0f0f0;
+    }
+
+    /* Alert messages */
+    .alert-modern {
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 500;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
         from {
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(-20px);
         }
 
         to {
@@ -165,993 +428,864 @@
         }
     }
 
-    .form-section {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 2rem;
-        border-left: 4px solid var(--primary-color);
+    .alert-success {
+        background: rgba(40, 167, 69, 0.1);
+        color: var(--success-color);
+        border-left: 4px solid var(--success-color);
     }
 
-    .form-section-header {
-        background-color: var(--light-primary);
-        padding: 1rem 1.5rem;
-        border-radius: 10px 10px 0 0;
-        border-bottom: 1px solid #e9ecef;
+    .alert-danger {
+        background: rgba(220, 53, 69, 0.1);
+        color: var(--danger-color);
+        border-left: 4px solid var(--danger-color);
     }
 
-    .form-section-body {
-        padding: 1.5rem;
+    .alert-icon {
+        font-size: 1.5rem;
     }
 
-    .form-control:focus,
-    .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(240, 4, 128, 0.25);
-    }
-
-    .required-field::after {
-        content: " *";
-        color: var(--primary-color);
-    }
-
-    /* Image Upload */
-    .image-upload-container {
-        border: 2px dashed #e9ecef;
-        border-radius: 10px;
-        padding: 2rem;
-        text-align: center;
+    .alert-close {
+        margin-left: auto;
         cursor: pointer;
-        transition: all 0.3s ease;
+        opacity: 0.6;
+        transition: opacity 0.3s;
     }
 
-    .image-upload-container:hover {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
+    .alert-close:hover {
+        opacity: 1;
     }
 
-    .image-upload-container.has-image {
-        border-style: solid;
-        border-color: var(--secondary-color);
-    }
-
-    .image-preview {
-        max-width: 200px;
-        max-height: 200px;
-        margin: 1rem auto;
-        display: none;
-    }
-
-    .image-preview img {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-    }
-
-    /* Category Cards */
-    .category-card {
-        border: 2px solid #e9ecef;
-        border-radius: 10px;
-        padding: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-    }
-
-    .category-card:hover {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
-        transform: translateY(-2px);
-    }
-
-    .category-card.selected {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
-        box-shadow: 0 4px 15px rgba(240, 4, 128, 0.2);
-    }
-
-    .category-icon {
-        font-size: 2rem;
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    .category-card.selected .category-icon {
-        color: var(--primary-color);
-    }
-
-    /* Navigation Buttons */
-    .form-navigation {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid #e9ecef;
-    }
-
-    .progress-bar-custom {
-        height: 8px;
-        background-color: #e9ecef;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        overflow: hidden;
-    }
-
-    .progress-bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        transition: width 0.3s ease;
-        border-radius: 10px;
-    }
-
-    /* Info Box */
-    .info-box {
-        background-color: #f8f9fa;
-        border-left: 4px solid #17a2b8;
-        padding: 1rem;
-        margin-top: 1rem;
-        border-radius: 5px;
-    }
-
-    .price-calculator {
-        background-color: var(--light-primary);
-        border: 1px solid var(--primary-color);
-        padding: 1rem;
-        border-radius: 8px;
-        margin-top: 1rem;
-    }
-
-    /* Current Image Display */
-    .current-image {
-        width: 100%;
-        max-width: 200px;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin: 1rem auto;
-        display: block;
-    }
-
-    .current-image-placeholder {
-        width: 200px;
-        height: 200px;
-        background: #f8f9fa;
-        border: 2px dashed #e9ecef;
-        border-radius: 8px;
+    /* Loading */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 1rem auto;
+        z-index: 9999;
+    }
+
+    .loading-content {
+        background: white;
+        padding: 2rem 3rem;
+        border-radius: 16px;
+        text-align: center;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid #f0f0f0;
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading-text {
+        color: var(--secondary-color);
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    /* Error inputs */
+    .form-control-modern.is-invalid {
+        border-color: var(--danger-color);
+        background: rgba(220, 53, 69, 0.05);
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Input icons */
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
         color: #6c757d;
-        font-size: 3rem;
+        font-size: 1.1rem;
     }
 
-    /* Loading States */
-    .loading-skeleton {
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        border-radius: 4px;
-        height: 1rem;
-        margin-bottom: 0.5rem;
+    .form-control-modern.with-icon {
+        padding-right: 3rem;
     }
 
-    @keyframes loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
+    /* Animation spinner pour les boutons */
+    .spinner {
+        animation: spin 1s linear infinite;
     }
 
-    /* Changes Indicator */
-    .changes-indicator {
-        background-color: #fff3cd;
-        border: 1px solid #ffeaa7;
-        color: #856404;
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        display: none;
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
 
-    .changes-indicator.show {
-        display: block;
+    /* Style pour les boutons de catégorie */
+    .category-buttons {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
     }
 
-    .changes-indicator i {
-        margin-right: 0.5rem;
+    .category-buttons .btn-modern {
+        padding: 0.5rem;
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 
-<main id="content" role="main" class="main font-public-sans">
-    <div class="content container-fluid">
-        <!-- Page Header -->
-        <div class="page-header mb-4">
-            <div class="row align-items-center">
-                <div class="col">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/" class="text-primary-custom">Tableau de Bord</a></li>
-                            <li class="breadcrumb-item"><a href="/produit/liste" class="text-primary-custom">Produits</a></li>
-                            <li class="breadcrumb-item"><a href="#" id="breadcrumbProduct" class="text-primary-custom">Détails</a></li>
-                            <li class="breadcrumb-item active">Modifier</li>
-                        </ol>
-                    </nav>
-                    <h1 class="page-header-title text-secondary-custom">
-                        <i class="bi-pencil-square me-2"></i>
-                        Modifier le Produit
-                    </h1>
-                    <p class="text-muted mb-0">Modifiez les informations de ce produit</p>
+<div class="edit-product-wrapper font-public-sans">
+    <!-- Header -->
+    <div class="edit-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="edit-title">
+                <div class="edit-title-icon">
+                    <i class="bi bi-pencil-square"></i>
                 </div>
-                <div class="col-auto">
-                    <div class="d-flex gap-2">
-                        <a href="#" id="backToDetailsBtn" class="btn btn-outline-secondary">
-                            <i class="bi-arrow-left me-1"></i> Retour
-                        </a>
-                        <a href="/produit/liste" class="btn btn-outline-secondary">
-                            <i class="bi-list me-1"></i> Liste
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Loading State -->
-        <div id="loadingState" class="text-center py-5">
-            <div class="spinner-border text-primary-custom" role="status">
-                <span class="visually-hidden">Chargement...</span>
-            </div>
-            <p class="text-muted mt-3">Chargement des informations du produit...</p>
-        </div>
-
-        <!-- Edit Form Content -->
-        <div id="editContent" style="display: none;">
-            <!-- Changes Indicator -->
-            <div class="changes-indicator" id="changesIndicator">
-                <i class="bi-info-circle"></i>
-                <strong>Modifications détectées :</strong> Vous avez des modifications non sauvegardées.
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="progress-bar-custom">
-                <div class="progress-bar-fill" id="progressBar" style="width: 33.33%"></div>
-            </div>
-
-            <!-- Steps Indicator -->
-            <div class="steps-container">
-                <div class="step-item active" data-step="1">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Informations</div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step-item" data-step="2">
-                    <div class="step-number">2</div>
-                    <div class="step-label">Prix & Coûts</div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step-item" data-step="3">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Stock & Image</div>
-                </div>
-            </div>
-
-            <!-- Formulaire Multi-étapes -->
-            <form id="productEditForm" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="productId" name="product_id">
-
-                <!-- STEP 1: Informations de Base -->
-                <div class="form-step active" data-step="1">
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h5 class="mb-0 text-secondary-custom">
-                                <i class="bi-info-circle me-2"></i>
-                                Étape 1 : Informations de Base
-                            </h5>
-                        </div>
-                        <div class="form-section-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="productName" class="form-label required-field">Nom du Produit</label>
-                                    <input type="text" class="form-control" id="productName" name="name" placeholder="Ex: PARB DADA 50KG" required>
-                                    <div class="form-text">Nom complet et descriptif du produit</div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="productCategory" class="form-label required-field">Catégorie</label>
-                                    <select class="form-select" id="productCategory" name="product_category_id" required>
-                                        <option value="">Sélectionner une catégorie</option>
-                                        <option value="cat-riz">RIZ</option>
-                                        <option value="cat-sucre">SUCRE</option>
-                                        <option value="cat-farine">FARINE</option>
-                                        <option value="cat-lait">LAIT</option>
-                                        <option value="cat-huile">HUILE</option>
-                                        <option value="cat-divers">DIVERS</option>
-                                        <option value="cat-degilare">DEGILARE</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label for="productDescription" class="form-label">Description</label>
-                                    <textarea class="form-control" id="productDescription" name="description" rows="4" placeholder="Description détaillée du produit, caractéristiques, origine..."></textarea>
-                                    <div class="form-text">Informations complémentaires pour identifier le produit</div>
-                                </div>
-                            </div>
-
-                            <div class="info-box">
-                                <small class="text-info">
-                                    <i class="bi-lightbulb me-1"></i>
-                                    <strong>Conseil :</strong> Utilisez un nom clair incluant le type, la marque et le conditionnement (ex: PARB BONJOURNE 50KG)
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sélection Rapide de Catégorie -->
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h6 class="mb-0 text-secondary-custom">Sélection Rapide de Catégorie</h6>
-                        </div>
-                        <div class="form-section-body">
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-riz">
-                                        <div class="category-icon">
-                                            <i class="bi-basket"></i>
-                                        </div>
-                                        <h6>RIZ</h6>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-sucre">
-                                        <div class="category-icon">
-                                            <i class="bi-cup-straw"></i>
-                                        </div>
-                                        <h6>SUCRE</h6>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-farine">
-                                        <div class="category-icon">
-                                            <i class="bi-egg"></i>
-                                        </div>
-                                        <h6>FARINE</h6>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-lait">
-                                        <div class="category-icon">
-                                            <i class="bi-droplet"></i>
-                                        </div>
-                                        <h6>LAIT</h6>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-huile">
-                                        <div class="category-icon">
-                                            <i class="bi-moisture"></i>
-                                        </div>
-                                        <h6>HUILE</h6>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-divers">
-                                        <div class="category-icon">
-                                            <i class="bi-box"></i>
-                                        </div>
-                                        <h6>DIVERS</h6>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <div class="category-card" data-category="cat-degilare">
-                                        <div class="category-icon">
-                                            <i class="bi-gift"></i>
-                                        </div>
-                                        <h6>DEGILARE</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 2: Prix et Coûts -->
-                <div class="form-step" data-step="2">
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h5 class="mb-0 text-secondary-custom">
-                                <i class="bi-currency-exchange me-2"></i>
-                                Étape 2 : Prix et Coûts
-                            </h5>
-                        </div>
-                        <div class="form-section-body">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label for="unitPrice" class="form-label required-field">Prix Unitaire (FCFA)</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="unitPrice" name="unit_price" placeholder="22500" min="0" step="0.01" required>
-                                        <span class="input-group-text">FCFA</span>
-                                    </div>
-                                    <div class="form-text">Prix de vente au client</div>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="cost" class="form-label">Coût d'Achat (FCFA)</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="cost" name="cost" placeholder="18000" min="0" step="0.01">
-                                        <span class="input-group-text">FCFA</span>
-                                    </div>
-                                    <div class="form-text">Coût d'acquisition</div>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="minimumCost" class="form-label">Coût Minimum (FCFA)</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="minimumCost" name="minimum_cost" placeholder="17000" min="0" step="0.01">
-                                        <span class="input-group-text">FCFA</span>
-                                    </div>
-                                    <div class="form-text">Prix plancher acceptable</div>
-                                </div>
-                            </div>
-
-                            <!-- Calculateur de Marge -->
-                            <div class="price-calculator" id="priceCalculator">
-                                <h6 class="text-secondary-custom mb-3">
-                                    <i class="bi-calculator me-2"></i>Analyse de Rentabilité
-                                </h6>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="text-center">
-                                            <small class="text-muted d-block">Marge Brute</small>
-                                            <h4 class="text-primary-custom mb-0" id="grossMargin">0 FCFA</h4>
-                                            <small class="text-muted" id="marginPercent">0%</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="text-center">
-                                            <small class="text-muted d-block">Marge Minimale</small>
-                                            <h4 class="text-success mb-0" id="minMargin">0 FCFA</h4>
-                                            <small class="text-muted" id="minMarginPercent">0%</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="text-center">
-                                            <small class="text-muted d-block">Statut</small>
-                                            <h4 id="profitStatus">
-                                                <span class="badge bg-secondary">-</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-box mt-3">
-                                <small class="text-info">
-                                    <i class="bi-info-circle me-1"></i>
-                                    <strong>Recommandations :</strong><br>
-                                    • Prix de vente = Coût + Marge (20-30% recommandé)<br>
-                                    • Coût minimum = Seuil en dessous duquel la vente n'est pas rentable<br>
-                                    • Vérifiez la compétitivité de vos prix
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 3: Stock et Image -->
-                <div class="form-step" data-step="3">
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h5 class="mb-0 text-secondary-custom">
-                                <i class="bi-boxes me-2"></i>
-                                Étape 3 : Gestion de Stock
-                            </h5>
-                        </div>
-                        <div class="form-section-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="minStockLevel" class="form-label">Seuil Minimum de Stock</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="minStockLevel" name="min_stock_level" placeholder="10" min="0" value="10">
-                                        <span class="input-group-text">unités</span>
-                                    </div>
-                                    <div class="form-text">Alerte lorsque le stock descend sous ce niveau</div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="isActive" class="form-label">Statut du Produit</label>
-                                    <select class="form-select" id="isActive" name="is_active">
-                                        <option value="1">Actif (en vente)</option>
-                                        <option value="0">Inactif (non disponible)</option>
-                                    </select>
-                                    <div class="form-text">Produit visible et vendable</div>
-                                </div>
-                            </div>
-
-                            <div class="info-box">
-                                <small class="text-info">
-                                    <i class="bi-bell me-1"></i>
-                                    <strong>Alertes de Stock :</strong> Vous recevrez une notification lorsque le stock atteindra le seuil minimum défini
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Image Actuelle et Upload -->
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h5 class="mb-0 text-secondary-custom">
-                                <i class="bi-image me-2"></i>
-                                Image du Produit
-                            </h5>
-                        </div>
-                        <div class="form-section-body">
-                            <!-- Image Actuelle -->
-                            <div id="currentImageContainer">
-                                <h6 class="text-muted mb-3">Image actuelle :</h6>
-                                <div id="currentImageDisplay"></div>
-                            </div>
-
-                            <!-- Upload Nouvelle Image -->
-                            <div class="mt-4">
-                                <h6 class="text-muted mb-3">Changer l'image :</h6>
-                                <div class="image-upload-container" id="imageUploadContainer">
-                                    <div class="upload-placeholder" id="uploadPlaceholder">
-                                        <i class="bi-cloud-upload" style="font-size: 3rem; color: var(--primary-color);"></i>
-                                        <h6 class="mt-3">Cliquez ou glissez une nouvelle image ici</h6>
-                                        <p class="text-muted small">PNG, JPG jusqu'à 5MB</p>
-                                    </div>
-                                    <div class="image-preview" id="imagePreview">
-                                        <img src="" alt="Aperçu" id="previewImg">
-                                    </div>
-                                    <input type="file" class="d-none" id="productImage" name="picture" accept="image/*">
-                                </div>
-
-                                <div class="d-flex justify-content-between mt-3">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="removeImageBtn" style="display: none;">
-                                        <i class="bi-trash me-1"></i> Supprimer la nouvelle image
-                                    </button>
-                                    <small class="text-muted">Facultatif - Laisser vide pour conserver l'image actuelle</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="form-navigation">
-                    <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
-                        <i class="bi-arrow-left me-1"></i> Précédent
-                    </button>
-
-                    <div>
-                        <button type="button" class="btn btn-outline-secondary me-2" onclick="resetForm()">
-                            <i class="bi-arrow-clockwise me-1"></i> Annuler
-                        </button>
-                        <button type="button" class="btn btn-primary-custom" id="nextBtn" onclick="changeStep(1)">
-                            Suivant <i class="bi-arrow-right ms-1"></i>
-                        </button>
-                        <button type="submit" class="btn btn-primary-custom d-none" id="submitBtn">
-                            <i class="bi-check-circle me-1"></i> Sauvegarder les Modifications
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Error State -->
-        <div id="errorState" class="text-center py-5" style="display: none;">
-            <i class="bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
-            <h4 class="text-danger mt-3">Produit non trouvé</h4>
-            <p class="text-muted">Le produit demandé n'existe pas ou a été supprimé.</p>
-            <a href="/produit/liste" class="btn btn-primary-custom">
-                <i class="bi-arrow-left me-1"></i> Retour à la liste
+                Modifier le Produit
+            </h1>
+            <a href="/produit/liste" class="btn-modern btn-secondary-modern">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
             </a>
         </div>
     </div>
-</main>
+
+    <!-- Alerts -->
+    <div id="alertContainer"></div>
+
+    <!-- Loading initial -->
+    <div id="loadingInitial" class="text-center py-5">
+        <div class="loading-spinner mx-auto"></div>
+        <div class="loading-text">Chargement du produit...</div>
+    </div>
+
+    <!-- Form -->
+    <form id="editProductForm" style="display: none;">
+        <div class="form-container">
+            <!-- Section Image -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <div class="section-icon">
+                        <i class="bi bi-image"></i>
+                    </div>
+                    Image du Produit
+                </h3>
+
+                <div class="image-upload-section">
+                    <div class="current-image-preview" id="currentImageContainer">
+                        <p class="text-muted mb-2">Image actuelle</p>
+                        <img id="currentImage" src="" alt="Image actuelle" class="preview-image">
+                    </div>
+
+                    <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                        <div class="upload-icon">
+                            <i class="bi bi-cloud-upload"></i>
+                        </div>
+                        <div class="upload-text">Cliquez pour changer l'image</div>
+                        <div class="upload-hint">PNG, JPG, JPEG (Max. 5MB)</div>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <img id="imagePreview" alt="Nouvelle image">
+                </div>
+            </div>
+
+            <!-- Section Informations générales -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <div class="section-icon">
+                        <i class="bi bi-info-circle"></i>
+                    </div>
+                    Informations Générales
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                Code Produit
+                            </label>
+                            <input type="text" id="productCode" class="form-control-modern" disabled>
+                            <small class="text-muted">Généré automatiquement</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                Catégorie <span class="label-required">*</span>
+                            </label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <select id="categoryId" class="form-control-modern form-select-modern" required>
+                                    <option value="">Chargement des catégories...</option>
+                                </select>
+                                <div class="category-buttons">
+                                    <button type="button" id="addCategoryBtn" class="btn-modern btn-outline-modern" onclick="showAddCategoryModal()" title="Ajouter une nouvelle catégorie" disabled>
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                    <button type="button" id="refreshCategoryBtn" class="btn-modern btn-outline-modern" onclick="refreshCategories()" title="Rafraîchir la liste des catégories">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i> 
+                                Cliquez sur <i class="bi bi-plus"></i> pour créer une nouvelle catégorie
+                            </small>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">
+                        Nom du Produit <span class="label-required">*</span>
+                    </label>
+                    <input type="text" id="productName" class="form-control-modern" placeholder="Ex: Laptop Dell XPS 15" required>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">
+                        Description <span class="label-required">*</span>
+                    </label>
+                    <textarea id="productDescription" class="form-control-modern" placeholder="Description détaillée du produit..." required></textarea>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Section Prix et Coûts -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <div class="section-icon">
+                        <i class="bi bi-currency-exchange"></i>
+                    </div>
+                    Prix et Coûts
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                Prix de Vente (FCFA) <span class="label-required">*</span>
+                            </label>
+                            <div class="input-with-icon">
+                                <input type="number" id="unitPrice" class="form-control-modern with-icon" placeholder="0" min="0" step="1" required>
+                                <span class="input-icon">FCFA</span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                Coût d'Achat (FCFA) <span class="label-required">*</span>
+                            </label>
+                            <div class="input-with-icon">
+                                <input type="number" id="cost" class="form-control-modern with-icon" placeholder="0" min="0" step="1" required>
+                                <span class="input-icon">FCFA</span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                Coût Minimum (FCFA) <span class="label-required">*</span>
+                            </label>
+                            <div class="input-with-icon">
+                                <input type="number" id="minimumCost" class="form-control-modern with-icon" placeholder="0" min="0" step="1" required>
+                                <span class="input-icon">FCFA</span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculateur de marge -->
+                <div class="price-calculator">
+                    <div class="calculator-row">
+                        <span class="calculator-label">
+                            <i class="bi bi-calculator"></i> Prix de vente
+                        </span>
+                        <span class="calculator-value" id="calcUnitPrice">0 FCFA</span>
+                    </div>
+                    <div class="calculator-row">
+                        <span class="calculator-label">
+                            <i class="bi bi-dash-circle"></i> Coût d'achat
+                        </span>
+                        <span class="calculator-value" id="calcCost">0 FCFA</span>
+                    </div>
+                    <div class="calculator-row">
+                        <span class="calculator-label">
+                            <i class="bi bi-graph-up-arrow"></i> Marge bénéficiaire
+                        </span>
+                        <span class="calculator-value" id="calcProfit">0 FCFA (0%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Stock -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <div class="section-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    Gestion du Stock
+                </h3>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">
+                        Stock Minimum <span class="label-required">*</span>
+                    </label>
+                    <input type="number" id="minStockLevel" class="form-control-modern" placeholder="0" min="0" step="1" required>
+                    <small class="text-muted">Seuil d'alerte pour le réapprovisionnement</small>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Section Statut -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <div class="section-icon">
+                        <i class="bi bi-toggles"></i>
+                    </div>
+                    Statut du Produit
+                </h3>
+
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="isActive" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Produit actif</span>
+                    <span id="statusText" class="toggle-status status-active">Actif</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn-modern btn-secondary-modern" onclick="window.location.href='/produit/liste'">
+                    <i class="bi bi-x-lg"></i> Annuler
+                </button>
+                <button type="submit" class="btn-modern btn-primary-modern" id="submitBtn">
+                    <i class="bi bi-check-lg"></i> Enregistrer les modifications
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Loading overlay -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Mise à jour en cours...</div>
+    </div>
+</div>
 
 <script>
-    let productId = null;
-    let product = null;
-    let currentStep = 1;
-    const totalSteps = 3;
-    let originalData = {};
-    let hasChanges = false;
+    const productId = '<?php echo $product_id; ?>';
+    let categories = [];
+    let currentProduct = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Récupérer l'ID du produit depuis l'URL
-        const pathParts = window.location.pathname.split('/');
-        productId = pathParts[pathParts.length - 1];
-        
-        if (productId) {
-            document.getElementById('productId').value = productId;
-            loadProductData();
-        } else {
-            showError();
+        if (!productId) {
+            showAlert('ID du produit manquant', 'danger');
+            return;
         }
 
+        // Charger d'abord les catégories, puis les données du produit
+        loadCategories().then(() => {
+            loadProductData();
+        }).catch(error => {
+            console.error('Erreur lors du chargement initial:', error);
+            showAlert('Erreur lors du chargement des données', 'danger');
+        });
+        
         setupEventListeners();
     });
 
-    function setupEventListeners() {
-        // Gestion des catégories
-        const categoryCards = document.querySelectorAll('.category-card');
-        const categorySelect = document.getElementById('productCategory');
+    async function loadCategories() {
+        try {
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+            
+            if (!accessToken) {
+                console.error('Token d\'accès manquant');
+                showAlert('Erreur d\'authentification', 'danger');
+                return;
+            }
 
-        categoryCards.forEach(card => {
-            card.addEventListener('click', function() {
-                categoryCards.forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                categorySelect.value = this.dataset.category;
-                trackChanges();
-            });
-        });
-
-        categorySelect.addEventListener('change', function() {
-            categoryCards.forEach(card => {
-                if (card.dataset.category === this.value) {
-                    card.classList.add('selected');
-                } else {
-                    card.classList.remove('selected');
+            const response = await fetch('https://toure.gestiem.com/api/product-categories', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             });
-            trackChanges();
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            console.log('Catégories reçues:', result); // Debug
+            
+            // L'API retourne directement un tableau de catégories selon la documentation
+            const categoriesList = Array.isArray(result) ? result : (result.data || []);
+            console.log('Catégories traitées:', categoriesList); // Debug
+            
+            categories = categoriesList.filter(cat => cat.is_active !== false); // Filtrer les catégories actives
+            populateCategorySelect();
+            
+            // Afficher le nombre de catégories chargées
+            console.log(`${categories.length} catégories chargées`);
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement des catégories:', error);
+            showAlert('Erreur lors du chargement des catégories: ' + error.message, 'danger');
+            
+            // En cas d'erreur, ajouter une option par défaut
+            const select = document.getElementById('categoryId');
+            select.innerHTML = '';
+            const errorOption = document.createElement('option');
+            errorOption.value = '';
+            errorOption.textContent = 'Erreur de chargement des catégories';
+            errorOption.disabled = true;
+            select.appendChild(errorOption);
+            
+            // Désactiver le bouton d'ajout de catégorie
+            const addCategoryBtn = document.getElementById('addCategoryBtn');
+            if (addCategoryBtn) {
+                addCategoryBtn.disabled = true;
+            }
+        }
+    }
+
+    function populateCategorySelect() {
+        const select = document.getElementById('categoryId');
+        
+        // Vider le select complètement
+        select.innerHTML = '';
+        
+        if (!categories || categories.length === 0) {
+            const noOption = document.createElement('option');
+            noOption.value = '';
+            noOption.textContent = 'Aucune catégorie disponible';
+            noOption.disabled = true;
+            select.appendChild(noOption);
+            return;
+        }
+        
+        // Ajouter l'option par défaut
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Sélectionner une catégorie';
+        select.appendChild(defaultOption);
+        
+        // Ajouter toutes les catégories
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.product_category_id;
+            option.textContent = cat.label;
+            
+            // Ajouter la description si disponible
+            if (cat.description) {
+                option.textContent += ` - ${cat.description}`;
+            }
+            
+            select.appendChild(option);
         });
+        
+        console.log(`Select de catégories peuplé avec ${categories.length} options`);
+        
+        // Activer le bouton d'ajout de catégorie
+        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        if (addCategoryBtn) {
+            addCategoryBtn.disabled = false;
+        }
+    }
 
-        // Calculateur de marge
-        const unitPrice = document.getElementById('unitPrice');
-        const cost = document.getElementById('cost');
-        const minimumCost = document.getElementById('minimumCost');
+    function showAddCategoryModal() {
+        const categoryName = prompt('Nom de la nouvelle catégorie:');
+        if (categoryName && categoryName.trim()) {
+            addNewCategory(categoryName.trim());
+        }
+    }
 
-        [unitPrice, cost, minimumCost].forEach(input => {
-            input.addEventListener('input', function() {
-                calculateMargins();
-                trackChanges();
+    async function addNewCategory(categoryName) {
+        try {
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+            
+            const response = await fetch('https://toure.gestiem.com/api/product-categories', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    label: categoryName,
+                    description: `Catégorie créée depuis l'édition de produit`,
+                    is_active: true
+                })
             });
-        });
 
-        // Upload d'image
-        const imageUploadContainer = document.getElementById('imageUploadContainer');
-        const productImage = document.getElementById('productImage');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        const removeImageBtn = document.getElementById('removeImageBtn');
-
-        imageUploadContainer.addEventListener('click', () => {
-            productImage.click();
-        });
-
-        productImage.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    uploadPlaceholder.style.display = 'none';
-                    imagePreview.style.display = 'block';
-                    imageUploadContainer.classList.add('has-image');
-                    removeImageBtn.style.display = 'inline-block';
-                };
-                reader.readAsDataURL(file);
-                trackChanges();
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                const errorResult = await response.json();
+                throw new Error(errorResult.message || 'Erreur lors de la création de la catégorie');
             }
-        });
 
-        removeImageBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            productImage.value = '';
-            previewImg.src = '';
-            uploadPlaceholder.style.display = 'block';
-            imagePreview.style.display = 'none';
-            imageUploadContainer.classList.remove('has-image');
-            removeImageBtn.style.display = 'none';
-            trackChanges();
-        });
+            const result = await response.json();
+            const newCategory = result.data || result;
+            
+            // Ajouter la nouvelle catégorie à la liste
+            categories.push(newCategory);
+            
+            // Mettre à jour le select
+            populateCategorySelect();
+            
+            // Sélectionner la nouvelle catégorie
+            document.getElementById('categoryId').value = newCategory.product_category_id;
+            
+            showAlert(`Catégorie "${categoryName}" créée avec succès !`, 'success');
+            
+        } catch (error) {
+            console.error('Erreur lors de la création de la catégorie:', error);
+            showAlert('Erreur lors de la création de la catégorie: ' + error.message, 'danger');
+        }
+    }
 
-        // Tous les autres inputs
-        const allInputs = document.querySelectorAll('input, select, textarea');
-        allInputs.forEach(input => {
-            if (input.type !== 'file') {
-                input.addEventListener('input', trackChanges);
-                input.addEventListener('change', trackChanges);
-            }
-        });
-
-        // Soumission du formulaire
-        document.getElementById('productEditForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await submitForm();
-        });
-
-        updateNavigation();
+    // Fonction pour rafraîchir la liste des catégories
+    async function refreshCategories() {
+        console.log('Rafraîchissement de la liste des catégories...');
+        
+        const refreshBtn = document.getElementById('refreshCategoryBtn');
+        const originalIcon = refreshBtn.innerHTML;
+        
+        // Afficher l'indicateur de chargement
+        refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise spinner"></i>';
+        refreshBtn.disabled = true;
+        
+        try {
+            await loadCategories();
+            showAlert('Liste des catégories rafraîchie avec succès !', 'success');
+        } catch (error) {
+            console.error('Erreur lors du rafraîchissement:', error);
+            showAlert('Erreur lors du rafraîchissement des catégories', 'danger');
+        } finally {
+            // Restaurer le bouton
+            refreshBtn.innerHTML = originalIcon;
+            refreshBtn.disabled = false;
+        }
     }
 
     async function loadProductData() {
         try {
-            showLoading(true);
-            
-            const result = await ProductAPI.getById(productId);
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
 
-            if (result.success) {
-                product = result.data.data;
-                
-                populateForm();
-                showLoading(false);
-            } else {
-                if (result.status === 404) {
-                    showError();
+            const response = await fetch(`https://toure.gestiem.com/api/products/${productId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/login';
                     return;
                 }
-                handleApiError(result, 'Erreur lors du chargement du produit');
-                showError();
+                throw new Error('Produit introuvable');
             }
-            
+
+            const result = await response.json();
+            currentProduct = result.data;
+            populateForm(currentProduct);
+
+            document.getElementById('loadingInitial').style.display = 'none';
+            document.getElementById('editProductForm').style.display = 'block';
+
         } catch (error) {
-            console.error('Error loading product:', error);
-            showNotification('error', 'Erreur lors du chargement du produit');
-            showError();
+            console.error('Erreur:', error);
+            showAlert('Erreur lors du chargement du produit: ' + error.message, 'danger');
+            document.getElementById('loadingInitial').style.display = 'none';
         }
     }
 
-    function populateForm() {
-        if (!product) return;
-
-        // Remplir le formulaire
+    function populateForm(product) {
+        console.log('Données du produit à peupler:', product); // Debug
+        
+        document.getElementById('productCode').value = product.code || '';
         document.getElementById('productName').value = product.name || '';
-        document.getElementById('productCategory').value = product.product_category_id || '';
         document.getElementById('productDescription').value = product.description || '';
-        document.getElementById('unitPrice').value = product.unit_price || '';
-        document.getElementById('cost').value = product.cost || '';
-        document.getElementById('minimumCost').value = product.minimum_cost || '';
-        document.getElementById('minStockLevel').value = product.min_stock_level || 10;
-        document.getElementById('isActive').value = product.is_active ? '1' : '0';
-
-        // Mettre à jour le breadcrumb
-        document.getElementById('breadcrumbProduct').textContent = product.name || 'Produit';
-        document.getElementById('backToDetailsBtn').href = `/produit/${productId}/details`;
-
-        // Afficher l'image actuelle
-        displayCurrentImage();
-
-        // Sélectionner la catégorie
-        const categoryCards = document.querySelectorAll('.category-card');
-        categoryCards.forEach(card => {
-            if (card.dataset.category === product.product_category_id) {
-                card.classList.add('selected');
-            }
-        });
-
-        // Calculer les marges
-        calculateMargins();
-
-        // Sauvegarder les données originales
-        originalData = {
-            name: product.name || '',
-            product_category_id: product.product_category_id || '',
-            description: product.description || '',
-            unit_price: product.unit_price || '',
-            cost: product.cost || '',
-            minimum_cost: product.minimum_cost || '',
-            min_stock_level: product.min_stock_level || 10,
-            is_active: product.is_active ? '1' : '0'
-        };
-    }
-
-    function displayCurrentImage() {
-        const currentImageDisplay = document.getElementById('currentImageDisplay');
         
+        // Gestion de la catégorie - supporte plusieurs structures
+        let categoryId = '';
+        if (product.product_category_id) {
+            categoryId = product.product_category_id;
+        } else if (product.category && product.category.product_category_id) {
+            categoryId = product.category.product_category_id;
+        } else if (product.category_id) {
+            categoryId = product.category_id;
+        }
+        
+        document.getElementById('categoryId').value = categoryId;
+        console.log('Catégorie sélectionnée:', categoryId); // Debug
+        
+        document.getElementById('unitPrice').value = product.unit_price || 0;
+        document.getElementById('cost').value = product.cost || 0;
+        document.getElementById('minimumCost').value = product.minimum_cost || 0;
+        document.getElementById('minStockLevel').value = product.min_stock_level || 0;
+        document.getElementById('isActive').checked = product.is_active;
+
+        // Image actuelle
         if (product.picture) {
-            currentImageDisplay.innerHTML = `
-                <img src="${product.picture}" alt="${product.name}" class="current-image">
-            `;
+            const img = document.getElementById('currentImage');
+            img.src = `https://toure.gestiem.com/storage/${product.picture}`;
+            img.onerror = function() {
+                document.getElementById('currentImageContainer').style.display = 'none';
+            };
         } else {
-            currentImageDisplay.innerHTML = `
-                <div class="current-image-placeholder">
-                    <i class="bi-image"></i>
-                    <div class="mt-2">Aucune image</div>
-                </div>
-            `;
+            document.getElementById('currentImageContainer').style.display = 'none';
         }
-    }
 
-    function trackChanges() {
-        const currentData = {
-            name: document.getElementById('productName').value,
-            product_category_id: document.getElementById('productCategory').value,
-            description: document.getElementById('productDescription').value,
-            unit_price: document.getElementById('unitPrice').value,
-            cost: document.getElementById('cost').value,
-            minimum_cost: document.getElementById('minimumCost').value,
-            min_stock_level: document.getElementById('minStockLevel').value,
-            is_active: document.getElementById('isActive').value
-        };
-
-        hasChanges = JSON.stringify(currentData) !== JSON.stringify(originalData);
+        updateStatusDisplay();
+        updatePriceCalculator();
         
-        const changesIndicator = document.getElementById('changesIndicator');
-        if (hasChanges) {
-            changesIndicator.classList.add('show');
-        } else {
-            changesIndicator.classList.remove('show');
+        // Vérifier si la catégorie sélectionnée existe dans la liste
+        if (categoryId && categories.length > 0) {
+            const categoryExists = categories.find(cat => cat.product_category_id === categoryId);
+            if (!categoryExists) {
+                console.warn(`Catégorie ${categoryId} non trouvée dans la liste des catégories chargées`);
+            }
         }
     }
 
-    function changeStep(direction) {
-        const steps = document.querySelectorAll('.form-step');
-        const stepItems = document.querySelectorAll('.step-item');
+    function setupEventListeners() {
+        // Image upload
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('La taille de l\'image ne doit pas dépasser 5MB', 'danger');
+                    return;
+                }
 
-        // Validation avant de passer à l'étape suivante
-        if (direction > 0 && !validateStep(currentStep)) {
-            return;
-        }
-
-        // Masquer l'étape actuelle
-        steps[currentStep - 1].classList.remove('active');
-
-        // Marquer comme complétée
-        if (direction > 0) {
-            stepItems[currentStep - 1].classList.add('completed');
-            stepItems[currentStep - 1].querySelector('.step-number').innerHTML = '<i class="bi-check2"></i>';
-        }
-
-        // Changer d'étape
-        currentStep += direction;
-
-        // Afficher la nouvelle étape
-        steps[currentStep - 1].classList.add('active');
-        stepItems[currentStep - 1].classList.add('active');
-
-        // Retirer le statut actif des autres étapes
-        stepItems.forEach((item, index) => {
-            if (index + 1 !== currentStep) {
-                item.classList.remove('active');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             }
         });
 
-        // Mettre à jour la navigation
-        updateNavigation();
-        updateProgressBar();
+        // Toggle status
+        document.getElementById('isActive').addEventListener('change', updateStatusDisplay);
 
-        // Scroll vers le haut
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+        // Price calculator
+        ['unitPrice', 'cost'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePriceCalculator);
         });
+
+        // Form submit
+        document.getElementById('editProductForm').addEventListener('submit', handleSubmit);
     }
 
-    function validateStep(step) {
-        const currentStepElement = document.querySelector(`.form-step[data-step="${step}"]`);
-        const requiredInputs = currentStepElement.querySelectorAll('[required]');
+    function updateStatusDisplay() {
+        const isActive = document.getElementById('isActive').checked;
+        const statusText = document.getElementById('statusText');
 
-        for (let input of requiredInputs) {
-            if (!input.value.trim()) {
-                input.focus();
-                input.classList.add('is-invalid');
-                showNotification('error', 'Veuillez remplir tous les champs obligatoires.');
-                return false;
-            }
-            input.classList.remove('is-invalid');
-        }
-
-        return true;
-    }
-
-    function updateNavigation() {
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
-
-        // Bouton précédent
-        prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
-
-        // Bouton suivant/soumettre
-        if (currentStep === totalSteps) {
-            nextBtn.classList.add('d-none');
-            submitBtn.classList.remove('d-none');
+        if (isActive) {
+            statusText.textContent = 'Actif';
+            statusText.className = 'toggle-status status-active';
         } else {
-            nextBtn.classList.remove('d-none');
-            submitBtn.classList.add('d-none');
+            statusText.textContent = 'Inactif';
+            statusText.className = 'toggle-status status-inactive';
         }
     }
 
-    function updateProgressBar() {
-        const progress = (currentStep / totalSteps) * 100;
-        document.getElementById('progressBar').style.width = progress + '%';
-    }
-
-    function calculateMargins() {
+    function updatePriceCalculator() {
         const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
         const cost = parseFloat(document.getElementById('cost').value) || 0;
-        const minimumCost = parseFloat(document.getElementById('minimumCost').value) || 0;
 
-        // Marge brute
-        const grossMargin = unitPrice - cost;
-        const marginPercent = cost > 0 ? ((grossMargin / cost) * 100).toFixed(2) : 0;
+        document.getElementById('calcUnitPrice').textContent = formatCurrency(unitPrice);
+        document.getElementById('calcCost').textContent = formatCurrency(cost);
 
-        // Marge minimale
-        const minMargin = unitPrice - minimumCost;
-        const minMarginPercent = minimumCost > 0 ? ((minMargin / minimumCost) * 100).toFixed(2) : 0;
+        const profit = unitPrice - cost;
+        const profitPercent = cost > 0 ? ((profit / cost) * 100).toFixed(1) : 0;
 
-        // Affichage
-        document.getElementById('grossMargin').textContent = grossMargin.toLocaleString() + ' FCFA';
-        document.getElementById('marginPercent').textContent = marginPercent + '%';
-        document.getElementById('minMargin').textContent = minMargin.toLocaleString() + ' FCFA';
-        document.getElementById('minMarginPercent').textContent = minMarginPercent + '%';
-
-        // Statut de rentabilité
-        const statusElement = document.getElementById('profitStatus');
-        if (grossMargin > 0 && marginPercent >= 20) {
-            statusElement.innerHTML = '<span class="badge bg-success">Excellent</span>';
-        } else if (grossMargin > 0 && marginPercent >= 10) {
-            statusElement.innerHTML = '<span class="badge bg-warning">Acceptable</span>';
-        } else if (grossMargin > 0) {
-            statusElement.innerHTML = '<span class="badge bg-danger">Faible</span>';
-        } else {
-            statusElement.innerHTML = '<span class="badge bg-danger">Non Rentable</span>';
-        }
+        const calcProfit = document.getElementById('calcProfit');
+        calcProfit.textContent = `${formatCurrency(profit)} (${profitPercent}%)`;
+        calcProfit.className = 'calculator-value ' + (profit >= 0 ? 'profit-positive' : 'profit-negative');
     }
 
-    async function submitForm() {
-        const form = document.getElementById('productEditForm');
-        const formData = new FormData(form);
+    async function handleSubmit(e) {
+        e.preventDefault();
 
-        // Ajouter l'ID du produit
-        formData.append('product_id', productId);
-
-        try {
-            const result = await ProductAPI.update(productId, formData);
-
-            if (result.success) {
-                showNotification('success', 'Produit modifié avec succès');
-                setTimeout(() => {
-                    window.location.href = `/produit/${productId}/details`;
-                }, 2000);
-            } else {
-                handleApiError(result, 'Erreur lors de la modification du produit');
-            }
-        } catch (error) {
-            showNotification('error', 'Erreur de connexion au serveur');
-            console.error('Error:', error);
-        }
-    }
-
-    function resetForm() {
-        if (hasChanges && !confirm('Vous avez des modifications non sauvegardées. Voulez-vous vraiment annuler ?')) {
+        // Validation personnalisée pour la catégorie
+        const categorySelect = document.getElementById('categoryId');
+        if (!categorySelect.value) {
+            showAlert('Veuillez sélectionner une catégorie', 'danger');
+            categorySelect.focus();
+            categorySelect.classList.add('is-invalid');
             return;
         }
-        
-        populateForm();
-        hasChanges = false;
-        document.getElementById('changesIndicator').classList.remove('show');
-    }
 
-    function showLoading(show) {
-        document.getElementById('loadingState').style.display = show ? 'block' : 'none';
-        document.getElementById('editContent').style.display = show ? 'none' : 'block';
-        document.getElementById('errorState').style.display = 'none';
-    }
+        // Clear previous errors
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
 
-    function showError() {
-        document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('editContent').style.display = 'none';
-        document.getElementById('errorState').style.display = 'block';
-    }
+        // Prepare data
+        const formData = new FormData();
+        formData.append('name', document.getElementById('productName').value);
+        formData.append('description', document.getElementById('productDescription').value);
+        formData.append('product_category_id', document.getElementById('categoryId').value);
+        formData.append('unit_price', document.getElementById('unitPrice').value);
+        formData.append('cost', document.getElementById('cost').value);
+        formData.append('minimum_cost', document.getElementById('minimumCost').value);
+        formData.append('min_stock_level', document.getElementById('minStockLevel').value);
+        formData.append('is_active', document.getElementById('isActive').checked ? '1' : '0');
 
-
-    // Avertir avant de quitter si le formulaire a été modifié
-    window.addEventListener('beforeunload', function(e) {
-        if (hasChanges) {
-            e.preventDefault();
-            e.returnValue = '';
+        // Add image if changed
+        const imageInput = document.getElementById('imageInput');
+        if (imageInput.files.length > 0) {
+            formData.append('image', imageInput.files[0]);
         }
-    });
+
+        try {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('submitBtn').disabled = true;
+
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+
+            const response = await fetch(`https://toure.gestiem.com/api/products/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'X-HTTP-Method-Override': 'PUT'
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 422) {
+                    handleValidationErrors(result.errors);
+                    showAlert('Veuillez corriger les erreurs dans le formulaire', 'danger');
+                } else {
+                    throw new Error(result.message || 'Erreur lors de la mise à jour');
+                }
+            } else {
+                showAlert('✓ Produit mis à jour avec succès !', 'success');
+                setTimeout(() => {
+                    window.location.href = `/produit/${productId}/details`;
+                }, 1500);
+            }
+
+        } catch (error) {
+            console.error('Erreur:', error);
+            showAlert('Erreur: ' + error.message, 'danger');
+        } finally {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+        }
+    }
+
+    function handleValidationErrors(errors) {
+        for (const [field, messages] of Object.entries(errors)) {
+            let inputId = '';
+
+            switch (field) {
+                case 'name':
+                    inputId = 'productName';
+                    break;
+                case 'description':
+                    inputId = 'productDescription';
+                    break;
+                case 'product_category_id':
+                    inputId = 'categoryId';
+                    break;
+                case 'unit_price':
+                    inputId = 'unitPrice';
+                    break;
+                case 'cost':
+                    inputId = 'cost';
+                    break;
+                case 'minimum_cost':
+                    inputId = 'minimumCost';
+                    break;
+                case 'min_stock_level':
+                    inputId = 'minStockLevel';
+                    break;
+            }
+
+            if (inputId) {
+                const input = document.getElementById(inputId);
+                input.classList.add('is-invalid');
+                const feedback = input.parentElement.querySelector('.invalid-feedback');
+                if (feedback) {
+                    feedback.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${messages[0]}`;
+                }
+            }
+        }
+    }
+
+    function showAlert(message, type) {
+        const container = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert-modern alert-${type}`;
+        alert.innerHTML = `
+        <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} alert-icon"></i>
+        <span>${message}</span>
+        <i class="bi bi-x-lg alert-close" onclick="this.parentElement.remove()"></i>
+    `;
+        container.appendChild(alert);
+
+        setTimeout(() => alert.remove(), 5000);
+    }
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA';
+    }
 </script>
 
 <?php

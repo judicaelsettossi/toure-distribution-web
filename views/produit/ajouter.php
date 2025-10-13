@@ -765,9 +765,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 // Succès
+                disableBeforeUnload(); // Désactiver complètement l'alerte beforeunload
                 showNotification('success', result.message || 'Produit créé avec succès');
                 setTimeout(() => {
-                    window.location.href = 'products.php';
+                    window.location.href = '/produit/liste';
                 }, 2000);
             } else {
                 // Erreur de validation
@@ -1018,6 +1019,12 @@ window.addEventListener('beforeunload', function(e) {
         e.returnValue = '';
     }
 });
+
+// Fonction pour désactiver l'alerte beforeunload
+function disableBeforeUnload() {
+    formModified = false;
+    window.removeEventListener('beforeunload', arguments.callee);
+}
 </script>
 
 <?php
