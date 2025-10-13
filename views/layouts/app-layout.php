@@ -3445,36 +3445,38 @@
 
         // INITIALIZATION OF DATATABLES
         // =======================================================
-        HSCore.components.HSDatatables.init($('#datatable'), {
-            select: {
-                style: 'multi',
-                selector: 'td:first-child input[type="checkbox"]',
-                classMap: {
-                    checkAll: '#datatableCheckAll',
-                    counter: '#datatableCounter',
-                    counterInfo: '#datatableCounterInfo'
-                }
-            },
-            language: {
-                zeroRecords: `<div class="text-center p-4">
+        if ($('#datatable').length) {
+            HSCore.components.HSDatatables.init($('#datatable'), {
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child input[type="checkbox"]',
+                    classMap: {
+                        checkAll: '#datatableCheckAll',
+                        counter: '#datatableCounter',
+                        counterInfo: '#datatableCounterInfo'
+                    }
+                },
+                language: {
+                    zeroRecords: `<div class="text-center p-4">
               <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
               <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">No data to show</p>
             </div>`
-            }
-        });
+                }
+            });
 
-        const datatable = HSCore.components.HSDatatables.getItem(0)
+            const datatable = HSCore.components.HSDatatables.getItem(0)
 
-        document.querySelectorAll('.js-datatable-filter').forEach(function(item) {
-            item.addEventListener('change', function(e) {
-                const elVal = e.target.value,
-                    targetColumnIndex = e.target.getAttribute('data-target-column-index'),
-                    targetTable = e.target.getAttribute('data-target-table');
+            document.querySelectorAll('.js-datatable-filter').forEach(function(item) {
+                item.addEventListener('change', function(e) {
+                    const elVal = e.target.value,
+                        targetColumnIndex = e.target.getAttribute('data-target-column-index'),
+                        targetTable = e.target.getAttribute('data-target-table');
 
-                HSCore.components.HSDatatables.getItem(targetTable).column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw()
+                    HSCore.components.HSDatatables.getItem(targetTable).column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw()
+                })
             })
-        })
+        }
     </script>
 
     <!-- JS Plugins Init. -->
@@ -3521,53 +3523,55 @@
 
                 // INITIALIZATION OF CHARTJS
                 // =======================================================
-                HSCore.components.HSChartJS.init('#updatingBarChart')
-                const updatingBarChart = HSCore.components.HSChartJS.getItem('updatingBarChart')
+                if ($('#updatingBarChart').length) {
+                    HSCore.components.HSChartJS.init('#updatingBarChart')
+                    const updatingBarChart = HSCore.components.HSChartJS.getItem('updatingBarChart')
 
-                // Call when tab is clicked
-                document.querySelectorAll('[data-bs-toggle="chart-bar"]').forEach(item => {
-                    item.addEventListener('click', e => {
-                        let keyDataset = e.currentTarget.getAttribute('data-datasets')
+                    // Call when tab is clicked
+                    document.querySelectorAll('[data-bs-toggle="chart-bar"]').forEach(item => {
+                        item.addEventListener('click', e => {
+                            let keyDataset = e.currentTarget.getAttribute('data-datasets')
 
-                        const styles = HSCore.components.HSChartJS.getTheme('updatingBarChart', HSThemeAppearance.getAppearance())
+                            const styles = HSCore.components.HSChartJS.getTheme('updatingBarChart', HSThemeAppearance.getAppearance())
 
-                        if (keyDataset === 'lastWeek') {
-                            updatingBarChart.data.labels = ["Apr 22", "Apr 23", "Apr 24", "Apr 25", "Apr 26", "Apr 27", "Apr 28", "Apr 29", "Apr 30", "Apr 31"];
-                            updatingBarChart.data.datasets = [{
-                                    "data": [120, 250, 300, 200, 300, 290, 350, 100, 125, 320],
-                                    "backgroundColor": styles.data.datasets[0].backgroundColor,
-                                    "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
-                                    "borderColor": styles.data.datasets[0].borderColor,
-                                    "maxBarThickness": 10
-                                },
-                                {
-                                    "data": [250, 130, 322, 144, 129, 300, 260, 120, 260, 245, 110],
-                                    "backgroundColor": styles.data.datasets[1].backgroundColor,
-                                    "borderColor": styles.data.datasets[1].borderColor,
-                                    "maxBarThickness": 10
-                                }
-                            ];
-                            updatingBarChart.update();
-                        } else {
-                            updatingBarChart.data.labels = ["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"];
-                            updatingBarChart.data.datasets = [{
-                                    "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220],
-                                    "backgroundColor": styles.data.datasets[0].backgroundColor,
-                                    "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
-                                    "borderColor": styles.data.datasets[0].borderColor,
-                                    "maxBarThickness": 10
-                                },
-                                {
-                                    "data": [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120],
-                                    "backgroundColor": styles.data.datasets[1].backgroundColor,
-                                    "borderColor": styles.data.datasets[1].borderColor,
-                                    "maxBarThickness": 10
-                                }
-                            ]
-                            updatingBarChart.update();
-                        }
+                            if (keyDataset === 'lastWeek') {
+                                updatingBarChart.data.labels = ["Apr 22", "Apr 23", "Apr 24", "Apr 25", "Apr 26", "Apr 27", "Apr 28", "Apr 29", "Apr 30", "Apr 31"];
+                                updatingBarChart.data.datasets = [{
+                                        "data": [120, 250, 300, 200, 300, 290, 350, 100, 125, 320],
+                                        "backgroundColor": styles.data.datasets[0].backgroundColor,
+                                        "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
+                                        "borderColor": styles.data.datasets[0].borderColor,
+                                        "maxBarThickness": 10
+                                    },
+                                    {
+                                        "data": [250, 130, 322, 144, 129, 300, 260, 120, 260, 245, 110],
+                                        "backgroundColor": styles.data.datasets[1].backgroundColor,
+                                        "borderColor": styles.data.datasets[1].borderColor,
+                                        "maxBarThickness": 10
+                                    }
+                                ];
+                                updatingBarChart.update();
+                            } else {
+                                updatingBarChart.data.labels = ["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"];
+                                updatingBarChart.data.datasets = [{
+                                        "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220],
+                                        "backgroundColor": styles.data.datasets[0].backgroundColor,
+                                        "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
+                                        "borderColor": styles.data.datasets[0].borderColor,
+                                        "maxBarThickness": 10
+                                    },
+                                    {
+                                        "data": [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120],
+                                        "backgroundColor": styles.data.datasets[1].backgroundColor,
+                                        "borderColor": styles.data.datasets[1].borderColor,
+                                        "maxBarThickness": 10
+                                    }
+                                ]
+                                updatingBarChart.update();
+                            }
+                        })
                     })
-                })
+                }
 
 
                 // INITIALIZATION OF CHARTJS
