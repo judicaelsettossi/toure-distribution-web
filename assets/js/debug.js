@@ -3,6 +3,12 @@ console.log('=== DEBUG MODE ACTIVÉ ===');
 
 // Intercepter les erreurs JavaScript
 window.addEventListener('error', function(e) {
+    // Ignorer les erreurs liées à $initializedEl qui sont maintenant gérées
+    if (e.message && e.message.includes('$initializedEl')) {
+        console.warn('⚠️ Erreur $initializedEl ignorée (gestion améliorée):', e.message);
+        return;
+    }
+    
     console.error('❌ Erreur JavaScript:', e.error);
     console.error('Fichier:', e.filename);
     console.error('Ligne:', e.lineno);
@@ -122,3 +128,4 @@ window.showDebugInfo = function() {
 console.log('=== Script de debug chargé ===');
 console.log('Utilisez testProductCreation() pour tester la création');
 console.log('Utilisez showDebugInfo() pour voir les informations de debug');
+

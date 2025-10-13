@@ -1,305 +1,289 @@
 <?php ob_start(); ?>
 
 <style>
-    :root {
-        --primary-color: #f00480;
-        --secondary-color: #010768;
-        --accent-color: #010068;
-        --light-primary: rgba(240, 4, 128, 0.1);
-        --light-secondary: rgba(1, 7, 104, 0.1);
-    }
+:root {
+    --primary-color: #f00480;
+    --secondary-color: #010768;
+    --accent-color: #010068;
+    --light-primary: rgba(240, 4, 128, 0.1);
+    --light-secondary: rgba(1, 7, 104, 0.1);
+}
 
-    .font-public-sans {
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
+.font-public-sans {
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
-    .text-primary-custom {
-        color: var(--primary-color) !important;
-    }
+.text-primary-custom { color: var(--primary-color) !important; }
+.text-secondary-custom { color: var(--secondary-color) !important; }
+.bg-primary-custom { background-color: var(--primary-color) !important; }
+.bg-secondary-custom { background-color: var(--secondary-color) !important; }
+.bg-light-primary { background-color: var(--light-primary) !important; }
 
-    .text-secondary-custom {
-        color: var(--secondary-color) !important;
-    }
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
 
-    .bg-primary-custom {
-        background-color: var(--primary-color) !important;
-    }
+.btn-primary-custom:hover {
+    background-color: #d1036d;
+    border-color: #d1036d;
+    color: white;
+}
 
-    .bg-secondary-custom {
-        background-color: var(--secondary-color) !important;
-    }
+.btn-secondary-custom {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+}
 
-    .bg-light-primary {
-        background-color: var(--light-primary) !important;
-    }
+.btn-secondary-custom:hover {
+    background-color: #020a7a;
+    border-color: #020a7a;
+    color: white;
+}
 
-    .btn-primary-custom {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-    }
+/* Steps Indicator */
+.steps-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
 
-    .btn-primary-custom:hover {
-        background-color: #d1036d;
-        border-color: #d1036d;
-        color: white;
-    }
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 200px;
+}
 
-    .btn-secondary-custom {
-        background-color: var(--secondary-color);
-        border-color: var(--secondary-color);
-        color: white;
-    }
+.step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: 3px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
 
-    .btn-secondary-custom:hover {
-        background-color: #020a7a;
-        border-color: #020a7a;
-        color: white;
-    }
+.step-item.active .step-number {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(240, 4, 128, 0.2);
+}
 
-    /* Steps Indicator */
-    .steps-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 3rem;
-        position: relative;
-    }
+.step-item.completed .step-number {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+}
 
-    .step-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        flex: 1;
-        max-width: 200px;
-    }
+.step-item.completed .step-number i {
+    font-size: 1.5rem;
+}
 
-    .step-number {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #e9ecef;
-        color: #6c757d;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 1.2rem;
-        border: 3px solid #e9ecef;
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 2;
-    }
+.step-label {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-align: center;
+}
 
-    .step-item.active .step-number {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-        box-shadow: 0 0 0 4px rgba(240, 4, 128, 0.2);
-    }
+.step-item.active .step-label {
+    color: var(--primary-color);
+}
 
-    .step-item.completed .step-number {
-        background-color: var(--secondary-color);
-        border-color: var(--secondary-color);
-        color: white;
-    }
+.step-item.completed .step-label {
+    color: var(--secondary-color);
+}
 
-    .step-item.completed .step-number i {
-        font-size: 1.5rem;
-    }
+.step-line {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    width: 100%;
+    height: 3px;
+    background-color: #e9ecef;
+    z-index: 1;
+}
 
-    .step-label {
-        margin-top: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #6c757d;
-        text-align: center;
-    }
+.step-item.completed .step-line {
+    background-color: var(--secondary-color);
+}
 
-    .step-item.active .step-label {
-        color: var(--primary-color);
-    }
+.step-item:last-child .step-line {
+    display: none;
+}
 
-    .step-item.completed .step-label {
-        color: var(--secondary-color);
-    }
+/* Form Sections */
+.form-step {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
 
-    .step-line {
-        position: absolute;
-        top: 25px;
-        left: 50%;
-        width: 100%;
-        height: 3px;
-        background-color: #e9ecef;
-        z-index: 1;
-    }
+.form-step.active {
+    display: block;
+}
 
-    .step-item.completed .step-line {
-        background-color: var(--secondary-color);
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-
-    .step-item:last-child .step-line {
-        display: none;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    /* Form Sections */
-    .form-step {
-        display: none;
-        animation: fadeIn 0.3s ease;
-    }
+.form-section {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--primary-color);
+}
 
-    .form-step.active {
-        display: block;
-    }
+.form-section-header {
+    background-color: var(--light-primary);
+    padding: 1rem 1.5rem;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #e9ecef;
+}
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
+.form-section-body {
+    padding: 1.5rem;
+}
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(240, 4, 128, 0.25);
+}
 
-    .form-section {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 2rem;
-        border-left: 4px solid var(--primary-color);
-    }
+.required-field::after {
+    content: " *";
+    color: var(--primary-color);
+}
 
-    .form-section-header {
-        background-color: var(--light-primary);
-        padding: 1rem 1.5rem;
-        border-radius: 10px 10px 0 0;
-        border-bottom: 1px solid #e9ecef;
-    }
+/* Image Upload */
+.image-upload-container {
+    border: 2px dashed #e9ecef;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-    .form-section-body {
-        padding: 1.5rem;
-    }
+.image-upload-container:hover {
+    border-color: var(--primary-color);
+    background-color: var(--light-primary);
+}
 
-    .form-control:focus,
-    .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(240, 4, 128, 0.25);
-    }
+.image-upload-container.has-image {
+    border-style: solid;
+    border-color: var(--secondary-color);
+}
 
-    .required-field::after {
-        content: " *";
-        color: var(--primary-color);
-    }
+.image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 1rem auto;
+    display: none;
+}
 
-    /* Image Upload */
-    .image-upload-container {
-        border: 2px dashed #e9ecef;
-        border-radius: 10px;
-        padding: 2rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+.image-preview img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
 
-    .image-upload-container:hover {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
-    }
+/* Category Cards */
+.category-card {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
 
-    .image-upload-container.has-image {
-        border-style: solid;
-        border-color: var(--secondary-color);
-    }
+.category-card:hover {
+    border-color: var(--primary-color);
+    background-color: var(--light-primary);
+    transform: translateY(-2px);
+}
 
-    .image-preview {
-        max-width: 200px;
-        max-height: 200px;
-        margin: 1rem auto;
-        display: none;
-    }
+.category-card.selected {
+    border-color: var(--primary-color);
+    background-color: var(--light-primary);
+    box-shadow: 0 4px 15px rgba(240, 4, 128, 0.2);
+}
 
-    .image-preview img {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-    }
+.category-icon {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
 
-    /* Category Cards */
-    .category-card {
-        border: 2px solid #e9ecef;
-        border-radius: 10px;
-        padding: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-    }
+.category-card.selected .category-icon {
+    color: var(--primary-color);
+}
 
-    .category-card:hover {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
-        transform: translateY(-2px);
-    }
+/* Navigation Buttons */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e9ecef;
+}
 
-    .category-card.selected {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
-        box-shadow: 0 4px 15px rgba(240, 4, 128, 0.2);
-    }
+.progress-bar-custom {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
 
-    .category-icon {
-        font-size: 2rem;
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-    }
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
 
-    .category-card.selected .category-icon {
-        color: var(--primary-color);
-    }
+/* Info Box */
+.info-box {
+    background-color: #f8f9fa;
+    border-left: 4px solid #17a2b8;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+}
 
-    /* Navigation Buttons */
-    .form-navigation {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid #e9ecef;
-    }
-
-    .progress-bar-custom {
-        height: 8px;
-        background-color: #e9ecef;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        overflow: hidden;
-    }
-
-    .progress-bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        transition: width 0.3s ease;
-        border-radius: 10px;
-    }
-
-    /* Info Box */
-    .info-box {
-        background-color: #f8f9fa;
-        border-left: 4px solid #17a2b8;
-        padding: 1rem;
-        margin-top: 1rem;
-        border-radius: 5px;
-    }
-
-    .price-calculator {
-        background-color: var(--light-primary);
-        border: 1px solid var(--primary-color);
-        padding: 1rem;
-        border-radius: 8px;
-        margin-top: 1rem;
-    }
+.price-calculator {
+    background-color: var(--light-primary);
+    border: 1px solid var(--primary-color);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
 </style>
 
 <main id="content" role="main" class="main font-public-sans">
@@ -354,7 +338,7 @@
 
         <!-- Formulaire Multi-étapes -->
         <form id="productForm" method="POST" action="/api/products" enctype="multipart/form-data">
-
+            
             <!-- STEP 1: Informations de Base -->
             <div class="form-step active" data-step="1">
                 <div class="form-section">
@@ -377,13 +361,7 @@
                                 <label for="productCategory" class="form-label required-field">Catégorie</label>
                                 <select class="form-select" id="productCategory" name="product_category_id" required>
                                     <option value="">Sélectionner une catégorie</option>
-                                    <option value="cat-riz">RIZ</option>
-                                    <option value="cat-sucre">SUCRE</option>
-                                    <option value="cat-farine">FARINE</option>
-                                    <option value="cat-lait">LAIT</option>
-                                    <option value="cat-huile">HUILE</option>
-                                    <option value="cat-divers">DIVERS</option>
-                                    <option value="cat-degilare">DEGILARE</option>
+                                    <!-- Les catégories seront chargées dynamiquement -->
                                 </select>
                             </div>
                         </div>
@@ -642,7 +620,7 @@
                 <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
                     <i class="bi-arrow-left me-1"></i> Précédent
                 </button>
-
+                
                 <div>
                     <button type="button" class="btn btn-outline-secondary me-2" onclick="saveDraft()">
                         <i class="bi-save me-1"></i> Sauvegarder Brouillon
@@ -669,322 +647,377 @@
 </main>
 
 <script>
-    let currentStep = 1;
-    const totalSteps = 3;
+let currentStep = 1;
+const totalSteps = 3;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Gestion des catégories
-        const categoryCards = document.querySelectorAll('.category-card');
-        const categorySelect = document.getElementById('productCategory');
+document.addEventListener('DOMContentLoaded', function() {
+    // Charger les catégories dès le chargement
+    loadCategories();
+    
+    // Gestion des catégories
+    const categoryCards = document.querySelectorAll('.category-card');
+    const categorySelect = document.getElementById('productCategory');
 
+    categoryCards.forEach(card => {
+        card.addEventListener('click', function() {
+            categoryCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            categorySelect.value = this.dataset.category;
+        });
+    });
+
+    // Synchroniser le select avec les cartes
+    categorySelect.addEventListener('change', function() {
         categoryCards.forEach(card => {
+            if (card.dataset.category === this.value) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+    });
+
+    // Calculateur de marge
+    const unitPrice = document.getElementById('unitPrice');
+    const cost = document.getElementById('cost');
+    const minimumCost = document.getElementById('minimumCost');
+
+    [unitPrice, cost, minimumCost].forEach(input => {
+        input.addEventListener('input', calculateMargins);
+    });
+
+    // Upload d'image
+    const imageUploadContainer = document.getElementById('imageUploadContainer');
+    const productImage = document.getElementById('productImage');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+    const removeImageBtn = document.getElementById('removeImageBtn');
+
+    imageUploadContainer.addEventListener('click', () => {
+        productImage.click();
+    });
+
+    productImage.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                uploadPlaceholder.style.display = 'none';
+                imagePreview.style.display = 'block';
+                imageUploadContainer.classList.add('has-image');
+                removeImageBtn.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    removeImageBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        productImage.value = '';
+        previewImg.src = '';
+        uploadPlaceholder.style.display = 'block';
+        imagePreview.style.display = 'none';
+        imageUploadContainer.classList.remove('has-image');
+        removeImageBtn.style.display = 'none';
+    });
+
+    // Drag and drop
+    imageUploadContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        imageUploadContainer.style.borderColor = 'var(--primary-color)';
+    });
+
+    imageUploadContainer.addEventListener('dragleave', () => {
+        imageUploadContainer.style.borderColor = '#e9ecef';
+    });
+
+    imageUploadContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            productImage.files = e.dataTransfer.files;
+            productImage.dispatchEvent(new Event('change'));
+        }
+        imageUploadContainer.style.borderColor = '#e9ecef';
+    });
+
+    // Validation à la soumission
+    document.getElementById('productForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        try {
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+            
+            const response = await fetch('https://toure.gestiem.com/api/products', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Succès
+                showNotification('success', result.message || 'Produit créé avec succès');
+                setTimeout(() => {
+                    window.location.href = 'products.php';
+                }, 2000);
+            } else {
+                // Erreur de validation
+                if (result.errors) {
+                    let errorMsg = 'Erreurs de validation:\n';
+                    Object.keys(result.errors).forEach(field => {
+                        errorMsg += `\n• ${result.errors[field].join('\n• ')}`;
+                    });
+                    showNotification('error', errorMsg);
+                } else {
+                    showNotification('error', result.message || 'Erreur lors de la création du produit');
+                }
+            }
+        } catch (error) {
+            showNotification('error', 'Erreur de connexion au serveur');
+            console.error('Error:', error);
+        }
+    });
+
+    updateNavigation();
+});
+
+async function loadCategories() {
+    const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+    
+    try {
+        const response = await fetch('https://toure.gestiem.com/api/product-categories', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const categories = await response.json();
+            const select = document.getElementById('productCategory');
+            
+            // Vider les options existantes sauf la première
+            select.innerHTML = '<option value="">Sélectionner une catégorie</option>';
+            
+            // Ajouter les catégories
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.product_category_id;
+                option.textContent = category.label;
+                select.appendChild(option);
+            });
+            
+            // Mettre à jour aussi les cartes de catégories
+            updateCategoryCards(categories);
+        } else {
+            console.error('Erreur lors du chargement des catégories');
+        }
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
+function updateCategoryCards(categories) {
+    const categoryCards = document.querySelectorAll('.category-card');
+    const categorySelect = document.getElementById('productCategory');
+    
+    categoryCards.forEach((card, index) => {
+        if (categories[index]) {
+            card.dataset.category = categories[index].product_category_id;
+            card.querySelector('h6').textContent = categories[index].label;
+            
             card.addEventListener('click', function() {
                 categoryCards.forEach(c => c.classList.remove('selected'));
                 this.classList.add('selected');
                 categorySelect.value = this.dataset.category;
             });
-        });
+        }
+    });
+}
 
-        // Synchroniser le select avec les cartes
-        categorySelect.addEventListener('change', function() {
-            categoryCards.forEach(card => {
-                if (card.dataset.category === this.value) {
-                    card.classList.add('selected');
-                } else {
-                    card.classList.remove('selected');
+function changeStep(direction) {
+    const steps = document.querySelectorAll('.form-step');
+    const stepItems = document.querySelectorAll('.step-item');
+    
+    // Validation avant de passer à l'étape suivante
+    if (direction > 0 && !validateStep(currentStep)) {
+        return;
+    }
+    
+    // Masquer l'étape actuelle
+    steps[currentStep - 1].classList.remove('active');
+    
+    // Marquer comme complétée
+    if (direction > 0) {
+        stepItems[currentStep - 1].classList.add('completed');
+        stepItems[currentStep - 1].querySelector('.step-number').innerHTML = '<i class="bi-check2"></i>';
+    }
+    
+    // Changer d'étape
+    currentStep += direction;
+    
+    // Afficher la nouvelle étape
+    steps[currentStep - 1].classList.add('active');
+    stepItems[currentStep - 1].classList.add('active');
+    
+    // Retirer le statut actif des autres étapes
+    stepItems.forEach((item, index) => {
+        if (index + 1 !== currentStep) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Mettre à jour la navigation
+    updateNavigation();
+    updateProgressBar();
+    
+    // Scroll vers le haut
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep(step) {
+    const currentStepElement = document.querySelector(`.form-step[data-step="${step}"]`);
+    const requiredInputs = currentStepElement.querySelectorAll('[required]');
+    
+    for (let input of requiredInputs) {
+        if (!input.value.trim()) {
+            input.focus();
+            input.classList.add('is-invalid');
+            showNotification('error', 'Veuillez remplir tous les champs obligatoires.');
+            return false;
+        }
+        input.classList.remove('is-invalid');
+    }
+    
+    return true;
+}
+
+function updateNavigation() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Bouton précédent
+    prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
+    
+    // Bouton suivant/soumettre
+    if (currentStep === totalSteps) {
+        nextBtn.classList.add('d-none');
+        submitBtn.classList.remove('d-none');
+    } else {
+        nextBtn.classList.remove('d-none');
+        submitBtn.classList.add('d-none');
+    }
+}
+
+function updateProgressBar() {
+    const progress = (currentStep / totalSteps) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+}
+
+function calculateMargins() {
+    const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+    const cost = parseFloat(document.getElementById('cost').value) || 0;
+    const minimumCost = parseFloat(document.getElementById('minimumCost').value) || 0;
+    
+    // Marge brute
+    const grossMargin = unitPrice - cost;
+    const marginPercent = cost > 0 ? ((grossMargin / cost) * 100).toFixed(2) : 0;
+    
+    // Marge minimale
+    const minMargin = unitPrice - minimumCost;
+    const minMarginPercent = minimumCost > 0 ? ((minMargin / minimumCost) * 100).toFixed(2) : 0;
+    
+    // Affichage
+    document.getElementById('grossMargin').textContent = grossMargin.toLocaleString() + ' FCFA';
+    document.getElementById('marginPercent').textContent = marginPercent + '%';
+    document.getElementById('minMargin').textContent = minMargin.toLocaleString() + ' FCFA';
+    document.getElementById('minMarginPercent').textContent = minMarginPercent + '%';
+    
+    // Statut de rentabilité
+    const statusElement = document.getElementById('profitStatus');
+    if (grossMargin > 0 && marginPercent >= 20) {
+        statusElement.innerHTML = '<span class="badge bg-success">Excellent</span>';
+    } else if (grossMargin > 0 && marginPercent >= 10) {
+        statusElement.innerHTML = '<span class="badge bg-warning">Acceptable</span>';
+    } else if (grossMargin > 0) {
+        statusElement.innerHTML = '<span class="badge bg-danger">Faible</span>';
+    } else {
+        statusElement.innerHTML = '<span class="badge bg-danger">Non Rentable</span>';
+    }
+}
+
+function saveDraft() {
+    const formData = new FormData(document.getElementById('productForm'));
+    const data = Object.fromEntries(formData);
+    localStorage.setItem('productDraft', JSON.stringify(data));
+    
+    showNotification('success', 'Brouillon sauvegardé avec succès');
+}
+
+function showNotification(type, message) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed top-0 end-0 m-3`;
+    toast.style.zIndex = '9999';
+    toast.style.minWidth = '300px';
+    
+    const icon = type === 'success' ? 'check-circle' : 'exclamation-triangle';
+    toast.innerHTML = `<i class="bi-${icon} me-2"></i>${message}`;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Restaurer le brouillon au chargement
+window.addEventListener('load', function() {
+    const draft = localStorage.getItem('productDraft');
+    if (draft && confirm('Un brouillon a été trouvé. Voulez-vous le restaurer ?')) {
+        const data = JSON.parse(draft);
+        
+        Object.keys(data).forEach(key => {
+            const element = document.querySelector(`[name="${key}"]`);
+            if (element) {
+                if (element.type === 'checkbox') {
+                    element.checked = data[key] === '1';
+                } else if (element.type !== 'file') {
+                    element.value = data[key];
                 }
-            });
-        });
-
-        // Calculateur de marge
-        const unitPrice = document.getElementById('unitPrice');
-        const cost = document.getElementById('cost');
-        const minimumCost = document.getElementById('minimumCost');
-
-        [unitPrice, cost, minimumCost].forEach(input => {
-            input.addEventListener('input', calculateMargins);
-        });
-
-        // Upload d'image
-        const imageUploadContainer = document.getElementById('imageUploadContainer');
-        const productImage = document.getElementById('productImage');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        const removeImageBtn = document.getElementById('removeImageBtn');
-
-        imageUploadContainer.addEventListener('click', () => {
-            productImage.click();
-        });
-
-        productImage.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    uploadPlaceholder.style.display = 'none';
-                    imagePreview.style.display = 'block';
-                    imageUploadContainer.classList.add('has-image');
-                    removeImageBtn.style.display = 'inline-block';
-                };
-                reader.readAsDataURL(file);
             }
         });
-
-        removeImageBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            productImage.value = '';
-            previewImg.src = '';
-            uploadPlaceholder.style.display = 'block';
-            imagePreview.style.display = 'none';
-            imageUploadContainer.classList.remove('has-image');
-            removeImageBtn.style.display = 'none';
-        });
-
-        // Drag and drop
-        imageUploadContainer.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            imageUploadContainer.style.borderColor = 'var(--primary-color)';
-        });
-
-        imageUploadContainer.addEventListener('dragleave', () => {
-            imageUploadContainer.style.borderColor = '#e9ecef';
-        });
-
-        imageUploadContainer.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                productImage.files = e.dataTransfer.files;
-                productImage.dispatchEvent(new Event('change'));
-            }
-            imageUploadContainer.style.borderColor = '#e9ecef';
-        });
-
-        // Validation à la soumission
-        document.getElementById('productForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-
-            try {
-                const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
-
-                const response = await fetch('https://toure.gestiem.com/api/products', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    // Succès
-                    showNotification('success', result.message || 'Produit créé avec succès');
-                    setTimeout(() => {
-                        window.location.href = 'products.php';
-                    }, 2000);
-                } else {
-                    // Erreur de validation
-                    if (result.errors) {
-                        let errorMsg = 'Erreurs de validation:\n';
-                        Object.keys(result.errors).forEach(field => {
-                            errorMsg += `\n• ${result.errors[field].join('\n• ')}`;
-                        });
-                        showNotification('error', errorMsg);
-                    } else {
-                        showNotification('error', result.message || 'Erreur lors de la création du produit');
-                    }
-                }
-            } catch (error) {
-                showNotification('error', 'Erreur de connexion au serveur');
-                console.error('Error:', error);
-            }
-        });
-
-        updateNavigation();
-    });
-
-    function changeStep(direction) {
-        const steps = document.querySelectorAll('.form-step');
-        const stepItems = document.querySelectorAll('.step-item');
-
-        // Validation avant de passer à l'étape suivante
-        if (direction > 0 && !validateStep(currentStep)) {
-            return;
-        }
-
-        // Masquer l'étape actuelle
-        steps[currentStep - 1].classList.remove('active');
-
-        // Marquer comme complétée
-        if (direction > 0) {
-            stepItems[currentStep - 1].classList.add('completed');
-            stepItems[currentStep - 1].querySelector('.step-number').innerHTML = '<i class="bi-check2"></i>';
-        }
-
-        // Changer d'étape
-        currentStep += direction;
-
-        // Afficher la nouvelle étape
-        steps[currentStep - 1].classList.add('active');
-        stepItems[currentStep - 1].classList.add('active');
-
-        // Retirer le statut actif des autres étapes
-        stepItems.forEach((item, index) => {
-            if (index + 1 !== currentStep) {
-                item.classList.remove('active');
-            }
-        });
-
-        // Mettre à jour la navigation
-        updateNavigation();
-        updateProgressBar();
-
-        // Scroll vers le haut
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        
+        // Recalculer les marges si les prix sont restaurés
+        calculateMargins();
+        
+        localStorage.removeItem('productDraft');
     }
+});
 
-    function validateStep(step) {
-        const currentStepElement = document.querySelector(`.form-step[data-step="${step}"]`);
-        const requiredInputs = currentStepElement.querySelectorAll('[required]');
+// Avertir avant de quitter si le formulaire a été modifié
+let formModified = false;
+document.getElementById('productForm').addEventListener('input', function() {
+    formModified = true;
+});
 
-        for (let input of requiredInputs) {
-            if (!input.value.trim()) {
-                input.focus();
-                input.classList.add('is-invalid');
-                showNotification('error', 'Veuillez remplir tous les champs obligatoires.');
-                return false;
-            }
-            input.classList.remove('is-invalid');
-        }
-
-        return true;
+window.addEventListener('beforeunload', function(e) {
+    if (formModified) {
+        e.preventDefault();
+        e.returnValue = '';
     }
-
-    function updateNavigation() {
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
-
-        // Bouton précédent
-        prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
-
-        // Bouton suivant/soumettre
-        if (currentStep === totalSteps) {
-            nextBtn.classList.add('d-none');
-            submitBtn.classList.remove('d-none');
-        } else {
-            nextBtn.classList.remove('d-none');
-            submitBtn.classList.add('d-none');
-        }
-    }
-
-    function updateProgressBar() {
-        const progress = (currentStep / totalSteps) * 100;
-        document.getElementById('progressBar').style.width = progress + '%';
-    }
-
-    function calculateMargins() {
-        const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
-        const cost = parseFloat(document.getElementById('cost').value) || 0;
-        const minimumCost = parseFloat(document.getElementById('minimumCost').value) || 0;
-
-        // Marge brute
-        const grossMargin = unitPrice - cost;
-        const marginPercent = cost > 0 ? ((grossMargin / cost) * 100).toFixed(2) : 0;
-
-        // Marge minimale
-        const minMargin = unitPrice - minimumCost;
-        const minMarginPercent = minimumCost > 0 ? ((minMargin / minimumCost) * 100).toFixed(2) : 0;
-
-        // Affichage
-        document.getElementById('grossMargin').textContent = grossMargin.toLocaleString() + ' FCFA';
-        document.getElementById('marginPercent').textContent = marginPercent + '%';
-        document.getElementById('minMargin').textContent = minMargin.toLocaleString() + ' FCFA';
-        document.getElementById('minMarginPercent').textContent = minMarginPercent + '%';
-
-        // Statut de rentabilité
-        const statusElement = document.getElementById('profitStatus');
-        if (grossMargin > 0 && marginPercent >= 20) {
-            statusElement.innerHTML = '<span class="badge bg-success">Excellent</span>';
-        } else if (grossMargin > 0 && marginPercent >= 10) {
-            statusElement.innerHTML = '<span class="badge bg-warning">Acceptable</span>';
-        } else if (grossMargin > 0) {
-            statusElement.innerHTML = '<span class="badge bg-danger">Faible</span>';
-        } else {
-            statusElement.innerHTML = '<span class="badge bg-danger">Non Rentable</span>';
-        }
-    }
-
-    function saveDraft() {
-        const formData = new FormData(document.getElementById('productForm'));
-        const data = Object.fromEntries(formData);
-        localStorage.setItem('productDraft', JSON.stringify(data));
-
-        showNotification('success', 'Brouillon sauvegardé avec succès');
-    }
-
-    function showNotification(type, message) {
-        const toast = document.createElement('div');
-        toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed top-0 end-0 m-3`;
-        toast.style.zIndex = '9999';
-        toast.style.minWidth = '300px';
-
-        const icon = type === 'success' ? 'check-circle' : 'exclamation-triangle';
-        toast.innerHTML = `<i class="bi-${icon} me-2"></i>${message}`;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
-
-    // Restaurer le brouillon au chargement
-    window.addEventListener('load', function() {
-        const draft = localStorage.getItem('productDraft');
-        if (draft && confirm('Un brouillon a été trouvé. Voulez-vous le restaurer ?')) {
-            const data = JSON.parse(draft);
-
-            Object.keys(data).forEach(key => {
-                const element = document.querySelector(`[name="${key}"]`);
-                if (element) {
-                    if (element.type === 'checkbox') {
-                        element.checked = data[key] === '1';
-                    } else if (element.type !== 'file') {
-                        element.value = data[key];
-                    }
-                }
-            });
-
-            // Recalculer les marges si les prix sont restaurés
-            calculateMargins();
-
-            localStorage.removeItem('productDraft');
-        }
-    });
-
-    // Avertir avant de quitter si le formulaire a été modifié
-    let formModified = false;
-    document.getElementById('productForm').addEventListener('input', function() {
-        formModified = true;
-    });
-
-    window.addEventListener('beforeunload', function(e) {
-        if (formModified) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
-    });
+});
 </script>
 
 <?php
