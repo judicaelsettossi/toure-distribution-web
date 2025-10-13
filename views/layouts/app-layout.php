@@ -3445,6 +3445,7 @@
 
         // INITIALIZATION OF DATATABLES
         // =======================================================
+        if (document.querySelector('#datatable')) {
         HSCore.components.HSDatatables.init($('#datatable'), {
             select: {
                 style: 'multi',
@@ -3475,6 +3476,7 @@
                 HSCore.components.HSDatatables.getItem(targetTable).column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw()
             })
         })
+        }
     </script>
 
     <!-- JS Plugins Init. -->
@@ -3494,7 +3496,7 @@
                 // =======================================================
                 const HSFormSearchInstance = new HSFormSearch('.js-form-search')
 
-                if (HSFormSearchInstance.collection.length) {
+                if (HSFormSearchInstance.collection.length > 1) {
                     HSFormSearchInstance.getItem(1).on('close', function(el) {
                         el.classList.remove('top-0')
                     })
@@ -3521,6 +3523,7 @@
 
                 // INITIALIZATION OF CHARTJS
                 // =======================================================
+                if (document.querySelector('#updatingBarChart')) {
                 HSCore.components.HSChartJS.init('#updatingBarChart')
                 const updatingBarChart = HSCore.components.HSChartJS.getItem('updatingBarChart')
 
@@ -3568,6 +3571,7 @@
                         }
                     })
                 })
+                }
 
 
                 // INITIALIZATION OF CHARTJS
