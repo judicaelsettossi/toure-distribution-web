@@ -90,6 +90,20 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/factures/impayees', 'FactureController@facturesImpayees');
     $r->addRoute('GET', '/factures/relances', 'FactureController@facturesRelances');
 
+    // Routes pour la gestion des camions
+    $r->addRoute('GET', '/camions', 'CamionController@listeCamions');
+    $r->addRoute('GET', '/camion/{id}', 'CamionController@detailsCamion');
+    $r->addRoute('GET', '/camion/creer', 'CamionController@creerCamion');
+    $r->addRoute('POST', '/camion/creer', 'CamionController@creerCamion');
+    $r->addRoute('GET', '/camion/{id}/modifier', 'CamionController@modifierCamion');
+    $r->addRoute('POST', '/camion/{id}/modifier', 'CamionController@modifierCamion');
+    $r->addRoute('GET', '/camion/{id}/supprimer', 'CamionController@supprimerCamion');
+    $r->addRoute('POST', '/camion/{id}/supprimer', 'CamionController@supprimerCamion');
+    $r->addRoute('GET', '/camions/supprimes', 'CamionController@camionsSupprimes');
+    $r->addRoute('GET', '/camion/{id}/restaurer', 'CamionController@restaurerCamion');
+    $r->addRoute('POST', '/camion/{id}/restaurer', 'CamionController@restaurerCamion');
+    $r->addRoute('GET', '/camions/statistiques', 'CamionController@statistiquesCamions');
+
     // Routes pour l'authentification
     $r->addRoute('GET', '/login', 'AuthController@login');
     $r->addRoute('POST', '/login', 'AuthController@loginPost');

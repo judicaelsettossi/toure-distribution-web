@@ -130,6 +130,22 @@
 
                         <!-- Collapse -->
                         <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesCamions" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesCamions" aria-expanded="false" aria-controls="navbarVerticalMenuPagesCamions">
+                                <i class="bi-truck nav-icon"></i>
+                                <span class="nav-link-title">Gestion des Camions</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesCamions" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/camions">Liste des camions</a>
+                                <a class="nav-link " href="/camion/creer">Nouveau camion</a>
+                                <a class="nav-link " href="/camions/supprimes">Camions supprimés</a>
+                                <a class="nav-link " href="/camions/statistiques">Statistiques</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
                             <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAccountMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAccountMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAccountMenu">
                                 <i class="bi-person-badge nav-icon"></i>
                                 <span class="nav-link-title">Paiement</span>
