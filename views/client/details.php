@@ -471,15 +471,39 @@
 </div>
 
 <script>
-    const clientId = window.location.pathname.split('/').pop();
     let clientData = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-        loadClientDetails();
+        // Extraire l'ID du client depuis l'URL
+        const pathParts = window.location.pathname.split('/');
+        let clientId = null;
+        
+        // Chercher l'ID dans différents formats d'URL
+        if (pathParts.includes('client') && pathParts.length > 2) {
+            const clientIndex = pathParts.indexOf('client');
+            clientId = pathParts[clientIndex + 1];
+        }
+        
+        // Si pas trouvé, essayer la méthode directe
+        if (!clientId) {
+            clientId = pathParts[pathParts.length - 1];
+        }
+        
+        console.log('URL pathname:', window.location.pathname);
+        console.log('Path parts:', pathParts);
+        console.log('Client ID extrait:', clientId);
+        
+        if (!clientId || clientId === 'details') {
+            showError('ID du client manquant dans l\'URL');
+            return;
+        }
+        
+        loadClientDetails(clientId);
     });
 
-    async function loadClientDetails() {
+    async function loadClientDetails(clientId) {
         try {
+            console.log('Chargement des détails pour le client:', clientId);
             const response = await fetch(`https://toure.gestiem.com/api/clients/${clientId}?with_client_type=1`, {
                 headers: {
                     'Accept': 'application/json',
@@ -492,9 +516,13 @@
                 clientData = result.data;
                 displayClientDetails(clientData);
             } else if (response.status === 404) {
-                showError('Client non trouvé');
+                showError(`Client avec l'ID "${clientId}" non trouvé`);
+            } else if (response.status === 401) {
+                window.location.href = '/login';
+                return;
             } else {
-                showError('Erreur lors du chargement des informations');
+                const errorResult = await response.json().catch(() => ({ message: 'Erreur inconnue' }));
+                showError(`Erreur ${response.status}: ${errorResult.message || 'Erreur lors du chargement des informations'}`);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -588,7 +616,8 @@
         if (!confirm(confirmMsg)) return;
 
         try {
-            const response = await fetch(`https://toure.gestiem.com/api/clients/${clientId}/toggle-status`, {
+            const currentClientId = getClientIdFromUrl();
+            const response = await fetch(`https://toure.gestiem.com/api/clients/${currentClientId}/toggle-status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -603,7 +632,7 @@
 
             if (response.ok) {
                 showNotification('success', result.message);
-                loadClientDetails();
+                loadClientDetails(getClientIdFromUrl());
             } else {
                 showNotification('error', result.message || 'Erreur lors de la mise à jour');
             }
@@ -632,7 +661,8 @@
         }
 
         try {
-            const response = await fetch(`https://toure.gestiem.com/api/clients/${clientId}/update-balance`, {
+            const currentClientId = getClientIdFromUrl();
+            const response = await fetch(`https://toure.gestiem.com/api/clients/${currentClientId}/update-balance`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -649,7 +679,7 @@
             if (response.ok) {
                 showNotification('success', result.message);
                 bootstrap.Modal.getInstance(document.getElementById('balanceModal')).hide();
-                loadClientDetails();
+                loadClientDetails(getClientIdFromUrl());
             } else {
                 showNotification('error', result.message || 'Erreur lors de la mise à jour');
             }
@@ -665,7 +695,8 @@
         }
 
         try {
-            const response = await fetch(`https://toure.gestiem.com/api/clients/${clientId}`, {
+            const currentClientId = getClientIdFromUrl();
+            const response = await fetch(`https://toure.gestiem.com/api/clients/${currentClientId}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -689,15 +720,24 @@
     }
 
     function editClient() {
-        window.location.href = `/client/${clientId}/modifier`;
+        window.location.href = `/client/${getClientIdFromUrl()}/modifier`;
     }
 
     function createInvoice() {
-        window.location.href = `/nouvelle-facture?client_id=${clientId}`;
+        window.location.href = `/nouvelle-facture?client_id=${getClientIdFromUrl()}`;
     }
 
     function createDelivery() {
-        window.location.href = `/nouvelle-livraison?client_id=${clientId}`;
+        window.location.href = `/nouvelle-livraison?client_id=${getClientIdFromUrl()}`;
+    }
+
+    function getClientIdFromUrl() {
+        const pathParts = window.location.pathname.split('/');
+        if (pathParts.includes('client') && pathParts.length > 2) {
+            const clientIndex = pathParts.indexOf('client');
+            return pathParts[clientIndex + 1];
+        }
+        return pathParts[pathParts.length - 1];
     }
 
     function getInitials(name) {
@@ -759,9 +799,14 @@
         document.getElementById('loadingState').innerHTML = `
         <i class="bi-exclamation-triangle fs-1 text-danger"></i>
         <p class="mt-3 text-danger">${message}</p>
-        <button class="btn btn-primary-custom" onclick="loadClientDetails()">
-            Réessayer
-        </button>
+        <div class="d-flex gap-2 justify-content-center">
+            <button class="btn btn-primary-custom" onclick="location.reload()">
+                <i class="bi-arrow-clockwise me-1"></i> Réessayer
+            </button>
+            <button class="btn btn-outline-secondary" onclick="window.location.href='/liste-client'">
+                <i class="bi-arrow-left me-1"></i> Retour à la liste
+            </button>
+        </div>
     `;
     }
 </script>

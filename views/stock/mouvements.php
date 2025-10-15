@@ -205,24 +205,96 @@
         letter-spacing: 0.5px;
     }
 
-    .movement-type.in {
+    .movement-type.entrée, .movement-type.in {
         background: rgba(16, 185, 129, 0.1);
         color: var(--success-color);
     }
 
-    .movement-type.out {
+    .movement-type.sortie, .movement-type.out {
         background: rgba(239, 68, 68, 0.1);
         color: var(--danger-color);
     }
 
-    .movement-type.transfer {
+    .movement-type.transfert, .movement-type.transfer {
         background: rgba(59, 130, 246, 0.1);
         color: var(--info-color);
     }
 
-    .movement-type.adjustment {
+    .movement-type.ajustement, .movement-type.adjustment {
         background: rgba(245, 158, 11, 0.1);
         color: var(--warning-color);
+    }
+
+    /* Status badges */
+    .status-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+    }
+
+    .status-completed {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .status-cancelled {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+    }
+
+    /* Movement details */
+    .movement-details {
+        max-width: 200px;
+    }
+
+    .detail-item {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+        color: #6b7280;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-action {
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-view {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--info-color);
+    }
+
+    .btn-view:hover {
+        background: var(--info-color);
+        color: white;
+    }
+
+    .btn-edit {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+    }
+
+    .btn-edit:hover {
+        background: var(--warning-color);
+        color: white;
     }
 
     /* Product info */
@@ -477,16 +549,26 @@
                 <label class="filter-label">Type de mouvement</label>
                 <select id="movementTypeFilter" class="filter-control">
                     <option value="">Tous les types</option>
-                    <option value="in">Entrées</option>
-                    <option value="out">Sorties</option>
-                    <option value="transfer">Transferts</option>
-                    <option value="adjustment">Ajustements</option>
+                    <option value="entrée">Entrées</option>
+                    <option value="sortie">Sorties</option>
+                    <option value="transfert">Transferts</option>
+                    <option value="ajustement">Ajustements</option>
                 </select>
             </div>
             
             <div class="filter-group">
-                <label class="filter-label">Produit</label>
-                <input type="text" id="productFilter" class="filter-control" placeholder="Rechercher un produit...">
+                <label class="filter-label">Statut</label>
+                <select id="statusFilter" class="filter-control">
+                    <option value="">Tous les statuts</option>
+                    <option value="pending">En attente</option>
+                    <option value="completed">Terminé</option>
+                    <option value="cancelled">Annulé</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Recherche</label>
+                <input type="text" id="searchFilter" class="filter-control" placeholder="Rechercher par référence...">
             </div>
             
             <div class="filter-group">
@@ -541,13 +623,12 @@
             <table class="table-modern">
                 <thead>
                     <tr>
-                        <th>Date/Heure</th>
-                        <th>Type</th>
-                        <th>Produit</th>
-                        <th>Quantité</th>
-                        <th>Motif</th>
                         <th>Référence</th>
-                        <th>Utilisateur</th>
+                        <th>Type</th>
+                        <th>Statut</th>
+                        <th>Date/Heure</th>
+                        <th>Détails</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="movementsTableBody">
@@ -598,7 +679,8 @@
     function setupEventListeners() {
         // Filtres
         document.getElementById('movementTypeFilter').addEventListener('change', applyFilters);
-        document.getElementById('productFilter').addEventListener('input', debounce(applyFilters, 300));
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('searchFilter').addEventListener('input', debounce(applyFilters, 300));
         document.getElementById('startDateFilter').addEventListener('change', applyFilters);
         document.getElementById('endDateFilter').addEventListener('change', applyFilters);
     }
@@ -612,7 +694,35 @@
                 return;
             }
 
-            const response = await fetch('https://toure.gestiem.com/api/stock/movements?per_page=1000', {
+            // Construire les paramètres de requête basés sur les filtres
+            const params = new URLSearchParams();
+            params.append('per_page', perPage);
+            params.append('page', currentPage);
+            
+            // Ajouter les filtres depuis l'URL PHP
+            <?php if (!empty($filters['movement_type'])): ?>
+            params.append('movement_type', '<?php echo htmlspecialchars($filters['movement_type']); ?>');
+            <?php endif; ?>
+            <?php if (!empty($filters['statut'])): ?>
+            params.append('statut', '<?php echo htmlspecialchars($filters['statut']); ?>');
+            <?php endif; ?>
+            <?php if (!empty($filters['search'])): ?>
+            params.append('search', '<?php echo htmlspecialchars($filters['search']); ?>');
+            <?php endif; ?>
+            <?php if (!empty($filters['date_from'])): ?>
+            params.append('date_from', '<?php echo htmlspecialchars($filters['date_from']); ?>');
+            <?php endif; ?>
+            <?php if (!empty($filters['date_to'])): ?>
+            params.append('date_to', '<?php echo htmlspecialchars($filters['date_to']); ?>');
+            <?php endif; ?>
+            <?php if (!empty($filters['sort_by'])): ?>
+            params.append('sort_by', '<?php echo htmlspecialchars($filters['sort_by']); ?>');
+            <?php endif; ?>
+            <?php if (!empty($filters['sort_order'])): ?>
+            params.append('sort_order', '<?php echo htmlspecialchars($filters['sort_order']); ?>');
+            <?php endif; ?>
+
+            const response = await fetch(`https://toure.gestiem.com/api/stock-movements?${params.toString()}`, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Accept': 'application/json'
@@ -621,12 +731,24 @@
 
             if (response.ok) {
                 const result = await response.json();
-                movements = result.data || [];
+                console.log('Réponse API mouvements:', result);
+                
+                // Gérer la structure de réponse avec pagination
+                if (result.data && result.data.data) {
+                    movements = result.data.data || [];
+                    totalPages = Math.ceil(result.data.total / perPage);
+                } else {
+                    movements = result.data || [];
+                }
+                
                 applyFilters();
                 
                 document.getElementById('loadingContainer').style.display = 'none';
                 document.getElementById('dataTableContainer').style.display = 'block';
             } else {
+                console.error('Erreur API:', response.status, response.statusText);
+                const errorResult = await response.json();
+                console.error('Détails erreur:', errorResult);
                 throw new Error('Erreur lors du chargement des mouvements');
             }
         } catch (error) {
@@ -638,18 +760,24 @@
 
     function applyFilters() {
         const typeFilter = document.getElementById('movementTypeFilter').value;
-        const productFilter = document.getElementById('productFilter').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilter').value;
+        const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
         const startDate = document.getElementById('startDateFilter').value;
         const endDate = document.getElementById('endDateFilter').value;
 
         filteredMovements = movements.filter(movement => {
             // Filtre par type
-            if (typeFilter && movement.type !== typeFilter) {
+            if (typeFilter && movement.movement_type !== typeFilter) {
                 return false;
             }
 
-            // Filtre par produit
-            if (productFilter && !movement.product?.name?.toLowerCase().includes(productFilter)) {
+            // Filtre par statut
+            if (statusFilter && movement.statut !== statusFilter) {
+                return false;
+            }
+
+            // Filtre par recherche (référence)
+            if (searchFilter && !movement.reference?.toLowerCase().includes(searchFilter)) {
                 return false;
             }
 
@@ -690,21 +818,42 @@
 
         tbody.innerHTML = movementsToShow.map(movement => `
             <tr>
+                <td class="reference-cell">
+                    <strong>${movement.reference || 'N/A'}</strong>
+                </td>
+                <td>
+                    <span class="movement-type ${movement.movement_type?.toLowerCase() || 'default'}">
+                        ${getMovementTypeLabel(movement.movement_type)}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge status-${movement.statut || 'pending'}">
+                        ${getStatusLabel(movement.statut)}
+                    </span>
+                </td>
                 <td class="date-cell">${formatDateTime(movement.created_at)}</td>
-                <td><span class="movement-type ${movement.type}">${getMovementTypeLabel(movement.type)}</span></td>
-                <td class="product-info-cell">
-                    ${movement.product?.picture ? `<img src="https://toure.gestiem.com/storage/${movement.product.picture}" class="product-image-small" alt="Image produit">` : ''}
-                    <div class="product-details-small">
-                        <h6>${movement.product?.name || 'Produit supprimé'}</h6>
-                        <small>Code: ${movement.product?.code || 'N/A'}</small>
+                <td class="details-cell">
+                    <div class="movement-details">
+                        ${movement.details ? movement.details.map(detail => `
+                            <div class="detail-item">
+                                <strong>${detail.product?.name || 'Produit'}:</strong> 
+                                ${detail.quantity || 0} unités
+                            </div>
+                        `).join('') : 'Aucun détail'}
                     </div>
                 </td>
-                <td class="quantity-cell ${movement.type === 'in' ? 'positive' : 'negative'}">
-                    ${movement.type === 'in' ? '+' : '-'}${movement.quantity}
+                <td class="actions-cell">
+                    <div class="action-buttons">
+                        <a href="/mouvement-stock/${movement.stock_movement_id || movement.id}" 
+                           class="btn-action btn-view" title="Voir les détails">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="/modifier-mouvement-stock/${movement.stock_movement_id || movement.id}" 
+                           class="btn-action btn-edit" title="Modifier">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </div>
                 </td>
-                <td>${movement.reason || '-'}</td>
-                <td>${movement.reference || '-'}</td>
-                <td>${movement.user?.name || 'Système'}</td>
             </tr>
         `).join('');
     }
@@ -763,7 +912,8 @@
 
     function resetFilters() {
         document.getElementById('movementTypeFilter').value = '';
-        document.getElementById('productFilter').value = '';
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('searchFilter').value = '';
         
         // Réinitialiser les dates
         const endDate = new Date();
@@ -791,12 +941,25 @@
 
     function getMovementTypeLabel(type) {
         const labels = {
+            'entrée': 'Entrée',
+            'sortie': 'Sortie',
+            'transfert': 'Transfert',
+            'ajustement': 'Ajustement',
             'in': 'Entrée',
             'out': 'Sortie',
             'transfer': 'Transfert',
             'adjustment': 'Ajustement'
         };
         return labels[type] || type;
+    }
+
+    function getStatusLabel(status) {
+        const labels = {
+            'pending': 'En attente',
+            'completed': 'Terminé',
+            'cancelled': 'Annulé'
+        };
+        return labels[status] || status;
     }
 
     function formatDateTime(dateString) {

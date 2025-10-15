@@ -25,6 +25,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/client/ajouter', 'ClientController@addClient');
     $r->addRoute('GET', '/liste-client', 'ClientController@listeClient');
     $r->addRoute('GET', '/client/{id}/details', 'ClientController@detailsClient');
+    $r->addRoute('GET', '/client/{id}/modifier', 'ClientController@editClient');
 
     // Routes pour les produits
     $r->addRoute('GET', '/produit/ajouter', 'ProduitController@produitAdd');
@@ -39,14 +40,55 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     // Routes pour la gestion de stock
     $r->addRoute('GET', '/entree-sortie-stock', 'StockController@stockEntry');
     $r->addRoute('GET', '/stock/mouvements', 'StockController@stockMovements');
+    $r->addRoute('GET', '/mouvements-stock', 'StockController@stockMovements');
     $r->addRoute('GET', '/stock/entree', 'StockController@stockIn');
     $r->addRoute('GET', '/stock/sortie', 'StockController@stockOut');
+    $r->addRoute('GET', '/stock/gestion', 'StockController@stockManagement');
+    $r->addRoute('GET', '/stock/mouvement/{id}/details', 'StockController@stockMovementDetails');
+    $r->addRoute('GET', '/mouvement-stock/{id}', 'StockController@stockMovementDetails');
+    
+    // Routes pour créer et modifier les mouvements de stock
+    $r->addRoute('GET', '/creer-mouvement-stock', 'StockController@createStockMovement');
+    $r->addRoute('POST', '/creer-mouvement-stock', 'StockController@createStockMovement');
+    $r->addRoute('GET', '/modifier-mouvement-stock/{id}', 'StockController@updateStockMovement');
+    $r->addRoute('POST', '/modifier-mouvement-stock/{id}', 'StockController@updateStockMovement');
+    
+    // Routes spécialisées pour les mouvements de stock
+    $r->addRoute('GET', '/transfert-entrepot', 'StockController@createWarehouseTransfer');
+    $r->addRoute('POST', '/transfert-entrepot', 'StockController@createWarehouseTransfer');
+    $r->addRoute('GET', '/reception-fournisseur', 'StockController@createSupplierReceipt');
+    $r->addRoute('POST', '/reception-fournisseur', 'StockController@createSupplierReceipt');
+    
+    // Routes pour les types de mouvements de stock
+    $r->addRoute('GET', '/stock/types-mouvements', 'StockController@stockMovementTypes');
+    $r->addRoute('GET', '/stock/type-mouvement/creer', 'StockController@createMovementType');
+    $r->addRoute('GET', '/stock/type-mouvement/{id}/edit', 'StockController@editMovementType');
+    
+    // Routes pour la gestion avancée des stocks
+    $r->addRoute('GET', '/stock/par-produit', 'StockController@stockByProduct');
+    $r->addRoute('GET', '/stock/par-produit/{id}', 'StockController@stockByProduct');
+    $r->addRoute('GET', '/stock/par-entrepot', 'StockController@stockByWarehouse');
+    $r->addRoute('GET', '/stock/par-entrepot/{id}', 'StockController@stockByWarehouse');
+    $r->addRoute('GET', '/stock/ajustement', 'StockController@stockAdjustment');
+    $r->addRoute('GET', '/stock/reservation', 'StockController@stockReservation');
 
     // Routes pour la gestion des fournisseurs
     $r->addRoute('GET', '/fournisseurs', 'FournisseurController@listeFournisseurs');
     $r->addRoute('GET', '/fournisseur/ajouter', 'FournisseurController@addFournisseur');
     $r->addRoute('GET', '/fournisseur/{id}/details', 'FournisseurController@detailsFournisseur');
     $r->addRoute('GET', '/fournisseur/{id}/edit', 'FournisseurController@editFournisseur');
+
+    // Routes pour les transferts entre entrepôts
+    $r->addRoute('GET', '/entrepot/transfert', 'EntrepotController@transfertEntrepot');
+
+    // Routes pour la gestion des factures
+    $r->addRoute('GET', '/factures', 'FactureController@listeFactures');
+    $r->addRoute('GET', '/facture/creer', 'FactureController@createFacture');
+    $r->addRoute('GET', '/facture/{id}/details', 'FactureController@detailsFacture');
+    $r->addRoute('GET', '/facture/{id}/edit', 'FactureController@editFacture');
+    $r->addRoute('GET', '/factures/statistiques', 'FactureController@statisticsFactures');
+    $r->addRoute('GET', '/factures/impayees', 'FactureController@facturesImpayees');
+    $r->addRoute('GET', '/factures/relances', 'FactureController@facturesRelances');
 
     // Routes pour l'authentification
     $r->addRoute('GET', '/login', 'AuthController@login');

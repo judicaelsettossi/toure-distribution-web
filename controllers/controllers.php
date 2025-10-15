@@ -7,3 +7,4 @@ require 'produit-controller.php';
 require 'entrepot-controller.php';
 require 'stock-controller.php';
 require 'fournisseur-controller.php';
+require 'facture-controller.php';

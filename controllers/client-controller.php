@@ -57,10 +57,32 @@ class ClientController
             $username = $_COOKIE['username'];
             $email = $_COOKIE['email'];
             $is_active = $_COOKIE['is_active'];
-            $last_login_at = $_COOKIE['last_login_at'];
+            $last_login_at = $_COOKIE['last_login_at'] ?? null;
             $access_token = $_COOKIE['access_token'];
 
             require './views/client/details.php';
+            exit();
+        } else {
+            header('Location: /login');
+            exit();
+        }
+    }
+
+    public function editClient($id)
+    {
+        $connected = (isset($_COOKIE['connected'])) ? true : false;
+
+        if ($connected) {
+            $user_id = $_COOKIE['user_id'];
+            $firstname = $_COOKIE['firstname'];
+            $lastname = $_COOKIE['lastname'];
+            $username = $_COOKIE['username'];
+            $email = $_COOKIE['email'];
+            $is_active = $_COOKIE['is_active'];
+            $last_login_at = $_COOKIE['last_login_at'] ?? null;
+            $access_token = $_COOKIE['access_token'];
+
+            require './views/client/edit.php';
             exit();
         } else {
             header('Location: /login');

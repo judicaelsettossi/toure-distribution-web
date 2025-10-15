@@ -822,17 +822,20 @@
             const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
             
             const formData = {
-                product_id: selectedProduct.id,
-                type: 'out',
-                quantity: quantity,
-                unit_price: parseFloat(document.getElementById('unitPrice').value) || null,
-                out_date: document.getElementById('outDate').value,
-                recipient: document.getElementById('recipient').value,
-                reason: document.getElementById('reason').value,
-                notes: document.getElementById('notes').value
+                movement_type: 'sortie',
+                entrepot_from_id: selectedWarehouse?.id || null,
+                client_id: selectedClient?.id || null,
+                note: document.getElementById('notes').value || null,
+                details: [
+                    {
+                        product_id: selectedProduct.id,
+                        quantite: quantity,
+                        prix_unitaire: parseFloat(document.getElementById('unitPrice').value) || null
+                    }
+                ]
             };
 
-            const response = await fetch('https://toure.gestiem.com/api/stock/movements', {
+            const response = await fetch('https://toure.gestiem.com/api/stock-movements', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

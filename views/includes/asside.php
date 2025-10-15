@@ -87,6 +87,7 @@
                             <div id="navbarVerticalMenuPagesEntrepot" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesEntrepot">
                                 <a class="nav-link " href="/creer-un-entrepot">Créer un entrepôt</a>
                                 <a class="nav-link " href="/entrepots">Liste des entrepôt</a>
+                                <a class="nav-link " href="/entrepot/transfert">Transfert entre entrepôts</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
@@ -114,9 +115,15 @@
 
                             <div id="navbarVerticalMenuPagesStock" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                 <a class="nav-link " href="/entree-sortie-stock">Tableau de bord</a>
+                                <a class="nav-link " href="/stock/gestion">Gestion des stocks</a>
                                 <a class="nav-link " href="/stock/entree">Entrée de stock</a>
                                 <a class="nav-link " href="/stock/sortie">Sortie de stock</a>
                                 <a class="nav-link " href="/stock/mouvements">Mouvements</a>
+                                <a class="nav-link " href="/stock/types-mouvements">Types de mouvements</a>
+                                <a class="nav-link " href="/stock/par-produit">Stocks par produit</a>
+                                <a class="nav-link " href="/stock/par-entrepot">Stocks par entrepôt</a>
+                                <a class="nav-link " href="/stock/ajustement">Ajustements</a>
+                                <a class="nav-link " href="/stock/reservation">Réservations</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
