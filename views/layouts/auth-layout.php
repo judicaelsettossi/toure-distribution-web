@@ -202,7 +202,7 @@
     </script>
 </head>
 
-<body class="d-flex align-items-center min-h-100">
+<body class="d-flex align-items-center min-h-100 no-scrollbar">
 
     <script src="/assets/js/hs.theme-appearance.js"></script>
 

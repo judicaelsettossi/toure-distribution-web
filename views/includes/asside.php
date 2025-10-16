@@ -55,8 +55,20 @@
                             <div id="navbarVerticalMenuPagesUsersMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                 <a class="nav-link " href="/client/ajouter">Créer un client</a>
                                 <a class="nav-link " href="/liste-client">Liste des clients</a>
-                                <a class="nav-link " href="/clients/fidelite">Programme de fidélité</a>
-                                <a class="nav-link " href="/clients/statistiques">Statistiques</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesFournisseurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesFournisseurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesFournisseurs">
+                                <i class="bi-truck nav-icon"></i>
+                                <span class="nav-link-title">Fournisseurs</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesFournisseurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/fournisseurs">Liste des fournisseurs</a>
+                                <a class="nav-link " href="/fournisseur/ajouter">Créer un fournisseur</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
@@ -88,20 +100,6 @@
                                 <a class="nav-link " href="/creer-un-entrepot">Créer un entrepôt</a>
                                 <a class="nav-link " href="/entrepots">Liste des entrepôt</a>
                                 <a class="nav-link " href="/entrepot/transfert">Transfert entre entrepôts</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesFournisseurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesFournisseurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesFournisseurs">
-                                <i class="bi-truck nav-icon"></i>
-                                <span class="nav-link-title">Fournisseurs</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesFournisseurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/fournisseurs">Liste des fournisseurs</a>
-                                <a class="nav-link " href="/fournisseur/ajouter">Créer un fournisseur</a>
                             </div>
                         </div>
                         <!-- End Collapse -->

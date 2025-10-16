@@ -33,12 +33,21 @@
         background-color: var(--primary-color);
         border-color: var(--primary-color);
         color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
     }
 
     .btn-primary-custom:hover {
         background-color: #d1036d;
         border-color: #d1036d;
         color: white;
+        transform: translateY(-1px);
     }
 
     .card-custom {
@@ -49,6 +58,8 @@
 
     .form-group-modern {
         margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
     }
 
     .form-label-modern {
@@ -56,6 +67,8 @@
         color: var(--secondary-color);
         margin-bottom: 0.5rem;
         font-size: 0.9rem;
+        display: block;
+        width: 100%;
     }
 
     .label-required::after {
@@ -198,6 +211,14 @@
         background-color: transparent;
         color: var(--primary-color);
         border: 2px solid var(--primary-color);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.3s ease;
     }
 
     .btn-outline-modern:hover {
@@ -211,6 +232,14 @@
         background-color: #6c757d;
         color: white;
         border: 2px solid #6c757d;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.3s ease;
     }
 
     .btn-secondary-modern:hover {
@@ -254,14 +283,32 @@
 
     .form-section {
         background: #fff;
-        border-radius: 8px;
+        border-radius: 12px;
         box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
         margin-bottom: 2rem;
         overflow: hidden;
+        border: 1px solid #e9ecef;
     }
 
     .form-section .card-body {
-        padding: 1.5rem;
+        padding: 2rem;
+    }
+
+    .form-section .card-header {
+        background: linear-gradient(135deg, var(--light-primary) 0%, #f8f9fa 100%);
+        border-bottom: 1px solid #e9ecef;
+        padding: 1.25rem 2rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-section .card-title {
+        font-weight: 600;
+        color: var(--secondary-color);
+        font-size: 1.1rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
     }
 
     .text-muted-custom {
@@ -271,19 +318,25 @@
 
     .client-types-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
         margin-top: 1rem;
+        align-items: stretch;
     }
 
     .client-type-card {
         border: 2px solid #e9ecef;
-        border-radius: 8px;
-        padding: 1rem;
+        border-radius: 12px;
+        padding: 1.5rem 1rem;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
         background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 140px;
     }
 
     .client-type-card:hover {
@@ -302,20 +355,30 @@
     }
 
     .client-type-icon {
-        font-size: 2rem;
+        font-size: 2.5rem;
         color: var(--primary-color);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .client-type-name {
         font-weight: 600;
         color: var(--secondary-color);
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.2;
     }
 
     .client-type-description {
         font-size: 0.875rem;
         color: #6c757d;
+        line-height: 1.4;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
     }
 
     @media (max-width: 768px) {
@@ -646,11 +709,20 @@
 
     async function loadClientData(clientId) {
         try {
+            // Récupérer le token d'authentification
+            const accessToken = localStorage.getItem('access_token');
+            
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+            
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+            
             const response = await fetch(`https://toure.gestiem.com/api/clients/${clientId}?with_client_type=1`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
+                headers: headers
             });
 
             if (response.ok) {
@@ -691,7 +763,12 @@
         
         // Sélectionner le type de client
         if (client.client_type_id) {
-            selectClientType(getClientTypeName(client.client_type_id));
+            const typeName = getClientTypeName(client.client_type_id);
+            if (typeName) {
+                selectClientType(typeName);
+            } else {
+                console.warn('Type de client non reconnu:', client.client_type_id);
+            }
         }
     }
 
@@ -706,17 +783,32 @@
     }
 
     function selectClientType(typeName) {
+        // Vérifier que typeName n'est pas vide
+        if (!typeName || typeName.trim() === '') {
+            console.warn('Type de client vide ou invalide:', typeName);
+            return;
+        }
+        
         // Désélectionner tous les types
         document.querySelectorAll('.client-type-card').forEach(card => {
             card.classList.remove('selected');
         });
         
+        // Vérifier que l'élément existe avant de le sélectionner
+        const element = document.getElementById(typeName);
+        if (!element) {
+            console.warn('Élément non trouvé pour le type:', typeName);
+            return;
+        }
+        
         // Sélectionner le type choisi
-        const selectedCard = document.querySelector(`#${typeName}`).closest('.client-type-card');
-        selectedCard.classList.add('selected');
+        const selectedCard = element.closest('.client-type-card');
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+        }
         
         // Cocher la radio
-        document.getElementById(typeName).checked = true;
+        element.checked = true;
     }
 
     function setupEventListeners() {
@@ -831,12 +923,21 @@
             
             console.log('Données à envoyer:', data);
             
+            // Récupérer le token d'authentification
+            const accessToken = localStorage.getItem('access_token');
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+            
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+            
             const response = await fetch(`https://toure.gestiem.com/api/clients/${clientId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: headers,
                 body: JSON.stringify(data)
             });
             

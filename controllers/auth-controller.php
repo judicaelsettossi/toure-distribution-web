@@ -32,10 +32,46 @@ class AuthController
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        
         $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
         curl_close($ch);
+        
+        // Logs pour le debugging
+        error_log("Code HTTP: " . $httpCode);
+        error_log("Erreur cURL: " . $curlError);
+        error_log("Réponse brute: " . $response);
 
+        // Vérifier s'il y a une erreur cURL
+        if ($curlError) {
+            error_log("Erreur cURL: " . $curlError);
+            header("Location: /login?error=connection");
+            exit;
+        }
+        
+        // Vérifier si la réponse est valide
+        if (!$response) {
+            error_log("Aucune réponse de l'API");
+            header("Location: /login?error=no_response");
+            exit;
+        }
+        
         $result = json_decode($response, true);
+        
+        // Vérifier si le JSON est valide
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log("Erreur de décodage JSON: " . json_last_error_msg());
+            error_log("Réponse brute: " . $response);
+            header("Location: /login?error=json_decode");
+            exit;
+        }
+        
+        // Logs pour le debugging
+        error_log("Réponse API de connexion: " . $response);
+        error_log("Résultat décodé: " . print_r($result, true));
 
         if ($result['success'] ?? false) {
             $user = $result['data']['user'];
@@ -52,10 +88,13 @@ class AuthController
             setcookie("access_token", $token, time() + (30 * 24 * 60 * 60), "/");
             setcookie("token_type", $result['data']['token_type'], time() + (30 * 24 * 60 * 60), "/");
 
+            error_log("Connexion réussie, redirection vers /");
             header("Location: /");
             exit;
         } else {
-            header("Location: /login");
+            $errorMessage = $result['message'] ?? 'Erreur de connexion';
+            error_log("Échec de la connexion: " . $errorMessage);
+            header("Location: /login?error=invalid_credentials&message=" . urlencode($errorMessage));
             exit;
         }
     }

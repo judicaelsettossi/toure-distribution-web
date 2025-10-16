@@ -1,30 +1,60 @@
 <?php ob_start(); ?>
 
+<style>
+    /* Cacher les barres de défilement mais conserver le scroll */
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    html,
+    body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('changePassTarget');
+    const passwordInput = document.getElementById('signupSrPassword');
+    const passwordIcon = document.getElementById('changePassIcon');
+    
+    if (togglePassword && passwordInput && passwordIcon) {
+        togglePassword.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.className = 'bi-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.className = 'bi-eye';
+            }
+        });
+    }
+});
+</script>
+
 <!-- ========== HEADER ========== -->
 <header class="position-absolute top-0 start-0 end-0 mt-3 mx-3">
-    <div class="d-flex d-lg-none justify-content-between">
+    <div class="d-flex d-lg-none justify-content-center">
         <a href="/">
             <img class="w-100" src="/assets/svg/logos/logo.png" alt="Logo" style="min-width: 7rem; max-width: 7rem;">
         </a>
-
-        <!-- Select -->
-        <div class="tom-select-custom tom-select-custom-end zi-2">
-            <select class="js-select form-select form-select-sm form-select-borderless" data-hs-tom-select-options='{
-                  "searchInDropdown": false,
-                  "hideSearch": true,
-                  "dropdownWidth": "12rem",
-                  "placeholder": "Pays"
-                }'>
-                <option label="empty"></option>
-                <option value="language1"
-                    data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="/assets/vendor/flag-icon-css/flags/1x1/bj.svg" width="16"/><span>Benin (BJ)</span></span>'>
-                    Benin (BJ)</option>
-                <option value="language2" selected
-                    data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="/assets/vendor/flag-icon-css/flags/1x1/bj.svg" width="16"/><span>Benin (BJ)</span></span>'>
-                    Benin (BJ)</option>
-            </select>
-        </div>
-        <!-- End Select -->
     </div>
 </header>
 <!-- ========== END HEADER ========== -->
@@ -85,6 +115,31 @@
                             <p>Vous n'avez pas de compte? <a class="link" href="/register" style="color: #f00480;">Créer
                                     un compte</a></p>
                         </div>
+
+                        <!-- Messages d'erreur -->
+                        <?php if (isset($_GET['error'])): ?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php
+                                switch ($_GET['error']) {
+                                    case 'connection':
+                                        echo 'Erreur de connexion au serveur. Veuillez réessayer.';
+                                        break;
+                                    case 'no_response':
+                                        echo 'Aucune réponse du serveur. Veuillez réessayer.';
+                                        break;
+                                    case 'json_decode':
+                                        echo 'Erreur de traitement des données. Veuillez réessayer.';
+                                        break;
+                                    case 'invalid_credentials':
+                                        $message = $_GET['message'] ?? 'Identifiants incorrects.';
+                                        echo htmlspecialchars($message);
+                                        break;
+                                    default:
+                                        echo 'Erreur de connexion. Veuillez réessayer.';
+                                }
+                                ?>
+                            </div>
+                        <?php endif; ?>
 
                         <!-- Email -->
                         <div class="mb-4">

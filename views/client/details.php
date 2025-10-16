@@ -48,7 +48,7 @@
     }
 
     .client-header {
-        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, #d1036d 100%);
         color: white;
         padding: 2rem;
         border-radius: 12px 12px 0 0;
@@ -108,6 +108,7 @@
         font-size: 0.875rem;
     }
 
+
     .badge-type {
         padding: 0.5rem 1rem;
         border-radius: 8px;
@@ -135,20 +136,6 @@
         color: #d32f2f;
     }
 
-    .action-card {
-        border: 2px dashed #e9ecef;
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .action-card:hover {
-        border-color: var(--primary-color);
-        background-color: var(--light-primary);
-        transform: translateY(-3px);
-    }
 
     .section-coming-soon {
         opacity: 0.5;
@@ -187,6 +174,85 @@
         font-size: 0.875rem;
         color: #6c757d;
         margin-top: 0.5rem;
+    }
+
+    /* Modal de confirmation de suppression */
+    .modal-content {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 16px 16px 0 0;
+    }
+
+    .modal-title {
+        font-weight: 600;
+        color: #dc3545;
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .modal-footer {
+        padding: 1rem 2rem 2rem;
+    }
+
+    .modal-footer .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .modal-footer .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .modal-footer .btn-danger:hover {
+        background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    }
+
+    .modal-footer .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .modal-footer .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    /* Modal de toggle status */
+    .modal-footer .btn-success {
+        background: linear-gradient(135deg, #198754 0%, #157347 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+    }
+
+    .modal-footer .btn-success:hover {
+        background: linear-gradient(135deg, #157347 0%, #146c43 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+    }
+
+    .modal-footer .btn-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    .modal-footer .btn-warning:hover {
+        background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
     }
 </style>
 
@@ -323,14 +389,14 @@
                     <div class="card card-custom mb-4 section-coming-soon">
                         <div class="card-header">
                             <h5 class="card-title mb-0">
-                                <i class="bi-clock-history me-2"></i>
-                                Historique des Factures
+                                <i class="bi-credit-card me-2"></i>
+                                Historique des Paiements
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="text-center text-muted py-4">
-                                <i class="bi-receipt fs-1"></i>
-                                <p class="mt-2">Aucune facture disponible</p>
+                                <i class="bi-credit-card fs-1"></i>
+                                <p class="mt-2">Aucun paiement disponible</p>
                             </div>
                         </div>
                     </div>
@@ -388,10 +454,6 @@
                         </div>
                         <div class="card-body">
                             <div class="stat-box mb-3">
-                                <div class="stat-value">0</div>
-                                <div class="stat-label">Factures Totales</div>
-                            </div>
-                            <div class="stat-box mb-3">
                                 <div class="stat-value">0 FCFA</div>
                                 <div class="stat-label">Chiffre d'Affaires</div>
                             </div>
@@ -402,25 +464,6 @@
                         </div>
                     </div>
 
-                    <!-- Actions Rapides -->
-                    <div class="card card-custom mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi-lightning me-2 text-primary-custom"></i>
-                                Actions Rapides
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="action-card mb-3" onclick="createInvoice()">
-                                <i class="bi-receipt fs-1 text-primary-custom"></i>
-                                <h6 class="mt-2 mb-0">Nouvelle Facture</h6>
-                            </div>
-                            <div class="action-card" onclick="createDelivery()">
-                                <i class="bi-truck fs-1 text-primary-custom"></i>
-                                <h6 class="mt-2 mb-0">Nouvelle Livraison</h6>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -605,16 +648,49 @@
         document.getElementById('createdAt').textContent = createdDate.toLocaleDateString('fr-FR');
     }
 
-    async function toggleClientStatus() {
+    function toggleClientStatus() {
         if (!clientData) return;
 
         const newStatus = !clientData.is_active;
-        const confirmMsg = newStatus ?
-            'Voulez-vous activer ce client ?' :
-            'Voulez-vous désactiver ce client ?';
+        const isActivating = newStatus;
+        
+        // Mettre à jour le contenu de la modal
+        document.getElementById('toggleStatusTitle').textContent = isActivating ? 'Activer le client' : 'Désactiver le client';
+        document.getElementById('toggleStatusMessage').textContent = isActivating ? 
+            'Êtes-vous sûr de vouloir activer ce client ?' : 
+            'Êtes-vous sûr de vouloir désactiver ce client ?';
+        document.getElementById('toggleClientName').textContent = clientData.name_client;
+        document.getElementById('toggleStatusInfo').textContent = isActivating ? 
+            'Le client pourra à nouveau effectuer des commandes et accéder à ses services.' :
+            'Le client ne pourra plus effectuer de commandes ni accéder à ses services.';
+        document.getElementById('toggleConfirmText').textContent = isActivating ? 'Activer' : 'Désactiver';
+        
+        // Changer l'icône selon l'action
+        const icon = document.getElementById('toggleStatusIcon');
+        icon.className = isActivating ? 'bi-toggle-on text-success' : 'bi-toggle-off text-danger';
+        
+        // Changer la couleur du cercle de fond
+        const circle = icon.parentElement;
+        circle.className = isActivating ? 
+            'bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3' :
+            'bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3';
+        
+        // Changer la couleur du bouton
+        const confirmBtn = document.getElementById('confirmToggleBtn');
+        confirmBtn.className = isActivating ? 'btn btn-success' : 'btn btn-danger';
+        
+        // Afficher la modal
+        const modal = new bootstrap.Modal(document.getElementById('toggleStatusModal'));
+        modal.show();
+        
+        // Ajouter l'événement de confirmation
+        document.getElementById('confirmToggleBtn').onclick = async function() {
+            modal.hide();
+            await performToggleStatus(newStatus);
+        };
+    }
 
-        if (!confirm(confirmMsg)) return;
-
+    async function performToggleStatus(newStatus) {
         try {
             const currentClientId = getClientIdFromUrl();
             const response = await fetch(`https://toure.gestiem.com/api/clients/${currentClientId}/toggle-status`, {
@@ -688,12 +764,24 @@
         }
     }
 
-    async function confirmDeleteClient() {
-        if (!confirm(
-                `Êtes-vous sûr de vouloir supprimer ${clientData.name_client} ?\n\nCette action est irréversible.`)) {
-            return;
-        }
+    function confirmDeleteClient() {
+        if (!clientData) return;
+        
+        // Afficher le nom du client dans la modal
+        document.getElementById('deleteClientName').textContent = clientData.name_client;
+        
+        // Afficher la modal
+        const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        modal.show();
+        
+        // Ajouter l'événement de confirmation
+        document.getElementById('confirmDeleteBtn').onclick = async function() {
+            modal.hide();
+            await deleteClient();
+        };
+    }
 
+    async function deleteClient() {
         try {
             const currentClientId = getClientIdFromUrl();
             const response = await fetch(`https://toure.gestiem.com/api/clients/${currentClientId}`, {
@@ -723,13 +811,6 @@
         window.location.href = `/client/${getClientIdFromUrl()}/modifier`;
     }
 
-    function createInvoice() {
-        window.location.href = `/nouvelle-facture?client_id=${getClientIdFromUrl()}`;
-    }
-
-    function createDelivery() {
-        window.location.href = `/nouvelle-livraison?client_id=${getClientIdFromUrl()}`;
-    }
 
     function getClientIdFromUrl() {
         const pathParts = window.location.pathname.split('/');
@@ -810,6 +891,86 @@
     `;
     }
 </script>
+
+<!-- Modal de Confirmation de Suppression -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">
+                    <i class="bi-exclamation-triangle-fill text-danger me-2"></i>
+                    Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <div class="text-center mb-4">
+                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi-trash-fill text-danger" style="font-size: 2rem;"></i>
+                    </div>
+                    <h6 class="text-dark mb-2">Êtes-vous sûr de vouloir supprimer ce client ?</h6>
+                    <p class="text-muted mb-0" id="deleteClientName">-</p>
+                </div>
+                <div class="alert alert-warning border-0">
+                    <div class="d-flex align-items-start">
+                        <i class="bi-info-circle-fill text-warning me-2 mt-1"></i>
+                        <div>
+                            <strong>Attention :</strong> Cette action est irréversible. Toutes les données associées à ce client seront définitivement supprimées.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi-x-circle me-1"></i> Annuler
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="bi-trash me-1"></i> Supprimer définitivement
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmation d'Activation/Désactivation -->
+<div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-labelledby="toggleStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" id="toggleStatusModalLabel">
+                    <i class="bi-toggle-on text-warning me-2"></i>
+                    <span id="toggleStatusTitle">Confirmer l'action</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <div class="text-center mb-4">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi-toggle-on text-warning" id="toggleStatusIcon" style="font-size: 2rem;"></i>
+                    </div>
+                    <h6 class="text-dark mb-2" id="toggleStatusMessage">Êtes-vous sûr de vouloir effectuer cette action ?</h6>
+                    <p class="text-muted mb-0" id="toggleClientName">-</p>
+                </div>
+                <div class="alert alert-info border-0">
+                    <div class="d-flex align-items-start">
+                        <i class="bi-info-circle-fill text-info me-2 mt-1"></i>
+                        <div>
+                            <strong>Information :</strong> <span id="toggleStatusInfo">Cette action modifiera le statut du client dans le système.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi-x-circle me-1"></i> Annuler
+                </button>
+                <button type="button" class="btn btn-warning" id="confirmToggleBtn">
+                    <i class="bi-check-circle me-1"></i> <span id="toggleConfirmText">Confirmer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php
 $content = ob_get_clean();
