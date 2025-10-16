@@ -146,13 +146,47 @@
 
                         <!-- Collapse -->
                         <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAccountMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAccountMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAccountMenu">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesChauffeurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesChauffeurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesChauffeurs">
                                 <i class="bi-person-badge nav-icon"></i>
-                                <span class="nav-link-title">Paiement</span>
+                                <span class="nav-link-title">Gestion des Chauffeurs</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesChauffeurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/chauffeurs">Liste des chauffeurs</a>
+                                <a class="nav-link " href="/chauffeur/creer">Nouveau chauffeur</a>
+                                <a class="nav-link " href="/chauffeurs/supprimes">Chauffeurs supprimés</a>
+                                <a class="nav-link " href="/chauffeurs/statistiques">Statistiques</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesCommandes" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesCommandes" aria-expanded="false" aria-controls="navbarVerticalMenuPagesCommandes">
+                                <i class="bi bi-cart-check nav-icon"></i>
+                                <span class="nav-link-title">Commandes</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesCommandes" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/commandes">Liste des commandes</a>
+                                <a class="nav-link " href="/commande/creer">Nouvelle commande</a>
+                                <a class="nav-link " href="/commandes/supprimees">Commandes supprimées</a>
+                                <a class="nav-link " href="/commandes/statistiques">Statistiques</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAccountMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAccountMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAccountMenu">
+                                <i class="bi-credit-card nav-icon"></i>
+                                <span class="nav-link-title">Paiements</span>
                             </a>
 
                             <div id="navbarVerticalMenuPagesAccountMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/subscription-list">Liste des paiements</a>
+                                <a class="nav-link " href="/paiement-commande">Liste des paiements</a>
+                                <a class="nav-link " href="/paiement-commande/creer">Nouveau paiement</a>
+                                <a class="nav-link " href="/subscription-list">Abonnements</a>
                             </div>
                         </div>
                         <!-- End Collapse -->

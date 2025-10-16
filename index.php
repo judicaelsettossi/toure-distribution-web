@@ -92,17 +92,65 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     // Routes pour la gestion des camions
     $r->addRoute('GET', '/camions', 'CamionController@listeCamions');
-    $r->addRoute('GET', '/camion/{id}', 'CamionController@detailsCamion');
+    $r->addRoute('GET', '/camions/supprimes', 'CamionController@camionsSupprimes');
+    $r->addRoute('GET', '/camions/statistiques', 'CamionController@statistiquesCamions');
     $r->addRoute('GET', '/camion/creer', 'CamionController@creerCamion');
     $r->addRoute('POST', '/camion/creer', 'CamionController@creerCamion');
+    $r->addRoute('GET', '/camion/{id}', 'CamionController@detailsCamion');
     $r->addRoute('GET', '/camion/{id}/modifier', 'CamionController@modifierCamion');
     $r->addRoute('POST', '/camion/{id}/modifier', 'CamionController@modifierCamion');
     $r->addRoute('GET', '/camion/{id}/supprimer', 'CamionController@supprimerCamion');
     $r->addRoute('POST', '/camion/{id}/supprimer', 'CamionController@supprimerCamion');
-    $r->addRoute('GET', '/camions/supprimes', 'CamionController@camionsSupprimes');
     $r->addRoute('GET', '/camion/{id}/restaurer', 'CamionController@restaurerCamion');
     $r->addRoute('POST', '/camion/{id}/restaurer', 'CamionController@restaurerCamion');
-    $r->addRoute('GET', '/camions/statistiques', 'CamionController@statistiquesCamions');
+
+    // Routes pour la gestion des chauffeurs
+    $r->addRoute('GET', '/chauffeurs', 'ChauffeurController@listeChauffeurs');
+    $r->addRoute('GET', '/chauffeurs/supprimes', 'ChauffeurController@chauffeursSupprimes');
+    $r->addRoute('GET', '/chauffeurs/statistiques', 'ChauffeurController@statistiquesChauffeurs');
+    $r->addRoute('GET', '/chauffeur/creer', 'ChauffeurController@creerChauffeur');
+    $r->addRoute('POST', '/chauffeur/creer', 'ChauffeurController@creerChauffeur');
+    $r->addRoute('GET', '/chauffeur/{id}', 'ChauffeurController@detailsChauffeur');
+    $r->addRoute('GET', '/chauffeur/{id}/modifier', 'ChauffeurController@modifierChauffeur');
+    $r->addRoute('POST', '/chauffeur/{id}/modifier', 'ChauffeurController@modifierChauffeur');
+    $r->addRoute('GET', '/chauffeur/{id}/supprimer', 'ChauffeurController@supprimerChauffeur');
+    $r->addRoute('POST', '/chauffeur/{id}/supprimer', 'ChauffeurController@supprimerChauffeur');
+    $r->addRoute('GET', '/chauffeur/{id}/restaurer', 'ChauffeurController@restaurerChauffeur');
+    $r->addRoute('POST', '/chauffeur/{id}/restaurer', 'ChauffeurController@restaurerChauffeur');
+
+    // Routes pour la gestion des commandes
+    $r->addRoute('GET', '/commandes', 'CommandeController@listeCommandes');
+    $r->addRoute('GET', '/commandes/supprimees', 'CommandeController@commandesSupprimees');
+    $r->addRoute('GET', '/commandes/statistiques', 'CommandeController@statistiquesCommandes');
+    $r->addRoute('GET', '/commande/creer', 'CommandeController@creerCommande');
+    $r->addRoute('POST', '/commande/creer', 'CommandeController@creerCommande');
+    $r->addRoute('GET', '/commande/{id}', 'CommandeController@detailsCommande');
+    $r->addRoute('GET', '/commande/{id}/modifier', 'CommandeController@modifierCommande');
+    $r->addRoute('POST', '/commande/{id}/modifier', 'CommandeController@modifierCommande');
+    $r->addRoute('GET', '/commande/{id}/supprimer', 'CommandeController@supprimerCommande');
+    $r->addRoute('POST', '/commande/{id}/supprimer', 'CommandeController@supprimerCommande');
+    $r->addRoute('GET', '/commande/{id}/restaurer', 'CommandeController@restaurerCommande');
+    $r->addRoute('POST', '/commande/{id}/restaurer', 'CommandeController@restaurerCommande');
+    
+    // Routes pour la gestion des détails de commandes
+    $r->addRoute('GET', '/commande/{id}/items', 'CommandeController@detailsCommandeItems');
+    $r->addRoute('GET', '/commande/{id}/ajouter-item', 'CommandeController@ajouterDetailCommande');
+    $r->addRoute('POST', '/commande/{id}/ajouter-item', 'CommandeController@ajouterDetailCommande');
+    $r->addRoute('GET', '/commande/{commande_id}/modifier-item/{detail_id}', 'CommandeController@modifierDetailCommande');
+
+    // Routes pour la gestion des paiements de commandes
+    $r->addRoute('GET', '/paiement-commande', 'PaiementCommandeController@index');
+    $r->addRoute('GET', '/paiement-commande/creer', 'PaiementCommandeController@creer');
+    $r->addRoute('POST', '/paiement-commande/creer', 'PaiementCommandeController@creer');
+    $r->addRoute('GET', '/paiement-commande/{id}', 'PaiementCommandeController@details');
+    $r->addRoute('GET', '/paiement-commande/{id}/modifier', 'PaiementCommandeController@modifier');
+    $r->addRoute('POST', '/paiement-commande/{id}/modifier', 'PaiementCommandeController@modifier');
+    $r->addRoute('GET', '/paiement-commande/{id}/supprimer', 'PaiementCommandeController@supprimer');
+    $r->addRoute('POST', '/paiement-commande/{id}/supprimer', 'PaiementCommandeController@supprimer');
+    $r->addRoute('GET', '/commande/{id}/paiements', 'PaiementCommandeController@commandePaiements');
+    $r->addRoute('POST', '/commande/{commande_id}/modifier-item/{detail_id}', 'CommandeController@modifierDetailCommande');
+    $r->addRoute('GET', '/commande/{commande_id}/supprimer-item/{detail_id}', 'CommandeController@supprimerDetailCommande');
+    $r->addRoute('POST', '/commande/{commande_id}/supprimer-item/{detail_id}', 'CommandeController@supprimerDetailCommande');
 
     // Routes pour l'authentification
     $r->addRoute('GET', '/login', 'AuthController@login');

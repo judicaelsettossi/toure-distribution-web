@@ -3399,6 +3399,9 @@
     <!-- JS Front -->
     <script src="/assets/js/theme.min.js"></script>
 
+    <!-- JS PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <!-- JS Debug (uniquement en développement) -->
     <script src="/assets/js/debug.js"></script>
     <script src="/assets/js/hs.theme-appearance-charts.js"></script>
