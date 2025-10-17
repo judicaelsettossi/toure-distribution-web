@@ -75,6 +75,21 @@
 
                         <!-- Collapse -->
                         <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesEntrepot" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEntrepot" aria-expanded="false" aria-controls="navbarVerticalMenuPagesEntrepot">
+                                <i class="bi-building nav-icon"></i>
+                                <span class="nav-link-title">Entrepôts</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesEntrepot" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesEntrepot">
+                                <a class="nav-link " href="/creer-un-entrepot">Créer un entrepôt</a>
+                                <a class="nav-link " href="/entrepots">Liste des entrepôt</a>
+                                <a class="nav-link " href="/entrepot/transfert">Transfert entre entrepôts</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
                             <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUserProfileMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUserProfileMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUserProfileMenu">
                                 <i class="bi-person nav-icon"></i>
                                 <span class="nav-link-title">Produits</span>
@@ -85,21 +100,6 @@
                                 <a class="nav-link " href="/produit/ajouter">Créer un produit</a>
                                 <a class="nav-link " href="/categorie-produit-add">Créer une categorie</a>
                                 <a class="nav-link " href="/categories-produits-liste">Liste des catégories</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesEntrepot" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEntrepot" aria-expanded="false" aria-controls="navbarVerticalMenuPagesEntrepot">
-                                <i class="bi-building nav-icon"></i>
-                                <span class="nav-link-title">Entrepôts</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesEntrepot" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesEntrepot">
-                                <a class="nav-link " href="/creer-un-entrepot">Créer un entrepôt</a>
-                                <a class="nav-link " href="/entrepots">Liste des entrepôt</a>
-                                <a class="nav-link " href="/entrepot/transfert">Transfert entre entrepôts</a>
                             </div>
                         </div>
                         <!-- End Collapse -->

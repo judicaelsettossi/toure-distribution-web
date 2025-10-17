@@ -1,82 +1,319 @@
 <?php ob_start(); ?>
 
 <style>
-    :root {
-        --primary-color: #f00480;
-        --secondary-color: #010768;
-        --accent-color: #010068;
-        --light-primary: rgba(240, 4, 128, 0.1);
-        --light-secondary: rgba(1, 7, 104, 0.1);
-        --success-color: #10b981;
-        --warning-color: #f59e0b;
-        --danger-color: #ef4444;
-        --info-color: #3b82f6;
-    }
+:root {
+    --primary-color: #10b981;
+    --secondary-color: #010768;
+    --accent-color: #010068;
+    --light-primary: rgba(16, 185, 129, 0.1);
+    --light-secondary: rgba(1, 7, 104, 0.1);
+}
 
-    .font-public-sans {
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+.font-public-sans {
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
-    /* Fix chevauchement */
-    .add-fournisseur-wrapper {
-        margin-left: 250px;
-        margin-top: 70px;
-        padding: 2rem;
-        min-height: calc(100vh - 70px);
-        background: #f8f9fa;
-    }
+.text-primary-custom {
+    color: var(--primary-color) !important;
+}
 
-    @media (max-width: 991px) {
-        .add-fournisseur-wrapper {
-            margin-left: 0;
-            margin-top: 60px;
-            padding: 1rem;
-        }
-    }
+.text-secondary-custom {
+    color: var(--secondary-color) !important;
+}
 
-    /* Header */
-    .add-fournisseur-header {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-    }
+.bg-primary-custom {
+    background-color: var(--primary-color) !important;
+}
 
-    .add-fournisseur-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-    }
+.bg-secondary-custom {
+    background-color: var(--secondary-color) !important;
+}
 
-    .add-fournisseur-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--secondary-color);
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
+.bg-light-primary {
+    background-color: var(--light-primary) !important;
+}
 
-    .add-fournisseur-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 15px;
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary-custom:hover {
+    background-color: #059669;
+    border-color: #059669;
+    color: white;
+}
+
+.btn-secondary-custom {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary-custom:hover {
+    background-color: #020a7a;
+    border-color: #020a7a;
+    color: white;
+}
+
+/* Steps Indicator - Compact */
+.steps-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 180px;
+}
+
+.step-number {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: 3px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.step-item.active .step-number {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.step-item.completed .step-number {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 0.5rem;
+    line-height: 1.2;
+}
+
+.step-item.active .step-label {
+    color: var(--primary-color);
+}
+
+.step-item.completed .step-label {
+    color: #28a745;
+}
+
+.step-line {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background-color: #e9ecef;
+    z-index: 1;
+}
+
+.step-item:last-child .step-line {
+    display: none;
+}
+
+.step-item.completed .step-line {
+    background-color: #28a745;
+}
+
+/* Form Steps - Compact */
+.form-step {
+    display: none;
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+}
+
+.form-step.active {
+    display: block !important;
+}
+
+.form-section {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.form-section-header {
+    background: linear-gradient(135deg, var(--light-primary) 0%, #f8f9fa 100%);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.form-group-modern {
+    margin-bottom: 1.5rem;
+}
+
+.form-label-modern {
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.label-required::after {
+    content: ' *';
+    color: #dc3545;
+}
+
+.form-control-modern {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.form-control-modern:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+    background-color: #fff;
+}
+
+.form-control-modern.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Progress Bar - Compact */
+.progress-bar-custom {
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    transition: width 0.3s ease;
+    border-radius: 8px;
+}
+
+/* Page Header - Compact */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.page-header .row {
+    position: relative;
+    z-index: 2;
+}
+
+.page-header-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: white !important;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.breadcrumb-item a {
+    color: rgba(255,255,255,0.8) !important;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: white !important;
+}
+
+.breadcrumb-item.active {
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* Form Navigation - Compact */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid #e9ecef;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .step-item {
+        max-width: 120px;
     }
+    
+    .step-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .form-step {
+        padding: 1rem;
+    }
+}
+
+
 
     /* Form container */
     .form-container {
@@ -233,63 +470,6 @@
         color: var(--secondary-color);
     }
 
-    /* Buttons */
-    .btn-modern {
-        padding: 0.75rem 2rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-decoration: none;
-    }
-
-    .btn-success-modern {
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        color: white;
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-success-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-    }
-
-    .btn-outline-modern {
-        background: white;
-        color: var(--secondary-color);
-        border: 2px solid var(--secondary-color);
-    }
-
-    .btn-outline-modern:hover {
-        background: var(--secondary-color);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary-modern {
-        background: #6b7280;
-        color: white;
-    }
-
-    .btn-secondary-modern:hover {
-        background: #4b5563;
-        transform: translateY(-2px);
-    }
-
-    /* Form actions */
-    .form-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: flex-end;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid #f0f0f0;
-    }
 
     /* Loading */
     .loading-overlay {
@@ -394,162 +574,202 @@
         .form-actions {
             flex-direction: column;
         }
-        
-        .add-fournisseur-title {
-            font-size: 2rem;
-        }
     }
 </style>
 
-<div class="add-fournisseur-wrapper font-public-sans">
-    <!-- Header -->
-    <div class="add-fournisseur-header fade-in">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="add-fournisseur-title">
-                <div class="add-fournisseur-icon">
-                    <i class="bi bi-truck"></i>
-                </div>
-                Nouveau Fournisseur
-            </h1>
-            <a href="/fournisseurs" class="btn-modern btn-outline-modern">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
-        </div>
-        <p class="text-muted mb-0">Ajoutez un nouveau fournisseur à votre système</p>
-    </div>
+<main id="content" role="main" class="main font-public-sans">
+    <div class="content container-fluid">
 
     <!-- Alerts -->
     <div id="alertContainer"></div>
 
+    <!-- Page Header -->
+    <div class="page-header mb-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/" class="text-primary-custom">Tableau de Bord</a></li>
+                        <li class="breadcrumb-item"><a href="/fournisseurs" class="text-primary-custom">Fournisseurs</a></li>
+                        <li class="breadcrumb-item active">Nouveau Fournisseur</li>
+                    </ol>
+                </nav>
+                <h1 class="page-header-title text-secondary-custom">
+                    <i class="bi-truck me-2"></i>
+                    Créer un Nouveau Fournisseur
+                </h1>
+                <p class="text-white-50 mb-0">Ajoutez un nouveau fournisseur en 3 étapes simples</p>
+            </div>
+            <div class="col-auto">
+                <a href="/fournisseurs" class="btn btn-outline-light btn-sm">
+                    <i class="bi-arrow-left me-1"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-custom">
+        <div class="progress-bar-fill" id="progressBar" style="width: 33%"></div>
+    </div>
+
+    <!-- Steps Indicator -->
+    <div class="steps-container">
+        <div class="step-item active" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-label">Informations<br>Générales</div>
+            <div class="step-line"></div>
+        </div>
+        <div class="step-item" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-label">Adresse &<br>Contact</div>
+            <div class="step-line"></div>
+        </div>
+        <div class="step-item" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-label">Statut &<br>Configuration</div>
+        </div>
+    </div>
+
     <!-- Form -->
     <form id="addFournisseurForm" class="form-container fade-in">
-        <!-- Section Informations générales -->
-        <div class="form-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="bi bi-info-circle"></i>
+        <!-- STEP 1: Informations Générales -->
+        <div class="form-step active" data-step="1">
+            <div class="form-section">
+                <div class="form-section-header">
+                    <h5 class="mb-0 text-secondary-custom">
+                        <i class="bi-info-circle-fill me-2"></i>
+                        Informations Générales du Fournisseur
+                    </h5>
                 </div>
-                Informations Générales
-            </h3>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern label-required">Nom du fournisseur</label>
-                        <input type="text" id="name" class="form-control-modern" placeholder="Ex: ACME Corporation" required>
-                        <div class="invalid-feedback"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Personne responsable</label>
-                        <input type="text" id="responsable" class="form-control-modern" placeholder="Ex: John Doe">
-                        <div class="invalid-feedback"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Email</label>
-                        <div class="input-with-icon">
-                            <input type="email" id="email" class="form-control-modern with-icon" placeholder="contact@example.com">
-                            <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern label-required">Nom du fournisseur</label>
+                            <input type="text" id="name" class="form-control-modern" placeholder="Ex: ACME Corporation" required>
+                            <div class="invalid-feedback"></div>
                         </div>
-                        <div class="invalid-feedback"></div>
                     </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Téléphone</label>
-                        <div class="input-with-icon">
-                            <input type="tel" id="phone" class="form-control-modern with-icon" placeholder="+225123456789">
-                            <span class="input-icon"><i class="bi bi-telephone"></i></span>
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Personne responsable</label>
+                            <input type="text" id="responsable" class="form-control-modern" placeholder="Ex: John Doe">
+                            <div class="invalid-feedback"></div>
                         </div>
-                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Numéro IFU</label>
+                            <input type="text" id="ifu" class="form-control-modern" placeholder="Ex: 1234567890123">
+                            <div class="invalid-feedback"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section Adresse -->
-        <div class="form-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="bi bi-geo-alt"></i>
+        <!-- STEP 2: Adresse & Contact -->
+        <div class="form-step" data-step="2">
+            <div class="form-section">
+                <div class="form-section-header">
+                    <h5 class="mb-0 text-secondary-custom">
+                        <i class="bi-geo-alt-fill me-2"></i>
+                        Adresse et Coordonnées
+                    </h5>
                 </div>
-                Adresse
-            </h3>
-
-            <div class="form-group-modern">
-                <label class="form-label-modern">Adresse complète</label>
-                <textarea id="adresse" class="form-control-modern" rows="3" placeholder="123 Main Street, Building A"></textarea>
-                <div class="invalid-feedback"></div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Ville</label>
-                        <input type="text" id="city" class="form-control-modern" placeholder="Ex: Paris">
-                        <div class="invalid-feedback"></div>
+                <div class="form-group-modern">
+                    <label class="form-label-modern">Adresse complète</label>
+                    <textarea id="adresse" class="form-control-modern" rows="3" placeholder="123 Main Street, Building A"></textarea>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Ville</label>
+                            <input type="text" id="city" class="form-control-modern" placeholder="Ex: Cotonou">
+                            <div class="invalid-feedback"></div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Conditions de paiement</label>
-                        <select id="paymentTerms" class="form-control-modern form-select-modern">
-                            <option value="">Sélectionner...</option>
-                            <option value="30 jours">30 jours</option>
-                            <option value="45 jours">45 jours</option>
-                            <option value="60 jours">60 jours</option>
-                            <option value="Comptant">Comptant</option>
-                            <option value="À la livraison">À la livraison</option>
-                        </select>
-                        <div class="invalid-feedback"></div>
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Code postal</label>
+                            <input type="text" id="postal_code" class="form-control-modern" placeholder="Ex: 01BP1234">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Email</label>
+                            <input type="email" id="email" class="form-control-modern" placeholder="contact@entreprise.com">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Téléphone</label>
+                            <input type="tel" id="phone" class="form-control-modern" placeholder="+225123456789">
+                            <div class="invalid-feedback"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section Statut -->
-        <div class="form-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="bi bi-toggle-on"></i>
+        <!-- STEP 3: Statut & Configuration -->
+        <div class="form-step" data-step="3">
+            <div class="form-section">
+                <div class="form-section-header">
+                    <h5 class="mb-0 text-secondary-custom">
+                        <i class="bi-toggle-on-fill me-2"></i>
+                        Statut et Configuration
+                    </h5>
                 </div>
-                Statut
-            </h3>
-
-            <div class="form-group-modern">
-                <div class="d-flex align-items-center">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="isActive" checked>
-                        <span class="slider"></span>
-                    </label>
-                    <span class="toggle-label">Fournisseur actif</span>
+                <div class="form-group-modern">
+                    <div class="d-flex align-items-center">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="isActive" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="toggle-label ms-3">Fournisseur actif</span>
+                    </div>
+                    <small class="text-muted">Un fournisseur actif peut être utilisé dans les commandes et mouvements de stock</small>
                 </div>
-                <small class="text-muted">Un fournisseur actif peut être utilisé dans les commandes et mouvements de stock</small>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">Conditions de paiement</label>
+                            <select id="paymentTerms" class="form-control-modern">
+                                <option value="">Sélectionner...</option>
+                                <option value="30 jours">30 jours</option>
+                                <option value="45 jours">45 jours</option>
+                                <option value="60 jours">60 jours</option>
+                                <option value="Comptant">Comptant</option>
+                                <option value="À la livraison">À la livraison</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Actions -->
-        <div class="form-actions">
-            <button type="button" class="btn-modern btn-secondary-modern" onclick="resetForm()">
-                <i class="bi bi-arrow-clockwise"></i>
-                Réinitialiser
+        <!-- Navigation -->
+        <div class="form-navigation">
+            <button type="button" class="btn btn-outline-secondary" id="prevBtn" style="display: none;">
+                <i class="bi-arrow-left me-1"></i> Précédent
             </button>
-            <button type="submit" class="btn-modern btn-success-modern">
-                <i class="bi bi-check-circle"></i>
-                Créer le Fournisseur
-            </button>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary-custom" id="nextBtn">
+                    Suivant <i class="bi-arrow-right ms-1"></i>
+                </button>
+                <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                    <i class="bi-check-circle me-1"></i> Créer le Fournisseur
+                </button>
+            </div>
         </div>
     </form>
-</div>
+    </div>
+</main>
 
 <!-- Loading Overlay -->
 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
@@ -561,8 +781,28 @@
 
 <script>
     let formModified = false;
+    let currentStep = 1;
+    const totalSteps = 3;
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Navigation buttons
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if (validateCurrentStep()) {
+                if (currentStep < totalSteps) {
+                    showStep(currentStep + 1);
+                }
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', function() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        });
+        
+        // Initialize first step
+        showStep(1);
+        
         // Event listeners
         setupEventListeners();
     });
@@ -601,13 +841,17 @@
             const formData = {
                 name: document.getElementById('name').value.trim(),
                 responsable: document.getElementById('responsable').value.trim(),
+                ifu: document.getElementById('ifu').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 adresse: document.getElementById('adresse').value.trim(),
                 city: document.getElementById('city').value.trim(),
+                postal_code: document.getElementById('postal_code').value.trim(),
                 payment_terms: document.getElementById('paymentTerms').value,
                 is_active: document.getElementById('isActive').checked
             };
+
+            console.log('Données du formulaire:', formData);
 
             const response = await fetch('https://toure.gestiem.com/api/fournisseurs', {
                 method: 'POST',
@@ -635,6 +879,8 @@
             } else {
                 if (response.status === 422) {
                     handleValidationErrors(result.errors);
+                } else if (response.status === 500) {
+                    throw new Error('Erreur serveur: Le modèle Fournisseur n\'existe pas côté serveur. Veuillez contacter l\'administrateur.');
                 } else {
                     throw new Error(result.message || 'Erreur lors de la création');
                 }
@@ -693,10 +939,97 @@
         showAlert('Veuillez corriger les erreurs dans le formulaire', 'danger');
     }
 
+    // Step management functions
+    function showStep(stepNumber) {
+        // Hide all steps
+        document.querySelectorAll('.form-step').forEach(step => {
+            step.classList.remove('active');
+        });
+
+        // Remove active class from all step items
+        document.querySelectorAll('.step-item').forEach(item => {
+            item.classList.remove('active', 'completed');
+        });
+
+        // Show current step
+        const currentStepElement = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        const currentStepItem = document.querySelector(`.step-item[data-step="${stepNumber}"]`);
+        
+        if (currentStepElement) {
+            currentStepElement.classList.add('active');
+        }
+        
+        if (currentStepItem) {
+            currentStepItem.classList.add('active');
+        }
+
+        // Mark previous steps as completed
+        for (let i = 1; i < stepNumber; i++) {
+            const prevStepItem = document.querySelector(`.step-item[data-step="${i}"]`);
+            if (prevStepItem) {
+                prevStepItem.classList.add('completed');
+            }
+        }
+
+        // Update progress bar
+        const progress = (stepNumber / totalSteps) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+
+        // Update navigation buttons
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (stepNumber === 1) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+        } else if (stepNumber === totalSteps) {
+            prevBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+        } else {
+            prevBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+        }
+
+        currentStep = stepNumber;
+    }
+
+    function validateCurrentStep() {
+        const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+        const requiredFields = currentStepElement.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                const feedback = field.parentNode.querySelector('.invalid-feedback');
+                if (feedback) {
+                    feedback.textContent = 'Ce champ est obligatoire';
+                }
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+                const feedback = field.parentNode.querySelector('.invalid-feedback');
+                if (feedback) {
+                    feedback.textContent = '';
+                }
+            }
+        });
+
+        return isValid;
+    }
+
     function resetForm() {
         document.getElementById('addFournisseurForm').reset();
         document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
         document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+        
+        // Reset to first step
+        currentStep = 1;
+        showStep(1);
         document.getElementById('isActive').checked = true;
         formModified = false;
     }

@@ -18,7 +18,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/creer-un-entrepot', 'EntrepotController@addEntrepot');
     $r->addRoute('GET', '/entrepots', 'EntrepotController@listeEntrepot');
     $r->addRoute('GET', '/entrepot/{id}/details', 'EntrepotController@detailsEntrepot');
-    $r->addRoute('GET', '/entrepot/{id}/edit', 'EntrepotController@editEntrepot');
+    $r->addRoute('GET', '/entrepot/{id}/modifier', 'EntrepotController@editEntrepot');
 
 
     // Routes pour les clients

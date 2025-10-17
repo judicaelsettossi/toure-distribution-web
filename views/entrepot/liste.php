@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="col-sm-auto">
-                    <a class="btn btn-primary-custom" href="/nouvel-entrepot">
+                    <a class="btn btn-primary-custom" href="/creer-un-entrepot">
                         <i class="bi-plus-lg me-1"></i> Nouvel Entrepôt
                     </a>
                 </div>
@@ -249,9 +249,23 @@
                         </h5>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-sm btn-outline-primary" onclick="exportWarehouses()">
-                            <i class="bi-download me-1"></i> Exporter
-                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi-download me-1"></i> Exporter
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="exportWarehouses('excel')">
+                                        <i class="bi-file-earmark-excel text-success me-2"></i> Excel (.xlsx)
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="exportWarehouses('pdf')">
+                                        <i class="bi-file-earmark-pdf text-danger me-2"></i> PDF
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -514,7 +528,7 @@
     }
 
     function viewWarehouse(warehouseId) {
-        window.location.href = `/entrepot/${warehouseId}`;
+        window.location.href = `/entrepot/${warehouseId}/details`;
     }
 
     function editWarehouse(event, warehouseId) {
@@ -527,9 +541,6 @@
         window.location.href = `/entrepot/${warehouseId}/details`;
     }
 
-    function exportWarehouses() {
-        window.location.href = 'https://toure.gestiem.com/api/entrepots/export';
-    }
 
     function showError(message) {
         const tbody = document.getElementById('warehousesTableBody');
@@ -545,7 +556,305 @@
         </tr>
     `;
     }
+
+    // Export functions
+    async function exportWarehouses(format = 'excel') {
+        const exportButton = document.getElementById('exportDropdown');
+        const originalText = exportButton.innerHTML;
+        
+        try {
+            console.log('Début de l\'export:', format);
+            exportButton.innerHTML = '<i class="bi-hourglass-split me-1"></i> Export...';
+            exportButton.disabled = true;
+            
+            // Check if libraries are loaded
+            if (format === 'excel' && typeof XLSX === 'undefined') {
+                throw new Error('SheetJS n\'est pas chargé. Veuillez recharger la page.');
+            }
+            if (format === 'pdf' && typeof pdfMake === 'undefined') {
+                throw new Error('PDFMake n\'est pas chargé. Veuillez recharger la page.');
+            }
+            
+            console.log('Bibliothèques vérifiées, début de l\'export...');
+            
+            if (format === 'excel') {
+                await exportToExcel([]);
+            } else if (format === 'pdf') {
+                await exportToPDF([]);
+            }
+            
+            console.log('Export terminé avec succès');
+            
+            // Show success message
+            showToast('Export réussi !', 'success');
+            
+        } catch (error) {
+            console.error('Erreur d\'export:', error);
+            showToast('Erreur d\'export: ' + error.message, 'danger');
+        } finally {
+            exportButton.innerHTML = originalText;
+            exportButton.disabled = false;
+        }
+    }
+
+    async function fetchWarehousesFromAPI(page = 1, perPage = 100, filters = {}) {
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            const queryParams = new URLSearchParams({
+                page: page.toString(),
+                per_page: perPage.toString(),
+                ...filters
+            });
+
+            const response = await fetch(`https://toure.gestiem.com/api/entrepots?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des entrepôts:', error);
+            throw error;
+        }
+    }
+
+    async function exportToExcel(data) {
+        try {
+            // Get complete warehouse data from API
+            const completeWarehouseData = await fetchWarehousesFromAPI(1, 1000);
+            const warehouses = completeWarehouseData.data || [];
+            
+            console.log('Données des entrepôts récupérées:', warehouses);
+            
+            // Prepare Excel data
+            const excelData = warehouses.map(warehouse => ({
+                'Code': warehouse.code || '',
+                'Nom': warehouse.name || '',
+                'Adresse': warehouse.adresse || '',
+                'Ville': warehouse.city || '',
+                'Code Postal': warehouse.postal_code || '',
+                'Téléphone': warehouse.phone || '',
+                'Email': warehouse.email || '',
+                'Statut': warehouse.is_active ? 'Actif' : 'Inactif',
+                'Date de Création': warehouse.created_at ? new Date(warehouse.created_at).toLocaleDateString('fr-FR') : ''
+            }));
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            
+            // Set column widths
+            ws['!cols'] = [
+                { width: 15 }, // Code
+                { width: 25 }, // Nom
+                { width: 35 }, // Adresse
+                { width: 20 }, // Ville
+                { width: 12 }, // Code Postal
+                { width: 15 }, // Téléphone
+                { width: 25 }, // Email
+                { width: 10 }, // Statut
+                { width: 15 }  // Date de Création
+            ];
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Entrepôts');
+            
+            // Generate and download file
+            const fileName = `entrepots_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            console.log('Export Excel terminé');
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'export Excel:', error);
+            throw error;
+        }
+    }
+
+    async function exportToPDF(data) {
+        try {
+            // Check if PDFMake is loaded
+            if (typeof pdfMake === 'undefined') {
+                throw new Error('PDFMake n\'est pas chargé. Veuillez recharger la page.');
+            }
+            
+            // Get complete warehouse data from API
+            const completeWarehouseData = await fetchWarehousesFromAPI(1, 1000);
+            const warehouses = completeWarehouseData.data || [];
+            
+            console.log('Données des entrepôts pour PDF:', warehouses);
+            
+            // Generate PDF
+            await generatePDFWithPDFMake(warehouses);
+            
+            console.log('Export PDF terminé');
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'export PDF:', error);
+            throw error;
+        }
+    }
+
+    async function generatePDFWithPDFMake(warehouses) {
+        const docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'landscape',
+            pageMargins: [20, 40, 20, 40],
+            content: [
+                // Title
+                {
+                    text: 'LISTE DES ENTREPÔTS',
+                    style: 'header',
+                    alignment: 'center',
+                    margin: [0, 0, 0, 20]
+                },
+                
+                // Export info
+                {
+                    text: `Exporté le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`,
+                    style: 'subheader',
+                    alignment: 'center',
+                    margin: [0, 0, 0, 20]
+                },
+                
+                // Statistics summary
+                {
+                    text: `Total: ${warehouses.length} entrepôt(s)`,
+                    style: 'stats',
+                    margin: [0, 0, 0, 20]
+                },
+                
+                // Table
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [60, 180, 120, 100, 80, 120, 130],
+                        body: [
+                            // Header row
+                            [
+                                { text: 'Code', style: 'tableHeader' },
+                                { text: 'Nom', style: 'tableHeader' },
+                                { text: 'Ville', style: 'tableHeader' },
+                                { text: 'Téléphone', style: 'tableHeader' },
+                                { text: 'Statut', style: 'tableHeader' },
+                                { text: 'Email', style: 'tableHeader' },
+                                { text: 'Date Création', style: 'tableHeader' }
+                            ],
+                            // Data rows
+                            ...warehouses.map(warehouse => [
+                                { text: warehouse.code || 'N/A', style: 'tableCell' },
+                                { text: warehouse.name || 'N/A', style: 'tableCell' },
+                                { text: warehouse.city || 'N/A', style: 'tableCell' },
+                                { text: warehouse.phone || 'N/A', style: 'tableCell' },
+                                { text: warehouse.is_active ? 'Actif' : 'Inactif', style: 'tableCell' },
+                                { text: warehouse.email || 'N/A', style: 'tableCell' },
+                                { text: warehouse.created_at ? new Date(warehouse.created_at).toLocaleDateString('fr-FR') : 'N/A', style: 'tableCell' }
+                            ])
+                        ]
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return (i === 0 || i === node.table.body.length) ? 2 : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return (i === 0 || i === node.table.body.length) ? '#010768' : '#cccccc';
+                        },
+                        vLineColor: function (i, node) {
+                            return (i === 0 || i === node.table.widths.length) ? '#010768' : '#cccccc';
+                        }
+                    }
+                }
+            ],
+            styles: {
+                header: {
+                    fontSize: 18,
+                    bold: true,
+                    color: '#010768'
+                },
+                subheader: {
+                    fontSize: 10,
+                    color: '#666666'
+                },
+                stats: {
+                    fontSize: 12,
+                    bold: true,
+                    color: '#010768'
+                },
+                tableHeader: {
+                    fontSize: 10,
+                    bold: true,
+                    color: '#ffffff',
+                    fillColor: '#010768',
+                    alignment: 'center'
+                },
+                tableCell: {
+                    fontSize: 9,
+                    color: '#333333',
+                    alignment: 'left'
+                }
+            }
+        };
+
+        // Generate and download PDF
+        const fileName = `entrepots_${new Date().toISOString().split('T')[0]}.pdf`;
+        pdfMake.createPdf(docDefinition).download(fileName);
+    }
+
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'danger' ? 'danger' : 'primary'} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        // Add to container
+        let toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toastContainer';
+            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toastContainer.style.zIndex = '9999';
+            document.body.appendChild(toastContainer);
+        }
+        
+        toastContainer.appendChild(toast);
+        
+        // Initialize and show toast
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+        
+        // Remove from DOM after hiding
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
+    }
 </script>
+
+<!-- SheetJS Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- PDFMake Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
 <?php
 $content = ob_get_clean();

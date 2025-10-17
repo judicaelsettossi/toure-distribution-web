@@ -1,7 +1,4 @@
-<?php
-ob_start();
-$entrepot_id = $id ?? '';
-?>
+<?php ob_start(); ?>
 
 <style>
     :root {
@@ -13,770 +10,958 @@ $entrepot_id = $id ?? '';
     }
 
     .font-public-sans {
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Fix chevauchement */
-    .warehouse-detail-wrapper {
-        margin-left: 250px;
-        margin-top: 70px;
-        padding: 2rem;
-        min-height: calc(100vh - 70px);
-        background: #f8f9fa;
+    .text-primary-custom {
+        color: var(--primary-color) !important;
     }
 
-    @media (max-width: 991px) {
-        .warehouse-detail-wrapper {
-            margin-left: 0;
-            margin-top: 60px;
-            padding: 1rem;
-        }
+    .text-secondary-custom {
+        color: var(--secondary-color) !important;
     }
 
-    /* Action bar sticky */
-    .action-bar {
-        position: sticky;
-        top: 70px;
-        background: white;
-        padding: 1.5rem;
-        border-radius: 20px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        margin-bottom: 2rem;
-        z-index: 100;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+    .bg-primary-custom {
+        background-color: var(--primary-color) !important;
     }
 
-    .breadcrumb-modern {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin: 0;
-        padding: 0;
-        list-style: none;
+    .bg-light-primary {
+        background-color: var(--light-primary) !important;
     }
 
-    .breadcrumb-modern li {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #6c757d;
-        font-size: 0.9rem;
-    }
-
-    .breadcrumb-modern li a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .breadcrumb-modern li a:hover {
-        color: var(--secondary-color);
-    }
-
-    /* Hero card */
-    .warehouse-hero {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        margin-bottom: 2rem;
-    }
-
-    .hero-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        padding: 3rem 2.5rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 400px;
-        height: 400px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-
-    .hero-header::after {
-        content: '';
-        position: absolute;
-        bottom: -30%;
-        left: -5%;
-        width: 300px;
-        height: 300px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
-
-    .warehouse-icon-large {
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        color: white;
-        margin-bottom: 1.5rem;
-        animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-
-    .warehouse-code {
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        letter-spacing: 2px;
-    }
-
-    .warehouse-name {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: white;
-        margin: 0 0 1rem 0;
-        line-height: 1.2;
-    }
-
-    .warehouse-address {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.95);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .status-badge-hero {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 10px 20px;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    .status-active {
-        background: rgba(40, 167, 69, 0.9);
+    .btn-primary-custom {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
         color: white;
     }
 
-    .status-inactive {
-        background: rgba(220, 53, 69, 0.9);
+    .btn-primary-custom:hover {
+        background-color: #d1036d;
+        border-color: #d1036d;
         color: white;
     }
 
-    /* Info sections */
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .info-card-modern {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        border-top: 4px solid transparent;
-    }
-
-    .info-card-modern:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(240, 4, 128, 0.15);
-        border-top-color: var(--primary-color);
-    }
-
-    .card-header-modern {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .card-icon {
-        width: 50px;
-        height: 50px;
+    .card-custom {
         border-radius: 12px;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        border: none;
+    }
+
+    .warehouse-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #d1036d 100%);
         color: white;
+        padding: 2rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .warehouse-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        flex-shrink: 0;
-    }
-
-    .card-title {
-        font-size: 1.3rem;
+        font-size: 2.5rem;
         font-weight: 700;
-        color: var(--secondary-color);
-        margin: 0;
-    }
-
-    .info-item-row {
-        display: flex;
-        align-items: flex-start;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 10px;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .info-item-row:hover {
-        background: var(--light-primary);
-        transform: translateX(5px);
-    }
-
-    .info-item-row:last-child {
-        margin-bottom: 0;
-    }
-
-    .info-icon-small {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
         background: white;
         color: var(--primary-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        margin-right: 1rem;
-        flex-shrink: 0;
+        border: 4px solid rgba(255, 255, 255, 0.3);
     }
 
-    .info-content {
-        flex: 1;
+    .info-item {
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
     }
 
     .info-label {
-        font-size: 0.85rem;
-        color: #6c757d;
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        color: #6c757d;
+        font-size: 0.875rem;
         margin-bottom: 0.25rem;
     }
 
     .info-value {
-        font-size: 1.1rem;
-        color: #212529;
-        font-weight: 600;
-    }
-
-    /* User card special */
-    .user-card {
-        background: linear-gradient(135deg, var(--light-primary), var(--light-secondary));
-        border: 2px solid var(--primary-color);
-    }
-
-    .user-avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-    }
-
-    .user-name {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    .user-email {
         font-size: 1rem;
-        color: #6c757d;
+        color: #212529;
+    }
+
+    .capacity-progress {
+        height: 30px;
+        border-radius: 8px;
+        background-color: #e9ecef;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .capacity-progress-bar {
+        background: linear-gradient(90deg, var(--primary-color) 0%, #d1036d 100%);
+        height: 100%;
+        border-radius: 8px;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Buttons */
-    .btn-modern {
-        padding: 12px 24px;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-primary-modern {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        box-shadow: 0 4px 15px rgba(240, 4, 128, 0.3);
-    }
-
-    .btn-primary-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(240, 4, 128, 0.4);
-    }
-
-    .btn-outline-modern {
-        background: white;
-        color: var(--primary-color);
-        border: 2px solid var(--primary-color);
-    }
-
-    .btn-outline-modern:hover {
-        background: var(--primary-color);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .btn-danger-modern {
-        background: #dc3545;
-        color: white;
-    }
-
-    .btn-danger-modern:hover {
-        background: #c82333;
-        transform: translateY(-2px);
-    }
-
-    /* Loading */
-    .loading-modern {
-        display: flex;
-        flex-direction: column;
         justify-content: center;
-        align-items: center;
-        min-height: 60vh;
-        gap: 1rem;
-    }
-
-    .spinner-modern {
-        width: 60px;
-        height: 60px;
-        border: 4px solid #f0f0f0;
-        border-top-color: var(--primary-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .loading-text {
-        color: var(--secondary-color);
+        color: white;
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 0.875rem;
+        transition: width 0.3s ease;
     }
 
-    /* Alert */
-    .alert-modern {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 5px 20px rgba(220, 53, 69, 0.15);
-        border-left: 4px solid #dc3545;
-    }
-
-    .alert-modern-title {
-        color: #dc3545;
-        font-weight: 700;
-        font-size: 1.3rem;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Stats mini */
-    .mini-stat {
-        text-align: center;
-        padding: 1rem;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .mini-stat-value {
-        font-size: 2rem;
-        font-weight: 800;
+    .badge-type {
+        background-color: var(--light-primary);
         color: var(--primary-color);
-        margin-bottom: 0.25rem;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
     }
 
-    .mini-stat-label {
-        font-size: 0.9rem;
+    .badge-status {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .stat-box {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, var(--light-primary) 0%, #f8f9fa 100%);
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #e9ecef;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
         color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    .section-coming-soon {
+        opacity: 0.7;
+    }
+
+    .section-coming-soon .card-header {
+        background-color: #f8f9fa;
+    }
+
+    .section-coming-soon .card-title {
+        color: #6c757d;
+    }
+
+    /* Modal styles */
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #d1036d 100%);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem 2rem;
+        border-bottom: none;
+    }
+
+    .modal-title {
         font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .modal-footer {
+        padding: 1rem 2rem 2rem;
+    }
+
+    .modal-footer .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .modal-footer .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .modal-footer .btn-danger:hover {
+        background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    }
+
+    .modal-footer .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .modal-footer .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    /* Modal de toggle status */
+    .modal-footer .btn-success {
+        background: linear-gradient(135deg, #198754 0%, #157347 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+    }
+
+    .modal-footer .btn-success:hover {
+        background: linear-gradient(135deg, #157347 0%, #146c43 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+    }
+
+    .modal-footer .btn-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    .modal-footer .btn-warning:hover {
+        background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
     }
 </style>
 
-<div class="warehouse-detail-wrapper font-public-sans">
-    <!-- Action bar -->
-    <div class="action-bar">
-        <nav>
-            <ol class="breadcrumb-modern">
-                <li><a href="/dashboard"><i class="bi bi-house-door"></i> Accueil</a></li>
-                <li><i class="bi bi-chevron-right"></i></li>
-                <li><a href="/entrepot/liste">Entrepôts</a></li>
-                <li><i class="bi bi-chevron-right"></i></li>
-                <li class="active">Détails</li>
-            </ol>
-        </nav>
-        <div id="actionButtons" class="d-flex gap-2" style="display: none !important;">
-            <button id="editBtn" class="btn-modern btn-primary-modern">
-                <i class="bi bi-pencil"></i> Modifier
+<main id="content" role="main" class="main font-public-sans">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link text-primary-custom" href="/">Tableau
+                                    de Bord</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link text-primary-custom"
+                                    href="/liste-entrepot">Entrepôts</a></li>
+                            <li class="breadcrumb-item active" id="warehouseNameBreadcrumb">Détails</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-sm-auto">
+                    <button class="btn btn-outline-secondary me-2" onclick="window.history.back()">
+                        <i class="bi-arrow-left me-1"></i> Retour
+                    </button>
+                    <button class="btn btn-primary-custom" onclick="editWarehouse()">
+                        <i class="bi-pencil me-1"></i> Modifier
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loadingState" class="text-center py-5">
+            <div class="spinner-border text-primary-custom" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-3 text-muted">Chargement des informations de l'entrepôt...</p>
+        </div>
+
+        <div id="warehouseContent" style="display: none;">
+            <!-- Warehouse Header Card -->
+            <div class="card card-custom mb-4">
+                <div class="warehouse-header">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="warehouse-avatar-large" id="warehouseAvatar">E</div>
+                        </div>
+                        <div class="col">
+                            <h2 class="mb-1" id="warehouseName">-</h2>
+                            <p class="mb-2 opacity-75">
+                                <i class="bi-tag me-2"></i>
+                                <span id="warehouseCode">-</span>
+                            </p>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge badge-type" id="warehouseTypeBadge">Entrepôt</span>
+                                <span class="badge badge-status" id="warehouseStatusBadge">-</span>
+                            </div>
+                        </div>
+                        <div class="col-auto text-end">
+                            <div class="btn-group">
+                                <button class="btn btn-light" onclick="toggleWarehouseStatus()" id="toggleStatusBtn">
+                                    <i class="bi-toggle-off me-1"></i> Activer/Désactiver
+                                </button>
+                                <button class="btn btn-danger" onclick="confirmDeleteWarehouse()">
+                                    <i class="bi-trash me-1"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Informations Principales -->
+                <div class="col-lg-8">
+                    <!-- Informations Générales -->
+                    <div class="card card-custom mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-building me-2 text-primary-custom"></i>
+                                Informations Générales
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="info-item">
+                                <div class="info-label">Nom de l'Entrepôt</div>
+                                <div class="info-value" id="name">-</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Code</div>
+                                <div class="info-value" id="code">-</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Description</div>
+                                <div class="info-value" id="description">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact & Localisation -->
+                    <div class="card card-custom mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-geo-alt me-2 text-primary-custom"></i>
+                                Contact & Localisation
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">
+                                    <a href="mailto:" id="email" class="text-primary-custom">-</a>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Téléphone</div>
+                                <div class="info-value">
+                                    <a href="tel:" id="phone" class="text-primary-custom">-</a>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Adresse</div>
+                                <div class="info-value" id="adresse">-</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Ville</div>
+                                <div class="info-value" id="city">-</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Code Postal</div>
+                                <div class="info-value" id="postal_code">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historique des Mouvements -->
+                    <div class="card card-custom mb-4 section-coming-soon">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-arrow-left-right me-2"></i>
+                                Historique des Mouvements
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center text-muted py-4">
+                                <i class="bi-arrow-left-right fs-1"></i>
+                                <p class="mt-2">Aucun mouvement disponible</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Capacité -->
+                    <div class="card card-custom mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-box-seam me-2 text-primary-custom"></i>
+                                Capacité
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">Capacité Totale</span>
+                                    <span class="fw-bold" id="totalCapacity">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">Stock Actuel</span>
+                                    <span class="fw-bold" id="currentStock">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted small">Espace Disponible</span>
+                                    <span class="fw-bold text-success" id="availableSpace">-</span>
+                                </div>
+
+                                <label class="small text-muted mb-2">Utilisation de l'Espace</label>
+                                <div class="capacity-progress">
+                                    <div class="capacity-progress-bar" id="capacityProgressBar" style="width: 0%;">
+                                        0%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistiques -->
+                    <div class="card card-custom mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-graph-up me-2 text-primary-custom"></i>
+                                Statistiques
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="stat-box">
+                                        <div class="stat-value" id="totalProducts">0</div>
+                                        <div class="stat-label">Produits</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-box">
+                                        <div class="stat-value" id="totalMovements">0</div>
+                                        <div class="stat-label">Mouvements</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations Système -->
+                    <div class="card card-custom mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-info-circle me-2 text-primary-custom"></i>
+                                Informations Système
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="info-item">
+                                <div class="info-label">Date de Création</div>
+                                <div class="info-value" id="created_at">-</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Dernière Modification</div>
+                                <div class="info-value" id="updated_at">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="text-center py-5" style="display: none;">
+            <div class="text-danger mb-3">
+                <i class="bi-exclamation-triangle fs-1"></i>
+            </div>
+            <h5 class="text-danger mb-3">Erreur de chargement</h5>
+            <p class="text-muted mb-4" id="errorMessage">Une erreur est survenue lors du chargement des informations de l'entrepôt.</p>
+            <button class="btn btn-primary-custom" onclick="loadWarehouseData()">
+                <i class="bi-arrow-clockwise me-1"></i> Réessayer
             </button>
-            <button id="deleteBtn" class="btn-modern btn-danger-modern">
-                <i class="bi bi-trash"></i> Supprimer
-            </button>
-            <a href="/entrepot/liste" class="btn-modern btn-outline-modern">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
         </div>
     </div>
+</main>
 
-    <!-- Loading -->
-    <div id="loadingContainer" class="loading-modern">
-        <div class="spinner-modern"></div>
-        <div class="loading-text">Chargement de l'entrepôt...</div>
-    </div>
-
-    <!-- Error -->
-    <div id="errorContainer" style="display: none;">
-        <div class="alert-modern">
-            <div class="alert-modern-title">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                Erreur
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">
+                    <i class="bi-exclamation-triangle me-2"></i>
+                    Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <p id="errorMessage" class="mb-0"></p>
-        </div>
-    </div>
-
-    <!-- Content -->
-    <div id="warehouseContainer" style="display: none;">
-        <!-- Hero card -->
-        <div class="warehouse-hero">
-            <div class="hero-header">
-                <div class="hero-content">
-                    <div class="warehouse-icon-large">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <div class="warehouse-code" id="warehouseCode">-</div>
-                    <h1 class="warehouse-name" id="warehouseName">-</h1>
-                    <div class="warehouse-address" id="warehouseAddress">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        <span>-</span>
-                    </div>
-                    <span id="statusBadge" class="status-badge-hero"></span>
+            <div class="modal-body">
+                <p class="mb-3">Êtes-vous sûr de vouloir supprimer cet entrepôt ?</p>
+                <div class="alert alert-warning">
+                    <i class="bi-exclamation-triangle me-2"></i>
+                    <strong>Attention :</strong> Cette action est irréversible et supprimera toutes les données associées à cet entrepôt.
                 </div>
+                <p class="mb-0"><strong>Entrepôt :</strong> <span id="deleteWarehouseName">-</span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Info grid -->
-        <div class="info-grid">
-            <!-- User card -->
-            <div class="info-card-modern user-card" id="userCard" style="display: none;">
-                <div class="card-header-modern">
-                    <div class="card-icon">
-                        <i class="bi bi-person-circle"></i>
-                    </div>
-                    <h3 class="card-title">Responsable</h3>
-                </div>
-                <div class="text-center">
-                    <div class="user-avatar" id="userAvatar">?</div>
-                    <div class="user-name" id="userName">-</div>
-                    <div class="user-email" id="userEmail">
-                        <i class="bi bi-envelope"></i>
-                        <span>-</span>
-                    </div>
-                </div>
+<!-- Modal de confirmation de changement de statut -->
+<div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-labelledby="toggleStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toggleStatusModalLabel">
+                    <i class="bi-toggle-on me-2"></i>
+                    Changer le statut
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <!-- System info -->
-            <div class="info-card-modern">
-                <div class="card-header-modern">
-                    <div class="card-icon">
-                        <i class="bi bi-info-circle"></i>
-                    </div>
-                    <h3 class="card-title">Informations Système</h3>
+            <div class="modal-body">
+                <p class="mb-3" id="toggleStatusMessage">-</p>
+                <div class="alert alert-info">
+                    <i class="bi-info-circle me-2"></i>
+                    <span id="toggleStatusInfo">-</span>
                 </div>
-
-                <div class="info-item-row">
-                    <div class="info-icon-small">
-                        <i class="bi bi-calendar-plus"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Date de création</div>
-                        <div class="info-value" id="createdAt">-</div>
-                    </div>
-                </div>
-
-                <div class="info-item-row">
-                    <div class="info-icon-small">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Dernière modification</div>
-                        <div class="info-value" id="updatedAt">-</div>
-                    </div>
-                </div>
-
-                <div class="info-item-row">
-                    <div class="info-icon-small">
-                        <i class="bi bi-fingerprint"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Identifiant</div>
-                        <div class="info-value" id="warehouseId" style="font-size: 0.85rem; word-break: break-all;">-</div>
-                    </div>
-                </div>
+                <p class="mb-0"><strong>Entrepôt :</strong> <span id="toggleWarehouseName">-</span></p>
             </div>
-
-            <!-- Quick stats (placeholder for future features) -->
-            <div class="info-card-modern">
-                <div class="card-header-modern">
-                    <div class="card-icon">
-                        <i class="bi bi-bar-chart"></i>
-                    </div>
-                    <h3 class="card-title">Statistiques Rapides</h3>
-                </div>
-
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="mini-stat">
-                            <div class="mini-stat-value">0</div>
-                            <div class="mini-stat-label">Produits en stock</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="mini-stat">
-                            <div class="mini-stat-value">0</div>
-                            <div class="mini-stat-label">Mouvements ce mois</div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="mini-stat">
-                            <div class="mini-stat-value">0 FCFA</div>
-                            <div class="mini-stat-label">Valeur totale du stock</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="alert alert-info mt-3 mb-0" style="border-radius: 10px; border-left: 4px solid #17a2b8;">
-                    <small><i class="bi bi-info-circle"></i> Statistiques détaillées à venir</small>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn" id="confirmToggleBtn">Confirmer</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const entrepotId = '<?php echo $entrepot_id; ?>';
+    let currentWarehouseId = null;
+    let currentWarehouse = null;
 
-        if (!entrepotId) {
-            showError('ID de l\'entrepôt manquant dans l\'URL');
+    // Fonction pour récupérer un cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Vérifier l'authentification
+        const accessToken = getCookie('access_token');
+        const connected = getCookie('connected');
+        
+        if (!connected || !accessToken) {
+            window.location.href = '/login';
             return;
         }
-
-        loadWarehouseDetails(entrepotId);
+        
+        // Récupérer l'ID de l'entrepôt depuis l'URL
+        const pathParts = window.location.pathname.split('/');
+        console.log('URL actuelle:', window.location.pathname);
+        console.log('Parties de l\'URL:', pathParts);
+        
+        currentWarehouseId = pathParts[pathParts.length - 2]; // /entrepot/{id}/details
+        console.log('ID extrait:', currentWarehouseId);
+        
+        if (currentWarehouseId && currentWarehouseId !== 'details') {
+            loadWarehouseData();
+        } else {
+            showError('ID de l\'entrepôt non trouvé dans l\'URL');
+        }
     });
 
-    async function loadWarehouseDetails(entrepotId) {
+    async function loadWarehouseData() {
         try {
-            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
-
+            showLoading();
+            
+            // Récupérer le token depuis les cookies
+            const accessToken = getCookie('access_token');
+            console.log('Token récupéré:', accessToken ? 'Présent' : 'Manquant');
+            
             if (!accessToken) {
-                window.location.href = '/login';
-                return;
+                throw new Error('Token d\'authentification manquant. Veuillez vous reconnecter.');
             }
 
-            const response = await fetch(`https://toure.gestiem.com/api/entrepots/${entrepotId}?with_user=1`, {
+            const apiUrl = `https://toure.gestiem.com/api/entrepots/${currentWarehouseId}`;
+            console.log('URL de l\'API:', apiUrl);
+            console.log('ID de l\'entrepôt:', currentWarehouseId);
+
+            const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             });
 
-            if (!response.ok) {
-                if (response.status === 401) {
-                    window.location.href = '/login';
-                    return;
-                }
-                if (response.status === 404) {
-                    throw new Error('Cet entrepôt n\'existe pas ou a été supprimé');
-                }
+            console.log('Réponse HTTP:', response.status, response.statusText);
 
-                const errorResult = await response.json();
-                throw new Error(errorResult.message || 'Impossible de charger les détails de l\'entrepôt');
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Erreur de réponse:', errorText);
+                
+                if (response.status === 404) {
+                    throw new Error('Entrepôt non trouvé');
+                } else if (response.status === 401) {
+                    throw new Error('Session expirée. Veuillez vous reconnecter.');
+                } else {
+                    throw new Error(`Erreur HTTP ${response.status}: ${errorText}`);
+                }
             }
 
-            const warehouse = await response.json();
-
-            console.log('Warehouse data:', warehouse);
-
-            displayWarehouseDetails(warehouse);
-
-            document.getElementById('loadingContainer').style.display = 'none';
-            document.getElementById('warehouseContainer').style.display = 'block';
-            document.getElementById('actionButtons').style.display = 'flex';
+            const result = await response.json();
+            console.log('Données reçues:', result);
+            
+            // L'API retourne directement les données de l'entrepôt
+            if (result.entrepot_id || result.id) {
+                currentWarehouse = result;
+                displayWarehouseData(currentWarehouse);
+                hideLoading();
+            } else if (result.success && result.data) {
+                // Structure alternative avec success/data
+                currentWarehouse = result.data;
+                displayWarehouseData(currentWarehouse);
+                hideLoading();
+            } else {
+                console.error('Structure de réponse invalide:', result);
+                throw new Error(result.message || 'Erreur lors du chargement des données');
+            }
 
         } catch (error) {
-            console.error('Erreur lors du chargement:', error);
+            console.error('Erreur lors du chargement de l\'entrepôt:', error);
             showError(error.message);
         }
     }
 
-    function displayWarehouseDetails(warehouse) {
-        // Informations principales
-        document.getElementById('warehouseCode').textContent = `Ref: ${warehouse.code || 'N/A'}`;
-        document.getElementById('warehouseName').textContent = warehouse.name || 'Entrepôt sans nom';
-        document.getElementById('warehouseAddress').innerHTML = `
-        <i class="bi bi-geo-alt-fill"></i>
-        <span>${warehouse.adresse || 'Adresse non renseignée'}</span>
-    `;
+    function displayWarehouseData(warehouse) {
+        // Header
+        document.getElementById('warehouseAvatar').textContent = getWarehouseInitials(warehouse.name || 'Entrepôt');
+        document.getElementById('warehouseName').textContent = warehouse.name || 'Nom non défini';
+        document.getElementById('warehouseCode').textContent = warehouse.code || 'Code non défini';
+        document.getElementById('warehouseNameBreadcrumb').textContent = warehouse.name || 'Détails';
 
-        // Badge statut
-        const statusBadge = document.getElementById('statusBadge');
-        if (warehouse.is_active) {
-            statusBadge.innerHTML = '<i class="bi bi-check-circle-fill"></i> Actif';
-            statusBadge.className = 'status-badge-hero status-active';
+        // Status badge (is_active peut être 1/0 ou true/false)
+        const statusBadge = document.getElementById('warehouseStatusBadge');
+        const isActive = warehouse.is_active === 1 || warehouse.is_active === true;
+        if (isActive) {
+            statusBadge.textContent = 'Actif';
+            statusBadge.className = 'badge badge-status bg-success';
         } else {
-            statusBadge.innerHTML = '<i class="bi bi-x-circle-fill"></i> Inactif';
-            statusBadge.className = 'status-badge-hero status-inactive';
+            statusBadge.textContent = 'Inactif';
+            statusBadge.className = 'badge badge-status bg-secondary';
         }
+
+        // Toggle button
+        const toggleBtn = document.getElementById('toggleStatusBtn');
+        if (isActive) {
+            toggleBtn.innerHTML = '<i class="bi-toggle-on me-1"></i> Désactiver';
+        } else {
+            toggleBtn.innerHTML = '<i class="bi-toggle-off me-1"></i> Activer';
+        }
+
+        // Informations générales
+        document.getElementById('name').textContent = warehouse.name || '-';
+        document.getElementById('code').textContent = warehouse.code || '-';
+        document.getElementById('description').textContent = warehouse.description || 'Aucune description';
+
+        // Contact & Localisation
+        const emailLink = document.getElementById('email');
+        if (warehouse.email) {
+            emailLink.textContent = warehouse.email;
+            emailLink.href = `mailto:${warehouse.email}`;
+        } else {
+            emailLink.textContent = '-';
+            emailLink.href = '#';
+        }
+
+        const phoneLink = document.getElementById('phone');
+        if (warehouse.phone) {
+            phoneLink.textContent = warehouse.phone;
+            phoneLink.href = `tel:${warehouse.phone}`;
+        } else {
+            phoneLink.textContent = '-';
+            phoneLink.href = '#';
+        }
+
+        document.getElementById('adresse').textContent = warehouse.adresse || '-';
+        document.getElementById('city').textContent = warehouse.city || '-';
+        document.getElementById('postal_code').textContent = warehouse.postal_code || '-';
+
+        // Capacité (données fictives pour l'instant)
+        document.getElementById('totalCapacity').textContent = '1000 m³';
+        document.getElementById('currentStock').textContent = '250 m³';
+        document.getElementById('availableSpace').textContent = '750 m³';
+        
+        const capacityProgress = 25; // 25% d'utilisation
+        const progressBar = document.getElementById('capacityProgressBar');
+        progressBar.style.width = `${capacityProgress}%`;
+        progressBar.textContent = `${capacityProgress}%`;
+
+        // Statistiques (données fictives pour l'instant)
+        document.getElementById('totalProducts').textContent = '45';
+        document.getElementById('totalMovements').textContent = '12';
 
         // Informations système
-        document.getElementById('warehouseId').textContent = warehouse.entrepot_id || '-';
-        document.getElementById('createdAt').textContent = formatDate(warehouse.created_at);
-        document.getElementById('updatedAt').textContent = formatDate(warehouse.updated_at);
-
-        // Informations utilisateur si disponibles
-        if (warehouse.user) {
-            document.getElementById('userCard').style.display = 'block';
-            document.getElementById('userName').textContent = warehouse.user.name || 'Non défini';
-            document.getElementById('userEmail').innerHTML = `
-            <i class="bi bi-envelope"></i>
-            <span>${warehouse.user.email || 'Non défini'}</span>
-        `;
-
-            // Avatar avec initiales
-            const initials = getInitials(warehouse.user.name);
-            document.getElementById('userAvatar').textContent = initials;
-        }
-
-        // Boutons d'action
-        document.getElementById('editBtn').onclick = () => {
-            window.location.href = `/entrepot/${warehouse.entrepot_id}/edit`;
-        };
-
-        document.getElementById('deleteBtn').onclick = () => {
-            if (confirm(`⚠️ ATTENTION : Voulez-vous vraiment supprimer l'entrepôt "${warehouse.name}" ?\n\nCette action est irréversible !`)) {
-                deleteWarehouse(warehouse.entrepot_id);
-            }
-        };
-
-        // Mettre à jour le titre de la page
-        document.title = `${warehouse.name} - Détails de l'entrepôt`;
+        document.getElementById('created_at').textContent = warehouse.created_at ? 
+            new Date(warehouse.created_at).toLocaleDateString('fr-FR') : '-';
+        document.getElementById('updated_at').textContent = warehouse.updated_at ? 
+            new Date(warehouse.updated_at).toLocaleDateString('fr-FR') : '-';
     }
 
-    function getInitials(name) {
-        if (!name) return '?';
-        const parts = name.trim().split(' ');
-        if (parts.length >= 2) {
-            return (parts[0][0] + parts[1][0]).toUpperCase();
+    function getWarehouseInitials(name) {
+        if (!name) return 'E';
+        const words = name.split(' ');
+        if (words.length >= 2) {
+            return (words[0][0] + words[1][0]).toUpperCase();
         }
         return name.substring(0, 2).toUpperCase();
     }
 
-    function formatDate(dateString) {
-        if (!dateString) return 'Non disponible';
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('fr-FR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date);
+    function showLoading() {
+        document.getElementById('loadingState').style.display = 'block';
+        document.getElementById('warehouseContent').style.display = 'none';
+        document.getElementById('errorState').style.display = 'none';
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('warehouseContent').style.display = 'block';
+        document.getElementById('errorState').style.display = 'none';
     }
 
     function showError(message) {
-        document.getElementById('loadingContainer').style.display = 'none';
-        document.getElementById('warehouseContainer').style.display = 'none';
-        document.getElementById('errorContainer').style.display = 'block';
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('warehouseContent').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
         document.getElementById('errorMessage').textContent = message;
     }
 
-    async function deleteWarehouse(entrepotId) {
-        try {
-            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+    function editWarehouse() {
+        if (currentWarehouseId) {
+            window.location.href = `/entrepot/${currentWarehouseId}/modifier`;
+        }
+    }
 
-            const response = await fetch(`https://toure.gestiem.com/api/entrepots/${entrepotId}`, {
+    function confirmDeleteWarehouse() {
+        if (!currentWarehouse) return;
+        
+        document.getElementById('deleteWarehouseName').textContent = currentWarehouse.name || 'Entrepôt';
+        
+        const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        modal.show();
+
+        // Gérer la confirmation
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            deleteWarehouse();
+        };
+    }
+
+    async function deleteWarehouse() {
+        try {
+            const accessToken = getCookie('access_token');
+            console.log('Suppression de l\'entrepôt:', currentWarehouseId);
+            
+            const response = await fetch(`https://toure.gestiem.com/api/entrepots/${currentWarehouseId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             });
 
-            if (response.ok) {
-                alert('✓ Entrepôt supprimé avec succès');
-                window.location.href = '/entrepot/liste';
-            } else {
-                const errorResult = await response.json();
-                alert('Erreur : ' + (errorResult.message || 'Impossible de supprimer l\'entrepôt'));
+            console.log('Réponse suppression:', response.status, response.statusText);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Erreur de réponse suppression:', errorText);
+                throw new Error(`Erreur HTTP ${response.status}: ${errorText}`);
             }
+
+            // Vérifier si la réponse contient du contenu
+            const responseText = await response.text();
+            console.log('Réponse texte:', responseText);
+
+            let result;
+            if (responseText.trim()) {
+                try {
+                    result = JSON.parse(responseText);
+                    console.log('Résultat JSON:', result);
+                } catch (jsonError) {
+                    console.error('Erreur parsing JSON:', jsonError);
+                    // Si ce n'est pas du JSON valide mais que le statut est 200, considérer comme succès
+                    if (response.status === 200) {
+                        result = { success: true };
+                    } else {
+                        throw new Error('Réponse invalide du serveur');
+                    }
+                }
+            } else {
+                // Réponse vide, mais statut 200 = succès
+                console.log('Réponse vide, mais statut 200 - considéré comme succès');
+                result = { success: true };
+            }
+            
+            if (result.success || response.status === 200) {
+                showToast('Entrepôt supprimé avec succès', 'success');
+                setTimeout(() => {
+                    window.location.href = '/entrepots';
+                }, 1500);
+            } else {
+                throw new Error(result.message || 'Erreur lors de la suppression');
+            }
+
         } catch (error) {
-            alert('Erreur de connexion au serveur');
+            console.error('Erreur lors de la suppression:', error);
+            showToast('Erreur lors de la suppression: ' + error.message, 'danger');
         }
+    }
+
+    function toggleWarehouseStatus() {
+        if (!currentWarehouse) return;
+        
+        const currentStatus = currentWarehouse.is_active === 1 || currentWarehouse.is_active === true;
+        const newStatus = !currentStatus;
+        const modal = new bootstrap.Modal(document.getElementById('toggleStatusModal'));
+        
+        // Mettre à jour le contenu du modal
+        document.getElementById('toggleStatusModalLabel').innerHTML = 
+            newStatus ? '<i class="bi-toggle-on me-2"></i> Activer l\'entrepôt' : 
+                       '<i class="bi-toggle-off me-2"></i> Désactiver l\'entrepôt';
+        
+        document.getElementById('toggleStatusMessage').textContent = 
+            newStatus ? 'Voulez-vous activer cet entrepôt ?' : 
+                       'Voulez-vous désactiver cet entrepôt ?';
+        
+        document.getElementById('toggleStatusInfo').textContent = 
+            newStatus ? 'L\'entrepôt sera disponible pour les opérations.' : 
+                       'L\'entrepôt sera indisponible pour les opérations.';
+        
+        document.getElementById('toggleWarehouseName').textContent = currentWarehouse.name || 'Entrepôt';
+        
+        // Style du bouton de confirmation
+        const confirmBtn = document.getElementById('confirmToggleBtn');
+        if (newStatus) {
+            confirmBtn.className = 'btn btn-success';
+            confirmBtn.innerHTML = '<i class="bi-toggle-on me-1"></i> Activer';
+        } else {
+            confirmBtn.className = 'btn btn-warning';
+            confirmBtn.innerHTML = '<i class="bi-toggle-off me-1"></i> Désactiver';
+        }
+        
+        modal.show();
+
+        // Gérer la confirmation
+        confirmBtn.onclick = function() {
+            performToggleStatus();
+        };
+    }
+
+    async function performToggleStatus() {
+        try {
+            const accessToken = getCookie('access_token');
+            const currentStatus = currentWarehouse.is_active === 1 || currentWarehouse.is_active === true;
+            const newStatus = !currentStatus;
+            
+            const response = await fetch(`https://toure.gestiem.com/api/entrepots/${currentWarehouseId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    is_active: newStatus
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            // Vérifier si la réponse contient du contenu
+            const responseText = await response.text();
+            console.log('Réponse toggle texte:', responseText);
+
+            let result;
+            if (responseText.trim()) {
+                try {
+                    result = JSON.parse(responseText);
+                    console.log('Résultat toggle JSON:', result);
+                } catch (jsonError) {
+                    console.error('Erreur parsing JSON toggle:', jsonError);
+                    // Si ce n'est pas du JSON valide mais que le statut est 200, considérer comme succès
+                    if (response.status === 200) {
+                        result = { success: true };
+                    } else {
+                        throw new Error('Réponse invalide du serveur');
+                    }
+                }
+            } else {
+                // Réponse vide, mais statut 200 = succès
+                console.log('Réponse toggle vide, mais statut 200 - considéré comme succès');
+                result = { success: true };
+            }
+            
+            if (result.success || result.entrepot_id || response.status === 200) {
+                currentWarehouse.is_active = newStatus ? 1 : 0;
+                displayWarehouseData(currentWarehouse);
+                showToast(`Entrepôt ${newStatus ? 'activé' : 'désactivé'} avec succès`, 'success');
+                
+                // Fermer le modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('toggleStatusModal'));
+                modal.hide();
+            } else {
+                throw new Error(result.message || 'Erreur lors du changement de statut');
+            }
+
+        } catch (error) {
+            console.error('Erreur lors du changement de statut:', error);
+            showToast('Erreur lors du changement de statut: ' + error.message, 'danger');
+        }
+    }
+
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'danger' ? 'danger' : 'primary'} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        // Add to container
+        let toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toastContainer';
+            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toastContainer.style.zIndex = '9999';
+            document.body.appendChild(toastContainer);
+        }
+        
+        toastContainer.appendChild(toast);
+        
+        // Initialize and show toast
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+        
+        // Remove from DOM after hiding
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
     }
 </script>
 
