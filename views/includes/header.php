@@ -156,46 +156,8 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <button class="navbar-icon-btn nav-link" type="button" data-bs-toggle="tooltip" title="Notifications">
                         <i class="bi-bell fs-5"></i>
-                        <span class="notification-badge">3</span>
+                        <span class="notification-badge">0</span>
                     </button>
-                </li>
-
-                <!-- Raccourcis -->
-                <li class="nav-item d-none d-md-inline-block">
-                    <div class="dropdown">
-                        <button class="navbar-icon-btn nav-link" type="button" data-bs-toggle="dropdown" data-bs-toggle="tooltip" title="Accès rapides">
-                            <i class="bi-grid-3x3-gap fs-5"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;">
-                            <h6 class="dropdown-header px-0">Accès Rapides</h6>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <a href="/nouveau-client" class="quick-access-item d-block text-center p-3 border rounded">
-                                        <i class="bi-person-plus fs-3 text-primary-custom"></i>
-                                        <div class="small mt-2">Nouveau Client</div>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="/nouvelle-facture" class="quick-access-item d-block text-center p-3 border rounded">
-                                        <i class="bi-receipt fs-3 text-primary-custom"></i>
-                                        <div class="small mt-2">Nouvelle Facture</div>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="/nouveau-produit" class="quick-access-item d-block text-center p-3 border rounded">
-                                        <i class="bi-box-seam fs-3 text-primary-custom"></i>
-                                        <div class="small mt-2">Nouveau Produit</div>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="/entree-sortie-stock" class="quick-access-item d-block text-center p-3 border rounded">
-                                        <i class="bi-boxes fs-3 text-primary-custom"></i>
-                                        <div class="small mt-2">Gérer Stock</div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </li>
 
                 <!-- Account -->
@@ -278,11 +240,6 @@
                             </div>
 
                             <div class="dropdown-divider"></div>
-
-                            <!-- Support -->
-                            <a class="dropdown-item" href="/aide">
-                                <i class="bi-question-circle dropdown-item-icon"></i> Centre d'Aide
-                            </a>
 
                             <div class="dropdown-divider"></div>
 
