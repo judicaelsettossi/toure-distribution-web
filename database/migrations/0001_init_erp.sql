@@ -1,0 +1,251 @@
+-- ERP Schema: products, categories, warehouses, inventory, stock movements, suppliers, purchases (commandes), sales (ventes), deliveries, payments, users
+
+-- Enable InnoDB and UTF8MB4 (MySQL)
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS=0;
+
+-- Reference tables
+CREATE TABLE IF NOT EXISTS product_categories (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  code VARCHAR(50) NOT NULL UNIQUE,
+  description TEXT NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS products (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  category_id BIGINT UNSIGNED NULL,
+  name VARCHAR(200) NOT NULL,
+  code VARCHAR(100) NOT NULL UNIQUE,
+  sku VARCHAR(100) NULL,
+  barcode VARCHAR(150) NULL,
+  unit VARCHAR(50) NOT NULL DEFAULT 'UN',
+  purchase_price DECIMAL(18,2) NOT NULL DEFAULT 0,
+  sale_price DECIMAL(18,2) NOT NULL DEFAULT 0,
+  vat_rate DECIMAL(5,2) NOT NULL DEFAULT 0,
+  min_stock INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES product_categories(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS warehouses (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  code VARCHAR(50) NOT NULL UNIQUE,
+  address VARCHAR(255) NULL,
+  city VARCHAR(120) NULL,
+  country VARCHAR(120) NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS suppliers (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  contact_name VARCHAR(150) NULL,
+  phone VARCHAR(60) NULL,
+  email VARCHAR(150) NULL,
+  address VARCHAR(255) NULL,
+  city VARCHAR(120) NULL,
+  country VARCHAR(120) NULL,
+  tax_id VARCHAR(80) NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS clients (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  phone VARCHAR(60) NULL,
+  email VARCHAR(150) NULL,
+  address VARCHAR(255) NULL,
+  city VARCHAR(120) NULL,
+  country VARCHAR(120) NULL,
+  credit_limit DECIMAL(18,2) NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Inventory per warehouse
+CREATE TABLE IF NOT EXISTS product_stocks (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  product_id BIGINT UNSIGNED NOT NULL,
+  warehouse_id BIGINT UNSIGNED NOT NULL,
+  quantity DECIMAL(18,3) NOT NULL DEFAULT 0,
+  reserved_qty DECIMAL(18,3) NOT NULL DEFAULT 0,
+  UNIQUE KEY uq_product_warehouse (product_id, warehouse_id),
+  CONSTRAINT fk_stocks_product FOREIGN KEY (product_id) REFERENCES products(id),
+  CONSTRAINT fk_stocks_warehouse FOREIGN KEY (warehouse_id) REFERENCES warehouses(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Stock movement types
+CREATE TABLE IF NOT EXISTS stock_movement_types (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(50) NOT NULL UNIQUE,
+  label VARCHAR(150) NOT NULL,
+  direction ENUM('IN','OUT','TRANSFER') NOT NULL,
+  affects_reserved TINYINT(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Stock movements
+CREATE TABLE IF NOT EXISTS stock_movements (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  movement_type_id TINYINT UNSIGNED NOT NULL,
+  product_id BIGINT UNSIGNED NOT NULL,
+  warehouse_id BIGINT UNSIGNED NOT NULL,
+  to_warehouse_id BIGINT UNSIGNED NULL,
+  quantity DECIMAL(18,3) NOT NULL,
+  unit_price DECIMAL(18,2) NULL,
+  reference VARCHAR(120) NULL,
+  document_type VARCHAR(60) NULL,
+  document_id BIGINT NULL,
+  notes VARCHAR(255) NULL,
+  status ENUM('PENDING','VALIDATED','CANCELLED') NOT NULL DEFAULT 'VALIDATED',
+  moved_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_mov_type FOREIGN KEY (movement_type_id) REFERENCES stock_movement_types(id),
+  CONSTRAINT fk_mov_product FOREIGN KEY (product_id) REFERENCES products(id),
+  CONSTRAINT fk_mov_wh_from FOREIGN KEY (warehouse_id) REFERENCES warehouses(id),
+  CONSTRAINT fk_mov_wh_to FOREIGN KEY (to_warehouse_id) REFERENCES warehouses(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Purchases (commandes to suppliers)
+CREATE TABLE IF NOT EXISTS commandes (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  numero_commande VARCHAR(100) NOT NULL UNIQUE,
+  fournisseur_id BIGINT UNSIGNED NOT NULL,
+  warehouse_id BIGINT UNSIGNED NULL,
+  date_achat DATE NOT NULL,
+  status ENUM('brouillon','validee','partielle','annulee','terminee') NOT NULL DEFAULT 'brouillon',
+  montant DECIMAL(18,2) NOT NULL DEFAULT 0,
+  paid_amount DECIMAL(18,2) NOT NULL DEFAULT 0,
+  notes TEXT NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_cmd_supplier FOREIGN KEY (fournisseur_id) REFERENCES suppliers(id),
+  CONSTRAINT fk_cmd_warehouse FOREIGN KEY (warehouse_id) REFERENCES warehouses(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS commande_details (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  commande_id BIGINT UNSIGNED NOT NULL,
+  product_id BIGINT UNSIGNED NOT NULL,
+  quantite DECIMAL(18,3) NOT NULL,
+  prix_unitaire DECIMAL(18,2) NOT NULL,
+  sous_total DECIMAL(18,2) NOT NULL,
+  received_qty DECIMAL(18,3) NOT NULL DEFAULT 0,
+  CONSTRAINT fk_cmd_det_cmd FOREIGN KEY (commande_id) REFERENCES commandes(id) ON DELETE CASCADE,
+  CONSTRAINT fk_cmd_det_product FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS paiement_commandes (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  commande_id BIGINT UNSIGNED NOT NULL,
+  payment_date DATE NOT NULL,
+  amount DECIMAL(18,2) NOT NULL,
+  method VARCHAR(60) NULL,
+  reference VARCHAR(120) NULL,
+  notes VARCHAR(255) NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pay_cmd FOREIGN KEY (commande_id) REFERENCES commandes(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Sales (ventes to clients)
+CREATE TABLE IF NOT EXISTS ventes (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  numero_vente VARCHAR(100) NOT NULL UNIQUE,
+  client_id BIGINT UNSIGNED NOT NULL,
+  warehouse_id BIGINT UNSIGNED NULL,
+  date_vente DATE NOT NULL,
+  status ENUM('brouillon','validee','partielle','annulee','terminee') NOT NULL DEFAULT 'brouillon',
+  montant DECIMAL(18,2) NOT NULL DEFAULT 0,
+  paid_amount DECIMAL(18,2) NOT NULL DEFAULT 0,
+  notes TEXT NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_vente_client FOREIGN KEY (client_id) REFERENCES clients(id),
+  CONSTRAINT fk_vente_warehouse FOREIGN KEY (warehouse_id) REFERENCES warehouses(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS vente_details (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  vente_id BIGINT UNSIGNED NOT NULL,
+  product_id BIGINT UNSIGNED NOT NULL,
+  quantite DECIMAL(18,3) NOT NULL,
+  prix_unitaire DECIMAL(18,2) NOT NULL,
+  sous_total DECIMAL(18,2) NOT NULL,
+  delivered_qty DECIMAL(18,3) NOT NULL DEFAULT 0,
+  CONSTRAINT fk_vdet_vente FOREIGN KEY (vente_id) REFERENCES ventes(id) ON DELETE CASCADE,
+  CONSTRAINT fk_vdet_product FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS paiement_ventes (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  vente_id BIGINT UNSIGNED NOT NULL,
+  payment_date DATE NOT NULL,
+  amount DECIMAL(18,2) NOT NULL,
+  method VARCHAR(60) NULL,
+  reference VARCHAR(120) NULL,
+  notes VARCHAR(255) NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pay_vente FOREIGN KEY (vente_id) REFERENCES ventes(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Deliveries (livraisons) for sales
+CREATE TABLE IF NOT EXISTS livraisons (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  vente_id BIGINT UNSIGNED NOT NULL,
+  status ENUM('preparee','en_cours','livree','retournee','annulee') NOT NULL DEFAULT 'preparee',
+  started_at TIMESTAMP NULL,
+  completed_at TIMESTAMP NULL,
+  cancelled_at TIMESTAMP NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_liv_vente FOREIGN KEY (vente_id) REFERENCES ventes(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS livraison_details (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  livraison_id BIGINT UNSIGNED NOT NULL,
+  product_id BIGINT UNSIGNED NOT NULL,
+  quantite DECIMAL(18,3) NOT NULL,
+  prepared_qty DECIMAL(18,3) NOT NULL DEFAULT 0,
+  delivered_qty DECIMAL(18,3) NOT NULL DEFAULT 0,
+  returned_qty DECIMAL(18,3) NOT NULL DEFAULT 0,
+  CONSTRAINT fk_ldet_liv FOREIGN KEY (livraison_id) REFERENCES livraisons(id) ON DELETE CASCADE,
+  CONSTRAINT fk_ldet_product FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Basic users table (for UI auth mapping if needed)
+CREATE TABLE IF NOT EXISTS app_users (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(120) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  firstname VARCHAR(120) NULL,
+  lastname VARCHAR(120) NULL,
+  email VARCHAR(150) NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  last_login_at TIMESTAMP NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Seed default movement types
+INSERT INTO stock_movement_types (code, label, direction, affects_reserved) VALUES
+  ('PURCHASE_RECEIPT', 'Réception fournisseur', 'IN', 0),
+  ('SALE_RESERVATION', 'Réservation vente', 'OUT', 1),
+  ('SALE_DELIVERY', 'Sortie vente', 'OUT', 0),
+  ('STOCK_ADJUSTMENT_IN', 'Ajustement (+)', 'IN', 0),
+  ('STOCK_ADJUSTMENT_OUT', 'Ajustement (-)', 'OUT', 0),
+  ('TRANSFER', 'Transfert entrepôts', 'TRANSFER', 0)
+ON DUPLICATE KEY UPDATE label=VALUES(label), direction=VALUES(direction), affects_reserved=VALUES(affects_reserved);
+
+SET FOREIGN_KEY_CHECKS=1;
