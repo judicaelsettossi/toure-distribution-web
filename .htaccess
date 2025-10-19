@@ -1,49 +1,51 @@
 RewriteEngine On
 
-# Rediriger toutes les requêtes vers index.php sauf pour les fichiers existants
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+# Rediriger l'API locale
+RewriteRule ^api/local/(.*)$ api/local-api.php/$1 [QSA,L]
 
-# Sécurité - Empêcher l'accès aux fichiers sensibles
-<Files "composer.json">
-    Order Allow,Deny
+# Exemple de redirections pour les contrôleurs
+# Décommentez pour utiliser des URLs propres
+
+# RewriteRule ^ventes$ controllers/vente-controller.php?action=index [QSA,L]
+# RewriteRule ^ventes/([0-9]+)$ controllers/vente-controller.php?action=show&id=$1 [QSA,L]
+# RewriteRule ^commandes$ controllers/commande-controller.php?action=index [QSA,L]
+# RewriteRule ^stock$ controllers/stock-controller.php?action=index [QSA,L]
+
+# Empêcher l'accès direct aux fichiers sensibles
+<FilesMatch "^(database-config|api-config)\.php$">
+    Order allow,deny
     Deny from all
-</Files>
+</FilesMatch>
 
-<Files "composer.lock">
-    Order Allow,Deny
-    Deny from all
-</Files>
-
-# Headers de sécurité
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options nosniff
-    Header always set X-Frame-Options DENY
-    Header always set X-XSS-Protection "1; mode=block"
+# Protection des dossiers sensibles
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_URI} ^/configs/
+    RewriteRule ^(.*)$ - [F,L]
+    
+    RewriteCond %{REQUEST_URI} ^/models/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ - [F,L]
 </IfModule>
 
 # Compression GZIP
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/plain
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/xml
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE application/xml
-    AddOutputFilterByType DEFLATE application/xhtml+xml
-    AddOutputFilterByType DEFLATE application/rss+xml
-    AddOutputFilterByType DEFLATE application/javascript
-    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
 # Cache des fichiers statiques
 <IfModule mod_expires.c>
-    ExpiresActive on
-    ExpiresByType text/css "access plus 1 year"
-    ExpiresByType application/javascript "access plus 1 year"
-    ExpiresByType image/png "access plus 1 year"
+    ExpiresActive On
     ExpiresByType image/jpg "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Sécurité supplémentaire
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
 </IfModule>
