@@ -4,6 +4,60 @@
 
 session_start();
 
+// Exclure les fichiers statiques du routage
+$requestUri = $_SERVER['REQUEST_URI'];
+$parsedUrl = parse_url($requestUri);
+$path = $parsedUrl['path'];
+
+// Exclure les routes d'application qui ne sont pas des fichiers statiques
+$appRoutes = ['/camion/', '/client/', '/fournisseur/', '/entrepot/', '/produit/', '/stock/', '/facture/', '/chauffeur/', '/commande/'];
+$isAppRoute = false;
+foreach ($appRoutes as $route) {
+    if (strpos($path, $route) === 0) {
+        $isAppRoute = true;
+        break;
+    }
+}
+
+// Si c'est une route d'application, ne pas traiter comme fichier statique
+if ($isAppRoute) {
+    // Continuer avec le routage normal
+} else {
+    // Liste des extensions de fichiers statiques à exclure
+    $staticExtensions = ['ico', 'css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'woff', 'woff2', 'ttf', 'eot'];
+    $pathInfo = pathinfo($path);
+
+    // Si c'est un fichier statique, servir directement
+    if (isset($pathInfo['extension']) && in_array(strtolower($pathInfo['extension']), $staticExtensions)) {
+    $filePath = __DIR__ . $path;
+    if (file_exists($filePath)) {
+        // Déterminer le type MIME
+        $mimeTypes = [
+            'ico' => 'image/x-icon',
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'woff' => 'font/woff',
+            'woff2' => 'font/woff2',
+            'ttf' => 'font/ttf',
+            'eot' => 'application/vnd.ms-fontobject'
+        ];
+        
+        $extension = strtolower($pathInfo['extension']);
+        $mimeType = isset($mimeTypes[$extension]) ? $mimeTypes[$extension] : 'application/octet-stream';
+        
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . filesize($filePath));
+        readfile($filePath);
+        exit;
+    }
+    }
+}
+
 require 'configs/utils.php';
 require 'vendor/autoload.php';
 require 'controllers/controllers.php';
@@ -21,6 +75,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/entrepot/{id}/modifier', 'EntrepotController@editEntrepot');
 
 
+
     // Routes pour les clients
     $r->addRoute('GET', '/client/ajouter', 'ClientController@addClient');
     $r->addRoute('GET', '/liste-client', 'ClientController@listeClient');
@@ -32,10 +87,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/produit/liste', 'ProduitController@listeProduit');
     $r->addRoute('GET', '/produit/{id}/details', 'ProduitController@detailsProduit');
     $r->addRoute('GET', '/produit/{id}/edit', 'ProduitController@editProduit');
+    $r->addRoute('PATCH', '/api/products/{id}/toggle-status', 'ProduitController@toggleStatus');
 
     // Routes pour les categories
     $r->addRoute('GET', '/categorie-produit-add', 'ProduitController@categorieProduitAdd');
     $r->addRoute('GET', '/categories-produits-liste', 'ProduitController@categorieProduitList');
+    $r->addRoute('GET', '/categorie/{id}/details', 'ProduitController@categorieDetails');
+    $r->addRoute('GET', '/categorie/{id}/edit', 'ProduitController@categorieEdit');
 
     // Routes pour la gestion de stock
     $r->addRoute('GET', '/entree-sortie-stock', 'StockController@stockEntry');
@@ -118,6 +176,26 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/chauffeur/{id}/restaurer', 'ChauffeurController@restaurerChauffeur');
     $r->addRoute('POST', '/chauffeur/{id}/restaurer', 'ChauffeurController@restaurerChauffeur');
 
+    // Routes pour la gestion des utilisateurs
+    $r->addRoute('GET', '/utilisateurs', 'UserController@listeUtilisateurs');
+    $r->addRoute('GET', '/utilisateur/creer', 'UserController@creerUtilisateur');
+    $r->addRoute('POST', '/utilisateur/creer', 'UserController@creerUtilisateur');
+    $r->addRoute('GET', '/utilisateur/{id}', 'UserController@detailsUtilisateur');
+    $r->addRoute('GET', '/utilisateur/{id}/modifier', 'UserController@modifierUtilisateur');
+    $r->addRoute('POST', '/utilisateur/{id}/modifier', 'UserController@modifierUtilisateur');
+
+    // API Routes utilisateurs
+    $r->addRoute('GET', '/api/users', 'UserController@getUsersList');
+    $r->addRoute('GET', '/api/users/statistics', 'UserController@getUsersStatistics');
+    $r->addRoute('GET', '/api/users/{id}', 'UserController@getUserDetails');
+    $r->addRoute('POST', '/api/users/{id}/activate', 'UserController@activateUser');
+    $r->addRoute('POST', '/api/users/{id}/unlock', 'UserController@unlockUser');
+    $r->addRoute('PUT', '/api/users/{id}', 'UserController@updateUser');
+
+    // Routes pour le profil utilisateur
+    $r->addRoute('GET', '/profil', 'UserController@profilUtilisateur');
+    $r->addRoute('POST', '/profil', 'UserController@profilUtilisateur');
+
     // Routes pour la gestion des commandes
     $r->addRoute('GET', '/commandes', 'CommandeController@listeCommandes');
     $r->addRoute('GET', '/commandes/supprimees', 'CommandeController@commandesSupprimees');
@@ -187,6 +265,9 @@ switch ($routeInfo[0]) {
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
         list($controller, $method) = explode('@', $handler, 2);
-        call_user_func_array(array(new $controller, $method), $vars);
+        
+        // Convertir les paramètres nommés en tableau indexé
+        $args = array_values($vars);
+        call_user_func_array(array(new $controller, $method), $args);
         break;
 }

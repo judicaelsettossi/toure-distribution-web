@@ -48,34 +48,43 @@
     }
 
     .form-group-modern {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.75rem;
+        display: flex;
+        flex-direction: column;
     }
 
     .form-label-modern {
         font-weight: 600;
         color: var(--secondary-color);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
         font-size: 0.9rem;
+        display: block;
+        width: 100%;
     }
 
     .label-required::after {
         content: ' *';
         color: #dc3545;
+        font-weight: 700;
     }
 
     .form-control-modern {
         border: 2px solid #e9ecef;
         border-radius: 8px;
-        padding: 0.75rem 1rem;
+        padding: 0.875rem 1rem;
         font-size: 1rem;
         transition: all 0.3s ease;
         background-color: #fff;
+        width: 100%;
+        min-height: 48px;
+        line-height: 1.5;
     }
 
     .form-control-modern:focus {
         border-color: var(--primary-color);
         box-shadow: 0 0 0 0.2rem rgba(240, 4, 128, 0.25);
         background-color: #fff;
+        outline: none;
     }
 
     .form-control-modern.is-invalid {
@@ -83,23 +92,40 @@
         box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
     }
 
+    .form-control-modern:read-only {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+    }
+
+    textarea.form-control-modern {
+        min-height: 100px;
+        resize: vertical;
+    }
+
     .form-check-modern {
         display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
     }
 
     .form-check-input-modern {
-        width: 1.25rem;
-        height: 1.25rem;
+        width: 1.5rem;
+        height: 1.5rem;
         border: 2px solid #e9ecef;
-        border-radius: 4px;
+        border-radius: 6px;
         background-color: #fff;
         cursor: pointer;
         position: relative;
         appearance: none;
         transition: all 0.3s ease;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
     }
 
     .form-check-input-modern:checked {
@@ -115,7 +141,7 @@
         transform: translate(-50%, -50%);
         color: white;
         font-weight: bold;
-        font-size: 0.875rem;
+        font-size: 1rem;
     }
 
     .form-check-label-modern {
@@ -123,13 +149,34 @@
         font-weight: 500;
         cursor: pointer;
         margin-bottom: 0;
+        line-height: 1.5;
+    }
+
+    .form-check-info {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #6c757d;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 
     .invalid-feedback {
         display: block;
         color: #dc3545;
         font-size: 0.875rem;
-        margin-top: 0.25rem;
+        margin-top: 0.5rem;
+        font-weight: 500;
+        padding-left: 0.25rem;
+    }
+
+    .text-muted-custom {
+        color: #6c757d !important;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
     }
 
     .alert {
@@ -252,23 +299,83 @@
     }
 
     .form-section .card-body {
-        padding: 1.5rem;
+        padding: 2rem;
     }
 
-    .text-muted-custom {
-        color: #6c757d !important;
-        font-size: 0.875rem;
+    /* Amélioration de l'alignement des colonnes */
+    .row {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
     }
 
+    .row > [class*="col-"] {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    /* Alignement des champs dans les colonnes */
+    .col-md-6 .form-group-modern {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .col-md-6 .form-control-modern {
+        flex: 1;
+    }
+
+    /* Espacement uniforme */
+    .form-section .row:last-child .form-group-modern {
+        margin-bottom: 0;
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
         .form-section .card-body {
-            padding: 1rem;
+            padding: 1.5rem;
         }
         
         .btn-modern {
             width: 100%;
             justify-content: center;
             margin-bottom: 0.5rem;
+        }
+
+        .form-group-modern {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control-modern {
+            padding: 0.75rem 1rem;
+            min-height: 44px;
+        }
+
+        .form-check-modern {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .d-flex.gap-3 {
+            flex-direction: column;
+            gap: 1rem !important;
+        }
+
+        .d-flex.gap-3 .btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-section .card-body {
+            padding: 1rem;
+        }
+
+        .section-header {
+            padding: 0.75rem 1rem;
+        }
+
+        .page-header {
+            padding: 1rem;
         }
     }
 </style>
@@ -374,17 +481,17 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="form-group-modern">
-                                    <div class="form-check-modern">
-                                        <input type="checkbox" id="is_active" name="is_active" class="form-check-input-modern" checked>
+                                <div class="form-check-modern">
+                                    <input type="checkbox" id="is_active" name="is_active" class="form-check-input-modern" checked>
+                                    <div>
                                         <label class="form-check-label-modern" for="is_active">
                                             Fournisseur actif
                                         </label>
+                                        <div class="form-check-info">
+                                            <i class="bi-info-circle"></i>
+                                            <span>Les fournisseurs inactifs ne peuvent pas recevoir de nouvelles commandes</span>
+                                        </div>
                                     </div>
-                                    <small class="text-muted-custom">
-                                        <i class="bi-info-circle me-1"></i>
-                                        Les fournisseurs inactifs ne peuvent pas recevoir de nouvelles commandes
-                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -454,13 +561,17 @@
                 <!-- Actions -->
                 <div class="form-section">
                     <div class="card-body">
-                        <div class="d-flex gap-3 justify-content-end">
-                            <button type="button" class="btn btn-secondary-modern" onclick="window.location.href='/fournisseurs'">
-                                <i class="bi-x-circle me-1"></i> Annuler
-                            </button>
-                            <button type="submit" class="btn btn-primary-modern" id="submitBtn">
-                                <i class="bi-check-circle me-1"></i> Enregistrer les modifications
-                            </button>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex gap-3 justify-content-end align-items-center">
+                                    <button type="button" class="btn btn-secondary-modern" onclick="window.location.href='/fournisseurs'">
+                                        <i class="bi-x-circle me-1"></i> Annuler
+                                    </button>
+                                    <button type="submit" class="btn btn-primary-modern" id="submitBtn">
+                                        <i class="bi-check-circle me-1"></i> Enregistrer les modifications
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

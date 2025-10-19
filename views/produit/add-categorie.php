@@ -571,14 +571,24 @@
         }, 4000);
     }
 
-    // Protection contre la perte de données
+    // Protection contre la perte de données - Désactivée après soumission
     let formModified = false;
+    let formSubmitted = false;
+    
     document.getElementById('categoryForm').addEventListener('input', function() {
-        formModified = true;
+        if (!formSubmitted) {
+            formModified = true;
+        }
+    });
+
+    // Marquer le formulaire comme soumis lors de la soumission
+    document.getElementById('categoryForm').addEventListener('submit', function() {
+        formSubmitted = true;
+        formModified = false;
     });
 
     window.addEventListener('beforeunload', function(e) {
-        if (formModified) {
+        if (formModified && !formSubmitted) {
             e.preventDefault();
             e.returnValue = '';
         }

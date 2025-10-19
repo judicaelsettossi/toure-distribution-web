@@ -1,19 +1,26 @@
-// Configuration API globale
-const API_CONFIG = {
-    baseUrl: 'https://toure.gestiem.com/api',
-    timeout: 30000
-};
+// Configuration API globale - utiliser une variable globale pour éviter les conflits
+if (typeof window.API_CONFIG === 'undefined') {
+    window.API_CONFIG = {
+        baseUrl: 'https://toure.gestiem.com/api',
+        timeout: 30000
+    };
+}
+// Utiliser var au lieu de const/let pour éviter les erreurs de redéclaration
+var API_CONFIG = window.API_CONFIG;
 
 // Fonction utilitaire pour récupérer les cookies
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
+if (typeof getCookie === 'undefined') {
+    window.getCookie = function(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return '';
+    }
 }
 
 // Fonction utilitaire pour faire des appels API
-async function apiCall(endpoint, method = 'GET', data = null, options = {}) {
+if (typeof apiCall === 'undefined') {
+    window.apiCall = async function(endpoint, method = 'GET', data = null, options = {}) {
     const url = API_CONFIG.baseUrl + endpoint;
     
     const defaultOptions = {
@@ -57,10 +64,12 @@ async function apiCall(endpoint, method = 'GET', data = null, options = {}) {
             status: 0
         };
     }
+    }
 }
 
 // Fonctions spécifiques pour les produits
-const ProductAPI = {
+if (typeof ProductAPI === 'undefined') {
+    window.ProductAPI = {
     // Récupérer tous les produits
     getAll: async (page = 1, limit = 10, search = '', category = '', status = '') => {
         let endpoint = `/products?page=${page}&limit=${limit}`;
@@ -91,10 +100,12 @@ const ProductAPI = {
     delete: async (productId) => {
         return await apiCall(`/products/${productId}`, 'DELETE');
     }
-};
+    };
+}
 
 // Fonctions spécifiques pour les catégories
-const CategoryAPI = {
+if (typeof CategoryAPI === 'undefined') {
+    window.CategoryAPI = {
     // Récupérer toutes les catégories
     getAll: async () => {
         return await apiCall('/product-categories');
@@ -119,10 +130,12 @@ const CategoryAPI = {
     delete: async (categoryId) => {
         return await apiCall(`/product-categories/${categoryId}`, 'DELETE');
     }
-};
+    };
+}
 
 // Fonction utilitaire pour afficher les notifications
-function showNotification(type, message, duration = 3000) {
+if (typeof showNotification === 'undefined') {
+    window.showNotification = function(type, message, duration = 3000) {
     const toast = document.createElement('div');
     toast.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} position-fixed top-0 end-0 m-3`;
     toast.style.zIndex = '9999';
@@ -144,15 +157,19 @@ function showNotification(type, message, duration = 3000) {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
     }, duration);
+    }
 }
 
 // Fonction utilitaire pour formater les prix
-function formatPrice(price) {
-    return new Intl.NumberFormat('fr-FR').format(price || 0) + ' FCFA';
+if (typeof formatPrice === 'undefined') {
+    window.formatPrice = function(price) {
+        return new Intl.NumberFormat('fr-FR').format(price || 0) + ' FCFA';
+    }
 }
 
 // Fonction utilitaire pour formater les dates
-function formatDate(dateString, options = {}) {
+if (typeof formatDate === 'undefined') {
+    window.formatDate = function(dateString, options = {}) {
     if (!dateString) return '-';
     
     const date = new Date(dateString);
@@ -165,22 +182,28 @@ function formatDate(dateString, options = {}) {
     };
     
     return date.toLocaleDateString('fr-FR', { ...defaultOptions, ...options });
+    }
 }
 
 // Fonction utilitaire pour valider les emails
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+if (typeof isValidEmail === 'undefined') {
+    window.isValidEmail = function(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
 }
 
 // Fonction utilitaire pour valider les UUIDs
-function isValidUUID(uuid) {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    return uuidRegex.test(uuid);
+if (typeof isValidUUID === 'undefined') {
+    window.isValidUUID = function(uuid) {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        return uuidRegex.test(uuid);
+    }
 }
 
 // Fonction pour gérer les erreurs API de manière centralisée
-function handleApiError(error, defaultMessage = 'Une erreur est survenue') {
+if (typeof handleApiError === 'undefined') {
+    window.handleApiError = function(error, defaultMessage = 'Une erreur est survenue') {
     console.error('API Error:', error);
     
     let message = defaultMessage;
@@ -202,6 +225,7 @@ function handleApiError(error, defaultMessage = 'Une erreur est survenue') {
     }
     
     showNotification('error', message);
+    }
 }
 
 // Export pour utilisation dans d'autres fichiers

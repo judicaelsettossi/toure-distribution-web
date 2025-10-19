@@ -54,6 +54,10 @@
         border-radius: 12px 12px 0 0;
     }
 
+    .fournisseur-header h2 {
+        color: white !important;
+    }
+
     .fournisseur-avatar-large {
         width: 100px;
         height: 100px;
@@ -163,6 +167,124 @@
         font-size: 0.875rem;
         color: #6c757d;
         margin-top: 0.5rem;
+    }
+
+    /* Modal styles - cohérent avec les autres pages */
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+        padding: 1.5rem 1.5rem 0 1.5rem;
+        border-bottom: none;
+    }
+
+    .modal-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #212529;
+    }
+
+    .modal-body {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+        text-align: center;
+    }
+
+    .modal-footer {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+        border-top: none;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.25rem;
+        opacity: 0.5;
+        transition: opacity 0.2s ease;
+    }
+
+    .btn-close:hover {
+        opacity: 0.75;
+    }
+
+    /* Boutons de la modal */
+    .modal-footer .btn {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        min-width: 100px;
+    }
+
+    .modal-footer .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .modal-footer .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    .modal-footer .btn-success {
+        background: linear-gradient(135deg, #198754 0%, #157347 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+    }
+
+    .modal-footer .btn-success:hover {
+        background: linear-gradient(135deg, #157347 0%, #146c43 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+    }
+
+    .modal-footer .btn-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    .modal-footer .btn-warning:hover {
+        background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .modal-footer .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+        transform: translateY(-1px);
+    }
+
+    /* Icône dans la modal */
+    .modal-body .icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .modal-body .icon.success {
+        color: #28a745;
+    }
+
+    .modal-body .icon.warning {
+        color: #ffc107;
+    }
+
+    .modal-body .icon.danger {
+        color: #dc3545;
     }
 </style>
 
@@ -382,6 +504,30 @@
     </div>
 </main>
 
+<!-- Modal de confirmation Bootstrap -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i id="modalIcon" class="bi bi-question-circle icon warning"></i>
+                <p id="modalMessage">Êtes-vous sûr de vouloir effectuer cette action ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi-x-circle me-1"></i> Annuler
+                </button>
+                <button type="button" id="modalConfirmBtn" class="btn btn-primary" onclick="confirmModalAction()">
+                    <i class="bi-check-circle me-1"></i> Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let fournisseurData = null;
 
@@ -502,16 +648,42 @@
         document.getElementById('updatedAt').textContent = updatedDate.toLocaleDateString('fr-FR');
     }
 
-    async function toggleFournisseurStatus() {
+    let currentModalAction = null;
+
+    function toggleFournisseurStatus() {
         if (!fournisseurData) return;
 
         const newStatus = !fournisseurData.is_active;
-        const confirmMsg = newStatus ?
-            'Voulez-vous activer ce fournisseur ?' :
-            'Voulez-vous désactiver ce fournisseur ?';
+        const isActivating = newStatus;
+        
+        // Configuration de la modal
+        document.getElementById('confirmationModalLabel').textContent = isActivating ? 'Activer le fournisseur' : 'Désactiver le fournisseur';
+        document.getElementById('modalMessage').textContent = isActivating ? 
+            `Voulez-vous activer le fournisseur "${fournisseurData.name}" ?` :
+            `Voulez-vous désactiver le fournisseur "${fournisseurData.name}" ?`;
+        
+        // Icône et couleur
+        const modalIcon = document.getElementById('modalIcon');
+        const confirmBtn = document.getElementById('modalConfirmBtn');
+        
+        if (isActivating) {
+            modalIcon.className = 'bi bi-check-circle icon success';
+            confirmBtn.className = 'btn btn-success';
+            confirmBtn.innerHTML = '<i class="bi-check-circle me-1"></i> Activer';
+        } else {
+            modalIcon.className = 'bi bi-x-circle icon warning';
+            confirmBtn.className = 'btn btn-warning';
+            confirmBtn.innerHTML = '<i class="bi-x-circle me-1"></i> Désactiver';
+        }
+        
+        // Stocker l'action à exécuter
+        currentModalAction = () => executeToggleStatus(newStatus);
+        
+        // Afficher la modal
+        showModal();
+    }
 
-        if (!confirm(confirmMsg)) return;
-
+    async function executeToggleStatus(newStatus) {
         try {
             const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
             const currentFournisseurId = getFournisseurIdFromUrl();
@@ -541,12 +713,29 @@
         }
     }
 
-    async function confirmDeleteFournisseur() {
-        if (!confirm(
-                `Êtes-vous sûr de vouloir supprimer ${fournisseurData.name} ?\n\nCette action est irréversible.`)) {
-            return;
-        }
+    function confirmDeleteFournisseur() {
+        if (!fournisseurData) return;
 
+        // Configuration de la modal pour la suppression
+        document.getElementById('confirmationModalLabel').textContent = 'Supprimer le fournisseur';
+        document.getElementById('modalMessage').textContent = `Êtes-vous sûr de vouloir supprimer le fournisseur "${fournisseurData.name}" ?\n\nCette action est irréversible.`;
+        
+        // Icône et couleur pour la suppression
+        const modalIcon = document.getElementById('modalIcon');
+        const confirmBtn = document.getElementById('modalConfirmBtn');
+        
+        modalIcon.className = 'bi bi-trash icon danger';
+        confirmBtn.className = 'btn btn-danger';
+        confirmBtn.innerHTML = '<i class="bi-trash me-1"></i> Supprimer';
+        
+        // Stocker l'action à exécuter
+        currentModalAction = executeDeleteFournisseur;
+        
+        // Afficher la modal
+        showModal();
+    }
+
+    async function executeDeleteFournisseur() {
         try {
             const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
             const currentFournisseurId = getFournisseurIdFromUrl();
@@ -597,6 +786,28 @@
     function getInitials(name) {
         return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
     }
+
+    // Fonctions pour gérer la modal Bootstrap
+    function showModal() {
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+    }
+
+    function confirmModalAction() {
+        if (currentModalAction) {
+            currentModalAction();
+        }
+        // Fermer la modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+        if (modal) {
+            modal.hide();
+        }
+    }
+
+    // Réinitialiser l'action quand la modal se ferme
+    document.getElementById('confirmationModal').addEventListener('hidden.bs.modal', function () {
+        currentModalAction = null;
+    });
 
     function showNotification(type, message) {
         const toast = document.createElement('div');

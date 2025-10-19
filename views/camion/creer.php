@@ -1,523 +1,672 @@
-<?php ob_start(); ?>
+<?php
+// Pas besoin d'ob_start() car le contrôleur gère déjà le buffer
+?>
 
 <style>
-    :root {
-        --primary-color: #f00480;
-        --secondary-color: #010768;
-        --accent-color: #010068;
-        --light-primary: rgba(240, 4, 128, 0.1);
-        --light-secondary: rgba(1, 7, 104, 0.1);
-        --success-color: #10b981;
-        --warning-color: #f59e0b;
-        --danger-color: #ef4444;
-        --info-color: #3b82f6;
-    }
+:root {
+    --primary-color: #f00480;
+    --secondary-color: #010768;
+    --accent-color: #010068;
+    --light-primary: rgba(240, 4, 128, 0.1);
+    --light-secondary: rgba(1, 7, 104, 0.1);
+}
 
-    .font-public-sans {
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+.font-public-sans {
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
-    /* Fix chevauchement */
-    .create-camion-wrapper {
-        margin-left: 250px;
-        margin-top: 70px;
-        padding: 2rem;
-        min-height: calc(100vh - 70px);
-        background: #f8f9fa;
-    }
+.text-primary-custom {
+    color: var(--primary-color) !important;
+}
 
-    @media (max-width: 991px) {
-        .create-camion-wrapper {
-            margin-left: 0;
-            margin-top: 60px;
-            padding: 1rem;
-        }
-    }
+.text-secondary-custom {
+    color: var(--secondary-color) !important;
+}
 
-    /* Header */
-    .create-camion-header {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-    }
+.bg-primary-custom {
+    background-color: var(--primary-color) !important;
+}
 
-    .create-camion-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-    }
+.bg-light-primary {
+    background-color: var(--light-primary) !important;
+}
 
-    .create-camion-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--secondary-color);
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
 
-    .create-camion-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 15px;
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    }
+.btn-primary-custom:hover {
+    background-color: #d1036d;
+    border-color: #d1036d;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(240, 4, 128, 0.3);
+}
 
-    /* Form container */
-    .form-container {
-        background: white;
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 2rem;
-    }
+.btn-secondary-custom {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
 
-    .form-section {
-        margin-bottom: 2.5rem;
-        padding-bottom: 2rem;
-        border-bottom: 2px solid #f0f0f0;
-    }
+.btn-secondary-custom:hover {
+    background-color: #020a7a;
+    border-color: #020a7a;
+    color: white;
+    transform: translateY(-1px);
+}
 
-    .form-section:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
+.btn-outline-modern {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    background: white;
+    color: #6c757d;
+}
 
-    .section-title {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--secondary-color);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
+.btn-outline-modern:hover {
+    background-color: #f8f9fa;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(240, 4, 128, 0.3);
+}
 
-    .section-icon {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-    }
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
 
-    /* Form controls */
-    .form-group-modern {
-        margin-bottom: 1.5rem;
-    }
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    z-index: 1;
+}
 
-    .form-label-modern {
-        font-weight: 600;
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-        display: block;
-        font-size: 0.95rem;
-    }
+.page-header .row {
+    position: relative;
+    z-index: 2;
+}
 
-    .label-required::after {
-        content: ' *';
-        color: var(--danger-color);
-    }
+.page-header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: white !important;
+}
 
-    .form-control-modern {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
+.breadcrumb {
+    background: none;
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
 
-    .form-control-modern:focus {
-        outline: none;
-        border-color: var(--success-color);
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
+.breadcrumb-item a {
+    color: rgba(255,255,255,0.8) !important;
+    text-decoration: none;
+}
 
-    .form-select-modern {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-        background-position: right 0.75rem center;
-        background-repeat: no-repeat;
-        background-size: 1rem;
-        padding-right: 2.5rem;
-    }
+.breadcrumb-item.active {
+    color: white !important;
+}
 
-    /* Buttons */
-    .btn-modern {
-        padding: 0.75rem 2rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-decoration: none;
-    }
+/* Form Section */
+.form-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
 
-    .btn-success-modern {
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        color: white;
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    }
+.form-section-header {
+    background: linear-gradient(135deg, var(--light-primary) 0%, #f8f9fa 100%);
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 
-    .btn-success-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-    }
+.form-section-header h5 {
+    font-weight: 600;
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
 
-    .btn-outline-modern {
-        background: white;
-        color: var(--secondary-color);
-        border: 2px solid var(--secondary-color);
-    }
+.form-section-body {
+    padding: 2rem;
+}
 
-    .btn-outline-modern:hover {
-        background: var(--secondary-color);
-        color: white;
-        transform: translateY(-2px);
-    }
+/* Form Controls */
+.form-label {
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
 
-    .btn-secondary-modern {
-        background: #6b7280;
-        color: white;
-    }
+.required-field::after {
+    content: " *";
+    color: var(--primary-color);
+    font-weight: bold;
+}
 
-    .btn-secondary-modern:hover {
-        background: #4b5563;
-        transform: translateY(-2px);
-    }
+.form-control {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
 
-    /* Form actions */
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 0.2rem rgba(240, 4, 128, 0.15);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.form-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    appearance: none;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 0.2rem rgba(240, 4, 128, 0.15);
+}
+
+.form-text {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Input with Icon */
+.position-relative {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    z-index: 2;
+}
+
+.has-icon {
+    padding-left: 35px;
+}
+
+/* Status Options */
+.status-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.status-option {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-option:hover {
+    border-color: var(--primary-color);
+    background-color: var(--light-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(240, 4, 128, 0.15);
+}
+
+.status-option.selected {
+    border-color: var(--primary-color);
+    background-color: var(--light-primary);
+    box-shadow: 0 4px 15px rgba(240, 4, 128, 0.2);
+}
+
+.status-icon {
+    font-size: 2rem;
+    color: var(--secondary-color);
+}
+
+.status-option.selected .status-icon {
+    color: var(--primary-color);
+}
+
+.status-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.status-description {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Loading */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f0f0f0;
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text {
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-icon {
+    font-size: 1.25rem;
+}
+
+.alert-close {
+    margin-left: auto;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    font-size: 1.25rem;
+}
+
+.alert-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-section-body {
+        padding: 1.5rem;
+    }
+    
     .form-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: flex-end;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid #f0f0f0;
+        padding: 1.5rem;
+        flex-direction: column;
     }
-
-    /* Loading */
-    .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
+    
+    .status-options {
+        grid-template-columns: 1fr;
     }
-
-    .loading-content {
-        background: white;
-        padding: 2rem 3rem;
-        border-radius: 16px;
-        text-align: center;
-    }
-
-    .loading-spinner {
-        width: 60px;
-        height: 60px;
-        border: 4px solid #f0f0f0;
-        border-top-color: var(--success-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 1rem;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .loading-text {
-        color: var(--secondary-color);
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-
-    /* Alert messages */
-    .alert-modern {
-        padding: 1.25rem;
-        border-radius: 12px;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        font-weight: 500;
-        animation: slideDown 0.3s ease-out;
-    }
-
-    .alert-success {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success-color);
-        border-left: 4px solid var(--success-color);
-    }
-
-    .alert-danger {
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger-color);
-        border-left: 4px solid var(--danger-color);
-    }
-
-    .alert-icon {
-        font-size: 1.5rem;
-    }
-
-    /* Animations */
-    .fade-in {
-        animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .form-actions {
-            flex-direction: column;
-        }
-        
-        .create-camion-title {
-            font-size: 2rem;
-        }
-    }
+}
 </style>
 
-<div class="create-camion-wrapper font-public-sans">
-    <!-- Header -->
-    <div class="create-camion-header fade-in">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="create-camion-title">
-                <div class="create-camion-icon">
-                    <i class="bi bi-truck"></i>
+<main id="content" role="main" class="main font-public-sans">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/" class="text-white">Tableau de Bord</a></li>
+                            <li class="breadcrumb-item"><a href="/camions" class="text-white">Camions</a></li>
+                            <li class="breadcrumb-item active">Nouveau Camion</li>
+                        </ol>
+                    </nav>
+                    <h1 class="page-header-title">
+                        <i class="bi-truck me-2"></i>
+                        Créer un Nouveau Camion
+                    </h1>
+                    <p class="mb-0">Ajoutez un nouveau véhicule à votre flotte de transport</p>
                 </div>
-                Nouveau Camion
-            </h1>
-            <a href="/camions" class="btn-modern btn-outline-modern">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
+                <div class="col-auto">
+                    <a href="/camions" class="btn btn-outline-light">
+                        <i class="bi-arrow-left me-1"></i> Retour
+                    </a>
+                </div>
+            </div>
         </div>
-        <p class="text-muted mb-0">Enregistrez un nouveau camion dans votre flotte</p>
+
+        <!-- Alerts Container -->
+        <div id="alertContainer"></div>
+
+        <!-- Form -->
+        <form id="createCamionForm">
+            <!-- Section Informations du Camion -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <h5>
+                        <i class="bi-truck"></i>
+                        Informations du Camion
+                    </h5>
+                </div>
+                <div class="form-section-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="numeroImmat" class="form-label required-field">Numéro d'Immatriculation</label>
+                            <div class="position-relative">
+                                <i class="bi-123 input-icon"></i>
+                                <input type="text" id="numeroImmat" name="numero_immat" class="form-control has-icon" 
+                                       placeholder="Ex: AB-1234-CD" required>
+                            </div>
+                            <div class="form-text">Numéro unique d'immatriculation du camion</div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="marque" class="form-label required-field">Marque</label>
+                            <div class="position-relative">
+                                <i class="bi-truck input-icon"></i>
+                                <input type="text" id="marque" name="marque" class="form-control has-icon" 
+                                       placeholder="Ex: Mercedes, Volvo, Iveco..." required>
+                            </div>
+                            <div class="form-text">Marque du véhicule</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="modele" class="form-label">Modèle</label>
+                            <div class="position-relative">
+                                <i class="bi-tag input-icon"></i>
+                                <input type="text" id="modele" name="modele" class="form-control has-icon" 
+                                       placeholder="Ex: Actros, FH16, Eurocargo...">
+                            </div>
+                            <div class="form-text">Modèle spécifique du camion</div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="capacite" class="form-label required-field">Capacité (tonnes)</label>
+                            <div class="position-relative">
+                                <i class="bi-speedometer2 input-icon"></i>
+                                <input type="number" id="capacite" name="capacite" class="form-control has-icon" 
+                                       placeholder="Ex: 15.50" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-text">Capacité de charge en tonnes</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                            <label for="note" class="form-label">Notes</label>
+                            <div class="position-relative">
+                                <i class="bi-file-text input-icon" style="top: 20px;"></i>
+                                <textarea id="note" name="note" class="form-control has-icon" 
+                                          placeholder="Notes ou observations sur le camion..." rows="3"></textarea>
+                            </div>
+                            <div class="form-text">Informations complémentaires sur l'état ou les caractéristiques</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Statut du Camion -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <h5>
+                        <i class="bi-gear"></i>
+                        Statut du Camion
+                    </h5>
+                </div>
+                <div class="form-section-body">
+                    <div class="status-options">
+                        <div class="status-option" data-status="disponible">
+                            <i class="bi-check-circle status-icon"></i>
+                            <h6 class="status-name">Disponible</h6>
+                            <p class="status-description">Camion disponible pour les missions</p>
+                        </div>
+                        <div class="status-option" data-status="en_mission">
+                            <i class="bi-truck status-icon"></i>
+                            <h6 class="status-name">En Mission</h6>
+                            <p class="status-description">Actuellement en cours de transport</p>
+                        </div>
+                        <div class="status-option" data-status="en_maintenance">
+                            <i class="bi-tools status-icon"></i>
+                            <h6 class="status-name">En Maintenance</h6>
+                            <p class="status-description">En réparation ou entretien</p>
+                        </div>
+                        <div class="status-option" data-status="hors_service">
+                            <i class="bi-x-circle status-icon"></i>
+                            <h6 class="status-name">Hors Service</h6>
+                            <p class="status-description">Temporairement indisponible</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="status" name="status" value="disponible">
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn-outline-modern" onclick="window.history.back()">
+                    <i class="bi-x-lg me-1"></i> Annuler
+                </button>
+                <button type="submit" class="btn-primary-custom" id="submitBtn">
+                    <i class="bi-check-lg me-1"></i> Créer le Camion
+                </button>
+            </div>
+        </form>
     </div>
-
-    <!-- Alerts -->
-    <div id="alertContainer"></div>
-
-    <!-- Form -->
-    <form id="createCamionForm" class="form-container fade-in">
-        <!-- Section Informations Générales -->
-        <div class="form-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="bi bi-info-circle"></i>
-                </div>
-                Informations Générales
-            </h3>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern label-required">Numéro d'immatriculation</label>
-                        <input type="text" id="numeroImmat" class="form-control-modern" placeholder="AB-1234-CD" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern label-required">Marque</label>
-                        <input type="text" id="marque" class="form-control-modern" placeholder="Mercedes, Volvo, Scania..." required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Modèle</label>
-                        <input type="text" id="modele" class="form-control-modern" placeholder="Actros, FH16, R-Series...">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern label-required">Capacité (tonnes)</label>
-                        <input type="number" id="capacite" class="form-control-modern" placeholder="15.5" min="0" step="0.1" required>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section Statut et Notes -->
-        <div class="form-section">
-            <h3 class="section-title">
-                <div class="section-icon">
-                    <i class="bi bi-gear"></i>
-                </div>
-                Statut et Configuration
-            </h3>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group-modern">
-                        <label class="form-label-modern">Statut</label>
-                        <select id="status" class="form-control-modern form-select-modern">
-                            <option value="disponible">Disponible</option>
-                            <option value="en_mission">En mission</option>
-                            <option value="en_maintenance">En maintenance</option>
-                            <option value="hors_service">Hors service</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group-modern">
-                <label class="form-label-modern">Notes / Observations</label>
-                <textarea id="note" class="form-control-modern" rows="4" placeholder="Informations complémentaires sur le camion (état, équipements, historique...)"></textarea>
-            </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="form-actions">
-            <button type="button" class="btn-modern btn-secondary-modern" onclick="resetForm()">
-                <i class="bi bi-arrow-clockwise"></i>
-                Réinitialiser
-            </button>
-            <button type="button" id="submitCreateCamion" class="btn-modern btn-success-modern">
-                <i class="bi bi-check-circle"></i>
-                Enregistrer le Camion
-            </button>
-        </div>
-    </form>
-</div>
+</main>
 
 <!-- Loading Overlay -->
 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
     <div class="loading-content">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Enregistrement en cours...</div>
+        <div class="loading-text">Création du camion...</div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Event listeners
         setupEventListeners();
+        initializeForm();
     });
 
     function setupEventListeners() {
-        // Soumission du formulaire
-        const form = document.getElementById('createCamionForm');
-        if (form) {
-            form.addEventListener('submit', handleSubmit);
-            console.log('Event listener ajouté au formulaire');
-        } else {
-            console.error('Formulaire non trouvé!');
-        }
-
-        // Event listener pour le bouton de soumission
-        const submitButton = document.getElementById('submitCreateCamion');
-        if (submitButton) {
-            console.log('Bouton de soumission trouvé:', submitButton);
-            submitButton.addEventListener('click', function(e) {
-                console.log('Bouton de soumission cliqué!');
-                e.preventDefault();
-                handleSubmit(e);
+        // Status selection
+        const statusOptions = document.querySelectorAll('.status-option');
+        statusOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                statusOptions.forEach(opt => opt.classList.remove('selected'));
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                // Update hidden input
+                document.getElementById('status').value = this.dataset.status;
             });
-        } else {
-            console.error('Bouton de soumission non trouvé!');
+        });
+
+        // Form submission
+        document.getElementById('createCamionForm').addEventListener('submit', handleSubmit);
+    }
+
+    function initializeForm() {
+        // Set default status as selected
+        const defaultStatus = document.querySelector('.status-option[data-status="disponible"]');
+        if (defaultStatus) {
+            defaultStatus.classList.add('selected');
         }
     }
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        console.log('=== DÉBUT DE LA SOUMISSION ===');
-
-        // Validation des champs requis
-        const numeroImmat = document.getElementById('numeroImmat').value.trim();
-        const marque = document.getElementById('marque').value.trim();
-        const capacite = document.getElementById('capacite').value;
-
-        if (!numeroImmat) {
-            showAlert('Veuillez saisir le numéro d\'immatriculation', 'danger');
-            return;
-        }
-
-        if (!marque) {
-            showAlert('Veuillez saisir la marque du camion', 'danger');
-            return;
-        }
-
-        if (!capacite || parseFloat(capacite) <= 0) {
-            showAlert('Veuillez saisir une capacité valide', 'danger');
-            return;
-        }
-
+    async function handleSubmit(event) {
+        event.preventDefault();
+        
         try {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-
-            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
-            console.log('Access token:', accessToken ? 'Présent' : 'Manquant');
-            
-            if (!accessToken) {
-                throw new Error('Token d\'accès manquant. Veuillez vous reconnecter.');
-            }
+            showLoadingOverlay();
             
             const formData = {
-                numero_immat: numeroImmat,
-                marque: marque,
-                modele: document.getElementById('modele').value.trim() || null,
-                capacite: parseFloat(capacite),
-                status: document.getElementById('status').value,
-                note: document.getElementById('note').value.trim() || null
+                numero_immat: document.getElementById('numeroImmat').value.trim(),
+                marque: document.getElementById('marque').value.trim(),
+                modele: document.getElementById('modele').value.trim(),
+                capacite: parseFloat(document.getElementById('capacite').value),
+                note: document.getElementById('note').value.trim(),
+                status: document.getElementById('status').value
             };
 
-            console.log('Données à envoyer:', formData);
+            console.log('Données du camion:', formData);
+
+            // Validation
+            if (!formData.numero_immat) {
+                throw new Error('Le numéro d\'immatriculation est obligatoire');
+            }
+            if (!formData.marque) {
+                throw new Error('La marque est obligatoire');
+            }
+            if (!formData.capacite || formData.capacite <= 0) {
+                throw new Error('La capacité doit être un nombre positif');
+            }
+
+            // Get access token from cookies
+            const accessToken = getCookie('access_token');
+            if (!accessToken) {
+                throw new Error('Token d\'authentification manquant. Veuillez vous reconnecter.');
+            }
 
             const response = await fetch('https://toure.gestiem.com/api/camions', {
                 method: 'POST',
@@ -529,61 +678,63 @@
                 body: JSON.stringify(formData)
             });
 
-            console.log('Réponse du serveur:', response.status, response.statusText);
+            console.log('Réponse création:', response.status);
 
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Succès:', result);
-                
-                showAlert('✓ Camion créé avec succès !', 'success');
-                resetForm();
-                
-                // Rediriger vers la liste après 2 secondes
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Erreur de réponse:', errorData);
+                throw new Error(errorData.message || `Erreur HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Camion créé:', result);
+
+            if (result.success) {
+                showAlert('Camion créé avec succès !', 'success');
                 setTimeout(() => {
-                    window.location.href = '/camions?created=1';
-                }, 2000);
+                    window.location.href = '/camions';
+                }, 1500);
             } else {
-                const errorResult = await response.json();
-                console.error('Erreur du serveur:', errorResult);
-                console.error('Détails de l\'erreur:', JSON.stringify(errorResult, null, 2));
-                
-                // Afficher les erreurs de validation de manière détaillée
-                if (errorResult.errors) {
-                    let errorMessage = 'Erreurs de validation:\n';
-                    for (const [field, messages] of Object.entries(errorResult.errors)) {
-                        errorMessage += `• ${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}\n`;
-                    }
-                    throw new Error(errorMessage);
-                }
-                
-                throw new Error(errorResult.message || `Erreur ${response.status}: ${response.statusText}`);
+                throw new Error(result.message || 'Erreur lors de la création');
             }
 
         } catch (error) {
-            console.error('Erreur:', error);
+            console.error('Erreur lors de la création:', error);
             showAlert('Erreur: ' + error.message, 'danger');
         } finally {
-            document.getElementById('loadingOverlay').style.display = 'none';
+            hideLoadingOverlay();
         }
     }
 
-    function resetForm() {
-        document.getElementById('createCamionForm').reset();
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
     }
 
-    function showAlert(message, type) {
+    function showLoadingOverlay() {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+
+    function hideLoadingOverlay() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    function showAlert(message, type = 'info') {
         const alertContainer = document.getElementById('alertContainer');
         const alertId = 'alert-' + Date.now();
         
-        const alertHTML = `
-            <div id="${alertId}" class="alert-modern alert-${type}">
-                <i class="alert-icon bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
-                <span>${message}</span>
-                <button type="button" class="btn-close" onclick="closeAlert('${alertId}')" style="margin-left: auto; background: none; border: none; font-size: 1.2rem; opacity: 0.7;">&times;</button>
-            </div>
+        const alert = document.createElement('div');
+        alert.id = alertId;
+        alert.className = `alert alert-${type === 'success' ? 'success' : type === 'danger' ? 'danger' : 'info'}`;
+        alert.innerHTML = `
+            <i class="bi ${type === 'success' ? 'bi-check-circle' : type === 'danger' ? 'bi-exclamation-triangle' : 'bi-info-circle'} alert-icon"></i>
+            <span>${message}</span>
+            <i class="bi bi-x-lg alert-close" onclick="closeAlert('${alertId}')"></i>
         `;
         
-        alertContainer.innerHTML = alertHTML;
+        alertContainer.appendChild(alert);
         
         // Auto-remove after 5 seconds
         setTimeout(() => {
@@ -600,6 +751,5 @@
 </script>
 
 <?php
-$content = ob_get_clean();
-require './views/layouts/app-layout.php';
+// Le contenu est directement affiché, le contrôleur récupère avec ob_get_clean()
 ?>

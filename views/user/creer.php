@@ -217,74 +217,35 @@
     color: #dc3545;
 }
 
-/* Status Selection */
-.status-selection {
-    margin-bottom: 1.5rem;
+/* Password Strength Indicator */
+.password-strength {
+    margin-top: 0.5rem;
 }
 
-.status-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.status-card {
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    padding: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: white;
-    text-align: center;
-    position: relative;
+.strength-bar {
+    height: 4px;
+    background-color: #e9ecef;
+    border-radius: 2px;
     overflow: hidden;
-}
-
-.status-card:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(240, 4, 128, 0.15);
-}
-
-.status-card.selected {
-    border-color: var(--primary-color);
-    background: var(--light-primary);
-    box-shadow: 0 4px 15px rgba(240, 4, 128, 0.2);
-}
-
-.status-card.selected::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), #d1036d);
-}
-
-.status-icon {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-    display: block;
-}
-
-.status-name {
-    font-weight: 600;
-    font-size: 1rem;
     margin-bottom: 0.5rem;
-    color: #212529;
 }
 
-.status-description {
-    font-size: 0.85rem;
-    color: #6c757d;
-    line-height: 1.4;
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
-.status-actif .status-icon { color: #28a745; }
-.status-inactif .status-icon { color: #6c757d; }
-.status-en-conge .status-icon { color: #ffc107; }
+.strength-weak { background-color: #dc3545; }
+.strength-fair { background-color: #ffc107; }
+.strength-good { background-color: #17a2b8; }
+.strength-strong { background-color: #28a745; }
+
+.strength-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
 
 /* Form Actions */
 .form-actions {
@@ -457,14 +418,6 @@
     .form-actions .btn-group {
         justify-content: center;
     }
-    
-    .status-cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .status-card {
-        padding: 1rem;
-    }
 }
 </style>
 
@@ -477,18 +430,18 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadcrumb-no-gutter">
                             <li class="breadcrumb-item"><a class="breadcrumb-link text-white" href="/">Tableau de Bord</a></li>
-                            <li class="breadcrumb-item"><a class="breadcrumb-link text-white" href="/chauffeurs">Chauffeurs</a></li>
-                            <li class="breadcrumb-item active">Nouveau Chauffeur</li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link text-white" href="/utilisateurs">Utilisateurs</a></li>
+                            <li class="breadcrumb-item active">Nouvel Utilisateur</li>
                         </ol>
                     </nav>
                     <h1 class="page-header-title">
-                        <i class="bi-person-plus me-2"></i>Créer un Nouveau Chauffeur
+                        <i class="bi-person-plus me-2"></i>Créer un Nouvel Utilisateur
                     </h1>
-                    <p class="mb-0">Ajoutez un nouveau conducteur à votre équipe</p>
+                    <p class="mb-0">Ajoutez un nouveau compte utilisateur au système</p>
                 </div>
 
                 <div class="col-sm-auto">
-                    <a class="btn btn-light" href="/chauffeurs">
+                    <a class="btn btn-light" href="/utilisateurs">
                         <i class="bi-arrow-left me-1"></i> Retour à la liste
                     </a>
                 </div>
@@ -499,86 +452,111 @@
         <div class="form-container">
             <div class="form-header">
                 <h2 class="form-title">
-                    <i class="bi-person-badge me-2"></i>Informations du Chauffeur
+                    <i class="bi-person-badge me-2"></i>Informations de l'Utilisateur
                 </h2>
             </div>
 
-            <form id="createChauffeurForm" class="form-body">
+            <form id="createUserForm" class="form-body">
                 <div class="row">
                     <!-- Informations Personnelles -->
                     <div class="col-lg-8">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">
-                                        <i class="bi-person me-1"></i>Nom complet *
+                                    <label for="firstname" class="form-label">
+                                        <i class="bi-person me-1"></i>Prénom *
                                     </label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <input type="text" class="form-control" id="firstname" name="firstname" required>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="phone" class="form-label">
-                                        <i class="bi-telephone me-1"></i>Numéro de téléphone *
+                                    <label for="lastname" class="form-label">
+                                        <i class="bi-person me-1"></i>Nom de famille *
                                     </label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    <input type="text" class="form-control" id="lastname" name="lastname" required>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="numero_permis" class="form-label">
-                                        <i class="bi-card-text me-1"></i>Numéro de permis *
+                                    <label for="username" class="form-label">
+                                        <i class="bi-at me-1"></i>Nom d'utilisateur *
                                     </label>
-                                    <input type="text" class="form-control" id="numero_permis" name="numero_permis" required>
+                                    <input type="text" class="form-control" id="username" name="username" required>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="date_expiration_permis" class="form-label">
-                                        <i class="bi-calendar-date me-1"></i>Date d'expiration du permis *
+                                    <label for="email" class="form-label">
+                                        <i class="bi-envelope me-1"></i>Adresse email *
                                     </label>
-                                    <input type="date" class="form-control" id="date_expiration_permis" name="date_expiration_permis" required>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phonenumber" class="form-label">
+                                        <i class="bi-telephone me-1"></i>Numéro de téléphone
+                                    </label>
+                                    <input type="tel" class="form-control" id="phonenumber" name="phonenumber">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="poste" class="form-label">
+                                        <i class="bi-briefcase me-1"></i>Poste/Fonction
+                                    </label>
+                                    <input type="text" class="form-control" id="poste" name="poste">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Statut -->
+                    <!-- Mot de passe -->
                     <div class="col-lg-4">
-                        <div class="status-selection">
-                            <label class="form-label">
-                                <i class="bi-activity me-1"></i>Statut du Chauffeur
+                        <div class="form-group">
+                            <label for="password" class="form-label">
+                                <i class="bi-lock me-1"></i>Mot de passe *
                             </label>
-                            <p class="text-muted small mb-3">Sélectionnez le statut initial du chauffeur</p>
-                            
-                            <div class="status-cards">
-                                <div class="status-card status-actif" data-status="actif">
-                                    <i class="bi-check-circle status-icon"></i>
-                                    <div class="status-name">Actif</div>
-                                    <div class="status-description">En service</div>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
                                 </div>
-
-                                <div class="status-card status-inactif" data-status="inactif">
-                                    <i class="bi-pause-circle status-icon"></i>
-                                    <div class="status-name">Inactif</div>
-                                    <div class="status-description">Hors service</div>
-                                </div>
-
-                                <div class="status-card status-en-conge" data-status="en_conge">
-                                    <i class="bi-calendar-check status-icon"></i>
-                                    <div class="status-name">En Congé</div>
-                                    <div class="status-description">En vacances</div>
-                                </div>
+                                <div class="strength-text" id="strengthText">Saisissez un mot de passe</div>
                             </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
 
-                            <input type="hidden" id="status" name="status" value="actif">
+                        <div class="form-group">
+                            <label for="password_confirmation" class="form-label">
+                                <i class="bi-lock-fill me-1"></i>Confirmer le mot de passe *
+                            </label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi-info-circle me-2"></i>
+                            <strong>Exigences du mot de passe :</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Minimum 8 caractères</li>
+                                <li>Au moins une majuscule</li>
+                                <li>Au moins une minuscule</li>
+                                <li>Au moins un chiffre</li>
+                                <li>Au moins un symbole</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -591,11 +569,11 @@
                     Les champs marqués d'un * sont obligatoires
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-outline-modern" onclick="window.location.href='/chauffeurs'">
+                    <button type="button" class="btn btn-outline-modern" onclick="window.location.href='/utilisateurs'">
                         <i class="bi-x-lg me-1"></i> Annuler
                     </button>
-                    <button type="submit" class="btn btn-primary-custom" id="saveBtn" form="createChauffeurForm">
-                        <i class="bi-check-lg me-1"></i> Créer le Chauffeur
+                    <button type="submit" class="btn btn-primary-custom" id="saveBtn" form="createUserForm">
+                        <i class="bi-check-lg me-1"></i> Créer l'Utilisateur
                     </button>
                 </div>
             </div>
@@ -629,31 +607,70 @@
     });
 
     function setupEventListeners() {
-        // Status cards
-        document.querySelectorAll('.status-card').forEach(card => {
-            card.addEventListener('click', function() {
-                selectStatus(this.dataset.status);
-            });
-        });
-
         // Form submission
-        document.getElementById('createChauffeurForm').addEventListener('submit', handleSubmit);
+        document.getElementById('createUserForm').addEventListener('submit', handleSubmit);
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', updatePasswordStrength);
+        document.getElementById('password_confirmation').addEventListener('input', validatePasswordConfirmation);
     }
 
-    function selectStatus(status) {
-        // Désélectionner toutes les cartes
-        document.querySelectorAll('.status-card').forEach(card => {
-            card.classList.remove('selected');
-        });
+    // Fonction pour calculer la force du mot de passe
+    function updatePasswordStrength() {
+        const password = document.getElementById('password').value;
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
         
-        // Sélectionner la carte correspondante
-        const selectedCard = document.querySelector(`[data-status="${status}"]`);
-        if (selectedCard) {
-            selectedCard.classList.add('selected');
+        let strength = 0;
+        let strengthLabel = '';
+        let strengthClass = '';
+        
+        if (password.length >= 8) strength += 1;
+        if (/[a-z]/.test(password)) strength += 1;
+        if (/[A-Z]/.test(password)) strength += 1;
+        if (/[0-9]/.test(password)) strength += 1;
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+        
+        switch (strength) {
+            case 0:
+            case 1:
+                strengthLabel = 'Très faible';
+                strengthClass = 'strength-weak';
+                break;
+            case 2:
+                strengthLabel = 'Faible';
+                strengthClass = 'strength-fair';
+                break;
+            case 3:
+                strengthLabel = 'Moyen';
+                strengthClass = 'strength-good';
+                break;
+            case 4:
+            case 5:
+                strengthLabel = 'Fort';
+                strengthClass = 'strength-strong';
+                break;
         }
         
-        // Mettre à jour le champ caché
-        document.getElementById('status').value = status;
+        const percentage = (strength / 5) * 100;
+        strengthFill.style.width = percentage + '%';
+        strengthFill.className = 'strength-fill ' + strengthClass;
+        strengthText.textContent = strengthLabel;
+    }
+
+    // Fonction pour valider la confirmation du mot de passe
+    function validatePasswordConfirmation() {
+        const password = document.getElementById('password').value;
+        const confirmation = document.getElementById('password_confirmation').value;
+        const confirmationField = document.getElementById('password_confirmation');
+        
+        if (confirmation && password !== confirmation) {
+            confirmationField.setCustomValidity('Les mots de passe ne correspondent pas');
+            confirmationField.classList.add('is-invalid');
+        } else {
+            confirmationField.setCustomValidity('');
+            confirmationField.classList.remove('is-invalid');
+        }
     }
 
     async function handleSubmit(e) {
@@ -673,13 +690,17 @@
             const data = Object.fromEntries(formData.entries());
             
             // Validation côté client
-            if (!data.name || !data.phone || !data.numero_permis || !data.date_expiration_permis) {
+            if (!data.firstname || !data.lastname || !data.username || !data.email || !data.password || !data.password_confirmation) {
                 throw new Error('Veuillez remplir tous les champs obligatoires');
+            }
+            
+            if (data.password !== data.password_confirmation) {
+                throw new Error('Les mots de passe ne correspondent pas');
             }
             
             // Appel API
             const accessToken = getCookie('access_token');
-            const response = await fetch('https://toure.gestiem.com/api/chauffeurs', {
+            const response = await fetch('https://toure.gestiem.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -691,17 +712,22 @@
 
             if (!response.ok) {
                 const errorData = await response.json();
+                if (errorData.errors) {
+                    // Afficher les erreurs de validation
+                    displayValidationErrors(errorData.errors);
+                    throw new Error('Erreurs de validation');
+                }
                 throw new Error(errorData.message || `Erreur HTTP: ${response.status}`);
             }
 
             const result = await response.json();
             
             if (result.success) {
-                showToast('Chauffeur créé avec succès', 'success');
+                showToast('Utilisateur créé avec succès', 'success');
                 
                 // Rediriger vers la liste après 2 secondes
                 setTimeout(() => {
-                    window.location.href = '/chauffeurs';
+                    window.location.href = '/utilisateurs';
                 }, 2000);
             } else {
                 throw new Error(result.message || 'Erreur lors de la création');
@@ -716,6 +742,28 @@
             saveBtn.classList.remove('btn-loading');
             saveBtn.innerHTML = originalText;
         }
+    }
+
+    // Fonction pour afficher les erreurs de validation
+    function displayValidationErrors(errors) {
+        // Réinitialiser les erreurs
+        document.querySelectorAll('.form-control').forEach(field => {
+            field.classList.remove('is-invalid');
+        });
+        document.querySelectorAll('.invalid-feedback').forEach(feedback => {
+            feedback.textContent = '';
+        });
+        
+        // Afficher les nouvelles erreurs
+        Object.keys(errors).forEach(fieldName => {
+            const field = document.getElementById(fieldName);
+            const feedback = field.nextElementSibling;
+            
+            if (field && feedback) {
+                field.classList.add('is-invalid');
+                feedback.textContent = errors[fieldName][0];
+            }
+        });
     }
 
     // Toast notifications
