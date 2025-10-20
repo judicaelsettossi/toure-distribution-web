@@ -1,3 +1,4 @@
+if (typeof HSCore !== 'undefined' && HSCore.components && HSCore.components.HSChartJS) {
 HSCore.components.HSChartJS.addTheme('updatingBarChart', 'dark', {
   data: {
     datasets: [{
@@ -457,3 +458,4 @@ HSCore.components.HSChartJS.addTheme('strong-line-chart', 'dark', {
     }
   }
 })
+}

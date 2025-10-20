@@ -10,5 +10,6 @@ require 'fournisseur-controller.php';
 require 'facture-controller.php';
 require 'camion-controller.php';
 require 'chauffeur-controller.php';
+require 'user-controller.php';
 require 'commande-controller.php';
 require 'paiement-commande-controller.php';

@@ -1,4 +1,5 @@
-const HSThemeAppearance = {
+if (typeof HSThemeAppearance === 'undefined') {
+    window.HSThemeAppearance = {
   currentThemeAttributeName: 'data-hs-current-theme',
   visablilityAttributeName: 'data-hs-theme-appearance',
 
@@ -132,3 +133,4 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
     HSThemeAppearance.setAppearance('auto', false)
   }
 })
+}

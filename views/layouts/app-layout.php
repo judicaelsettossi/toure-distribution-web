@@ -2434,8 +2434,6 @@
         </div>
     </div>
 
-    <script src="/assets/js/demo.js"></script>
-
     <!-- END ONLY DEV -->
 
     <!-- ========== SECONDARY CONTENTS ========== -->
@@ -3392,12 +3390,31 @@
     <script src="/assets/js/vendor.min.js"></script>
 
     <!-- JS API Configuration -->
+    <script>
+        // Protection contre la redéclaration d'API_CONFIG
+        if (typeof window.API_CONFIG === 'undefined') {
+            window.API_CONFIG = {
+                baseUrl: 'https://toure.gestiem.com/api',
+                timeout: 30000
+            };
+        }
+    </script>
     <script src="/assets/js/api.js"></script>
+
+    <!-- JS Demo -->
+    <script src="/assets/js/demo.js"></script>
 
     <script src="/assets/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
 
     <!-- JS Front -->
-    <script src="/assets/js/theme.min.js"></script>
+    <script>
+        // Charger theme.min.js seulement si HSCore n'existe pas déjà
+        if (typeof HSCore === 'undefined') {
+            const script = document.createElement('script');
+            script.src = '/assets/js/theme.min.js';
+            document.head.appendChild(script);
+        }
+    </script>
 
     <!-- JS PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3445,243 +3462,10 @@
             cb(start, end);
         });
     </script>
-
-    <!-- JS Plugins Init. -->
-    <script>
-        (function() {
-            localStorage.removeItem('hs_theme')
-
-            // Fonction utilitaire pour accéder aux éléments HSCore de manière sécurisée
-            function safeGetHSCoreItem(component, selector) {
-                try {
-                    if (component && component.collection && component.collection.length > 0) {
-                        const item = component.getItem(selector);
-                        // Vérifier si l'élément retourné a bien $initializedEl
-                        if (item && item.$initializedEl !== undefined) {
-                            return item;
+<!-- JS Plugins Init. -->
                         }
                     }
-                    return null;
-                } catch (error) {
-                    console.warn('Erreur lors de l\'accès à l\'élément HSCore:', error);
-                    return null;
-                }
-            }
-
-            // Protection globale pour tous les composants HSCore
-            function protectHSCoreComponents() {
-                Object.keys(HSCore.components).forEach(componentName => {
-                    const component = HSCore.components[componentName];
-                    if (component && typeof component.getItem === 'function') {
-                        const originalGetItem = component.getItem;
-                        component.getItem = function(selector) {
-                            try {
-                                const result = originalGetItem.call(this, selector);
-                                if (result && result.$initializedEl === undefined) {
-                                    console.warn(`Élément ${componentName} avec sélecteur ${selector} non initialisé`);
-                                    return null;
-                                }
-                                return result;
-                            } catch (error) {
-                                console.warn(`Erreur lors de l'accès à ${componentName}.getItem(${selector}):`, error);
-                                return null;
-                            }
-                        };
-                    }
-                });
-            }
-
-            window.onload = function() {
-                // Protection globale des composants HSCore
-                protectHSCoreComponents();
-
-                // INITIALIZATION OF DATATABLES
-                // =======================================================
-                HSCore.components.HSDatatables.init($('#datatable'), {
-                    select: {
-                        style: 'multi',
-                        selector: 'td:first-child input[type="checkbox"]',
-                        classMap: {
-                            checkAll: '#datatableCheckAll',
-                            counter: '#datatableCounter',
-                            counterInfo: '#datatableCounterInfo'
-                        }
-                    },
-                    language: {
-                        zeroRecords: `<div class="text-center p-4">
-                      <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-                      <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
-                    <p class="mb-0">No data to show</p>
-                    </div>`
-                    }
-                });
-
-                // Accès sécurisé à la DataTable
-                const datatable = safeGetHSCoreItem(HSCore.components.HSDatatables, 0);
-
-                document.querySelectorAll('.js-datatable-filter').forEach(function(item) {
-                    item.addEventListener('change', function(e) {
-                        const elVal = e.target.value,
-                            targetColumnIndex = e.target.getAttribute('data-target-column-index'),
-                            targetTable = e.target.getAttribute('data-target-table');
-
-                        const targetDatatable = safeGetHSCoreItem(HSCore.components.HSDatatables, targetTable);
-                        
-                        if (targetDatatable) {
-                            targetDatatable.column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw();
-                        }
-                    })
-                })
-
-
-                // INITIALIZATION OF NAVBAR VERTICAL ASIDE
-                // =======================================================
-                new HSSideNav('.js-navbar-vertical-aside').init()
-
-
-                // INITIALIZATION OF FORM SEARCH
-                // =======================================================
-                const HSFormSearchInstance = new HSFormSearch('.js-form-search')
-
-                if (HSFormSearchInstance.collection.length > 0) {
-                    const formSearchItem = safeGetHSCoreItem(HSFormSearchInstance, 1);
-                    if (formSearchItem && typeof formSearchItem.on === 'function') {
-                        formSearchItem.on('close', function(el) {
-                            el.classList.remove('top-0')
-                        })
-                    }
-
-                    document.querySelector('.js-form-search-mobile-toggle').addEventListener('click', e => {
-                        let dataOptions = JSON.parse(e.currentTarget.getAttribute('data-hs-form-search-options')),
-                            $menu = document.querySelector(dataOptions.dropMenuElement)
-
-                        $menu.classList.add('top-0')
-                        $menu.style.left = 0
-                    })
-                }
-
-
-                // INITIALIZATION OF BOOTSTRAP DROPDOWN
-                // =======================================================
-                HSBsDropdown.init()
-
-
-                // INITIALIZATION OF CHARTJS
-                // =======================================================
-                HSCore.components.HSChartJS.init('.js-chart')
-
-
-                // INITIALIZATION OF CHARTJS
-                // =======================================================
-                HSCore.components.HSChartJS.init('#updatingBarChart')
-                
-                // Accès sécurisé au graphique
-                const updatingBarChart = safeGetHSCoreItem(HSCore.components.HSChartJS, 'updatingBarChart');
-
-                // Call when tab is clicked - seulement si le graphique existe
-                if (updatingBarChart) {
-                    document.querySelectorAll('[data-bs-toggle="chart-bar"]').forEach(item => {
-                        item.addEventListener('click', e => {
-                            let keyDataset = e.currentTarget.getAttribute('data-datasets')
-
-                            const styles = HSCore.components.HSChartJS.getTheme('updatingBarChart', HSThemeAppearance.getAppearance())
-
-                            if (keyDataset === 'lastWeek') {
-                                updatingBarChart.data.labels = ["Apr 22", "Apr 23", "Apr 24", "Apr 25", "Apr 26", "Apr 27", "Apr 28", "Apr 29", "Apr 30", "Apr 31"];
-                                updatingBarChart.data.datasets = [{
-                                        "data": [120, 250, 300, 200, 300, 290, 350, 100, 125, 320],
-                                        "backgroundColor": styles.data.datasets[0].backgroundColor,
-                                        "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
-                                        "borderColor": styles.data.datasets[0].borderColor,
-                                        "maxBarThickness": 10
-                                    },
-                                    {
-                                        "data": [250, 130, 322, 144, 129, 300, 260, 120, 260, 245, 110],
-                                        "backgroundColor": styles.data.datasets[1].backgroundColor,
-                                        "borderColor": styles.data.datasets[1].borderColor,
-                                        "maxBarThickness": 10
-                                    }
-                                ];
-                                updatingBarChart.update();
-                            } else {
-                                updatingBarChart.data.labels = ["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"];
-                                updatingBarChart.data.datasets = [{
-                                        "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220],
-                                        "backgroundColor": styles.data.datasets[0].backgroundColor,
-                                        "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
-                                        "borderColor": styles.data.datasets[0].borderColor,
-                                        "maxBarThickness": 10
-                                    },
-                                    {
-                                        "data": [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120],
-                                        "backgroundColor": styles.data.datasets[1].backgroundColor,
-                                        "borderColor": styles.data.datasets[1].borderColor,
-                                        "maxBarThickness": 10
-                                    }
-                                ]
-                                updatingBarChart.update();
-                            }
-                        })
-                    })
-                }
-
-
-                // INITIALIZATION OF CHARTJS
-                // =======================================================
-                HSCore.components.HSChartJS.init('.js-chart-datalabels', {
-                    plugins: [ChartDataLabels],
-                    options: {
-                        plugins: {
-                            datalabels: {
-                                anchor: function(context) {
-                                    var value = context.dataset.data[context.dataIndex];
-                                    return value.r < 20 ? 'end' : 'center';
-                                },
-                                align: function(context) {
-                                    var value = context.dataset.data[context.dataIndex];
-                                    return value.r < 20 ? 'end' : 'center';
-                                },
-                                color: function(context) {
-                                    var value = context.dataset.data[context.dataIndex];
-                                    return value.r < 20 ? context.dataset.backgroundColor : context.dataset.color;
-                                },
-                                font: function(context) {
-                                    var value = context.dataset.data[context.dataIndex],
-                                        fontSize = 25;
-
-                                    if (value.r > 50) {
-                                        fontSize = 35;
-                                    }
-
-                                    if (value.r > 70) {
-                                        fontSize = 55;
-                                    }
-
-                                    return {
-                                        weight: 'lighter',
-                                        size: fontSize
-                                    };
-                                },
-                                formatter: function(value) {
-                                    return value.r
-                                },
-                                offset: 2,
-                                padding: 0
-                            }
-                        },
-                    }
-                })
-
-                // INITIALIZATION OF SELECT
-                // =======================================================
-                HSCore.components.HSTomSelect.init('.js-select')
-
-
-                // INITIALIZATION OF CLIPBOARD
-                // =======================================================
-                HSCore.components.HSClipboard.init('.js-clipboard')
-            }
-        })()
+                })();
     </script>
 
     <!-- Style Switcher JS -->

@@ -111,6 +111,198 @@
     .stock-critical {
         background-color: #dc3545;
     }
+
+    /* Export Dropdown Styles */
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        padding: 0.5rem 0;
+        min-width: 160px;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--light-primary);
+        color: var(--primary-color);
+    }
+
+    .dropdown-item i {
+        width: 16px;
+        text-align: center;
+    }
+
+    .export-loading {
+        position: relative;
+        pointer-events: none;
+    }
+
+    .export-loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border: 2px solid transparent;
+        border-top: 2px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 400px;
+    }
+
+    .toast {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-left: 4px solid;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        transform: translateX(100%);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .toast.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .toast.hide {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    .toast-success {
+        border-left-color: #10b981;
+        background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+    }
+
+    .toast-error {
+        border-left-color: #ef4444;
+        background: linear-gradient(135deg, #fef2f2 0%, #fef7f7 100%);
+    }
+
+    .toast-warning {
+        border-left-color: #f59e0b;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    }
+
+    .toast-info {
+        border-left-color: #3b82f6;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    }
+
+    .toast-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+    }
+
+    .toast-success .toast-icon {
+        background: #10b981;
+        color: white;
+    }
+
+    .toast-error .toast-icon {
+        background: #ef4444;
+        color: white;
+    }
+
+    .toast-warning .toast-icon {
+        background: #f59e0b;
+        color: white;
+    }
+
+    .toast-info .toast-icon {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .toast-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .toast-title {
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+        color: #1f2937;
+    }
+
+    .toast-message {
+        font-size: 0.85rem;
+        color: #6b7280;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    .toast-close {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .toast-close:hover {
+        background: rgba(0,0,0,0.1);
+        color: #374151;
+    }
+
+    @media (max-width: 768px) {
+        .toast-container {
+            top: 1rem;
+            right: 1rem;
+            left: 1rem;
+            max-width: none;
+        }
+    }
 </style>
 
 <main id="content" role="main" class="main font-public-sans">
@@ -255,42 +447,29 @@
                         </h5>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-sm btn-outline-primary" onclick="exportProducts()">
-                            <i class="bi-download me-1"></i> Exporter
-                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi-download me-1"></i> Exporter
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="exportProducts('excel')">
+                                        <i class="bi-file-earmark-excel text-success me-2"></i> Excel (.xlsx)
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="exportProducts('pdf')">
+                                        <i class="bi-file-earmark-pdf text-danger me-2"></i> PDF
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover table-nowrap align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Produit</th>
-                            <th>Code</th>
-                            <th>Catégorie</th>
-                            <th>Prix Unitaire</th>
-                            <th>Coût</th>
-                            <th>Stock</th>
-                            <th>Statut</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                        <tr class="skeleton-row">
-                            <td colspan="8" class="text-center py-5">
-                                <div class="spinner-border text-primary-custom" role="status">
-                                    <span class="visually-hidden">Chargement...</span>
-                                </div>
-                                <p class="mt-3 text-muted">Chargement des produits...</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="card-footer">
+            <!-- Pagination Top -->
+            <div class="card-body py-2 border-bottom">
                 <div class="row align-items-center">
                     <div class="col-sm mb-2 mb-sm-0">
                         <div class="d-flex align-items-center">
@@ -311,9 +490,61 @@
                     </div>
                 </div>
             </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-nowrap align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Produit</th>
+                            <th>Code</th>
+                            <th>Prix Unitaire</th>
+                            <th>Coût</th>
+                            <th>Stock</th>
+                            <th>Statut</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <tr class="skeleton-row">
+                            <td colspan="7" class="text-center py-5">
+                                <div class="spinner-border text-primary-custom" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                                <p class="mt-3 text-muted">Chargement des produits...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </main>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- Libraries for Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script>
+    // Ensure libraries are loaded
+    window.addEventListener('load', function() {
+        console.log('XLSX loaded:', typeof XLSX !== 'undefined');
+        console.log('PDFMake loaded:', typeof pdfMake !== 'undefined');
+        
+        if (typeof pdfMake === 'undefined') {
+            console.error('PDFMake n\'est pas chargé !');
+            showToast('Erreur', 'PDFMake n\'est pas chargé. Rechargez la page.', 'error');
+        }
+        
+        if (typeof XLSX === 'undefined') {
+            console.error('XLSX n\'est pas chargé !');
+            showToast('Erreur', 'XLSX n\'est pas chargé. Rechargez la page.', 'error');
+        }
+    });
+</script>
 
 <script>
     const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
@@ -538,7 +769,7 @@
         if (products.length === 0) {
             tbody.innerHTML = `
             <tr>
-                <td colspan="8" class="text-center py-5">
+                <td colspan="7" class="text-center py-5">
                     <i class="bi-inbox fs-1 text-muted"></i>
                     <p class="mt-3 text-muted">Aucun produit trouvé</p>
                 </td>
@@ -563,9 +794,6 @@
                 </div>
             </td>
             <td><span class="badge bg-light text-dark">${product.code}</span></td>
-            <td>
-                ${getCategoryLabel(product)}
-            </td>
             <td class="fw-bold">${formatCurrency(product.unit_price)}</td>
             <td class="text-muted">${formatCurrency(product.cost || 0)}</td>
             <td>
@@ -651,15 +879,392 @@
         window.location.href = `/produit/${productId}/details`;
     }
 
-    function exportProducts() {
-        window.location.href = 'https://toure.gestiem.com/api/products/export';
+    async function exportProducts(format = 'excel') {
+        const exportButton = document.getElementById('exportDropdown');
+        const originalText = exportButton.innerHTML;
+        
+        try {
+            console.log('Début de l\'export:', format);
+            
+            // Show loading state
+            exportButton.classList.add('export-loading');
+            exportButton.innerHTML = '<i class="bi-hourglass-split me-1"></i> Export...';
+            exportButton.disabled = true;
+            
+            // Check if required libraries are loaded
+            if (format === 'excel' && typeof XLSX === 'undefined') {
+                throw new Error('Bibliothèque Excel non chargée. Veuillez recharger la page.');
+            }
+            
+            if (format === 'pdf' && typeof pdfMake === 'undefined') {
+                throw new Error('PDFMake n\'est pas chargé. Veuillez recharger la page.');
+            }
+            
+            console.log('Bibliothèques vérifiées, début de l\'export...');
+            
+            // Utiliser les produits filtrés pour l'export
+            const productsToExport = filteredProducts.length > 0 ? filteredProducts : allProducts;
+            
+            if (format === 'excel') {
+                await exportToExcel(productsToExport);
+            } else if (format === 'pdf') {
+                await exportToPDF(productsToExport);
+            }
+            
+            console.log('Export terminé avec succès');
+            
+            // Show success message
+            showToast('Export réussi', `Fichier ${format.toUpperCase()} téléchargé avec succès`, 'success');
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'export:', error);
+            showToast('Erreur d\'export', error.message || 'Une erreur est survenue lors de l\'export', 'error');
+        } finally {
+            // Reset button state
+            exportButton.classList.remove('export-loading');
+            exportButton.innerHTML = originalText;
+            exportButton.disabled = false;
+        }
+    }
+
+    async function exportToExcel(products) {
+        // Create workbook and worksheet
+        const wb = XLSX.utils.book_new();
+        
+        // Prepare data with proper headers and formatting
+        const excelData = products.map((product, index) => ({
+            'N°': index + 1,
+            'ID Produit': product.product_id || '',
+            'Nom du Produit': product.name || '',
+            'Code': product.code || '',
+            'Description': product.description || '',
+            'Catégorie': getCategoryName(product),
+            'Prix Unitaire': product.unit_price || 0,
+            'Coût': product.cost || 0,
+            'Stock': product.min_stock_level || 0,
+            'Statut': product.is_active ? 'Actif' : 'Inactif',
+            'Date de Création': product.created_at ? formatDate(product.created_at) : ''
+        }));
+        
+        const ws = XLSX.utils.json_to_sheet(excelData);
+        
+        // Set column widths for better readability
+        const colWidths = [
+            { wch: 6 },  // N°
+            { wch: 15 }, // ID Produit
+            { wch: 25 }, // Nom du Produit
+            { wch: 12 }, // Code
+            { wch: 35 }, // Description
+            { wch: 20 }, // Catégorie
+            { wch: 15 }, // Prix Unitaire
+            { wch: 12 }, // Coût
+            { wch: 10 }, // Stock
+            { wch: 12 }, // Statut
+            { wch: 18 }  // Date de Création
+        ];
+        ws['!cols'] = colWidths;
+        
+        // Style the header row
+        const headerRange = XLSX.utils.decode_range(ws['!ref']);
+        for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+            const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+            if (!ws[cellAddress]) continue;
+            
+            ws[cellAddress].s = {
+                font: { bold: true, color: { rgb: "FFFFFF" } },
+                fill: { fgColor: { rgb: "F00480" } },
+                alignment: { horizontal: "center", vertical: "center" },
+                border: {
+                    top: { style: "thin", color: { rgb: "000000" } },
+                    bottom: { style: "thin", color: { rgb: "000000" } },
+                    left: { style: "thin", color: { rgb: "000000" } },
+                    right: { style: "thin", color: { rgb: "000000" } }
+                }
+            };
+        }
+        
+        // Style data rows
+        for (let row = 1; row <= products.length; row++) {
+            for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+                const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                if (!ws[cellAddress]) continue;
+                
+                // Special styling for status column
+                if (col === 9) { // Statut column
+                    const isActive = ws[cellAddress].v === 'Actif';
+                    ws[cellAddress].s = {
+                        font: { bold: true, color: { rgb: isActive ? "28A745" : "6C757D" } },
+                        alignment: { horizontal: "center", vertical: "center" },
+                        border: {
+                            top: { style: "thin", color: { rgb: "CCCCCC" } },
+                            bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+                            left: { style: "thin", color: { rgb: "CCCCCC" } },
+                            right: { style: "thin", color: { rgb: "CCCCCC" } }
+                        }
+                    };
+                } else {
+                    ws[cellAddress].s = {
+                        alignment: { horizontal: "left", vertical: "center" },
+                        border: {
+                            top: { style: "thin", color: { rgb: "CCCCCC" } },
+                            bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+                            left: { style: "thin", color: { rgb: "CCCCCC" } },
+                            right: { style: "thin", color: { rgb: "CCCCCC" } }
+                        }
+                    };
+                }
+            }
+        }
+        
+        // Add summary sheet
+        const summaryData = [
+            ['RÉSUMÉ DE L\'EXPORT'],
+            [''],
+            ['Total des produits', products.length],
+            ['Produits actifs', products.filter(p => p.is_active).length],
+            ['Produits inactifs', products.filter(p => !p.is_active).length],
+            ['Stock faible', products.filter(p => (p.min_stock_level || 0) < 10).length],
+            [''],
+            ['Date d\'export', new Date().toLocaleDateString('fr-FR')],
+            ['Heure d\'export', new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})],
+            ['Filtres appliqués', getCurrentFiltersString()]
+        ];
+        
+        const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+        summaryWs['!cols'] = [{ wch: 25 }, { wch: 30 }];
+        
+        // Style summary sheet
+        summaryWs['A1'].s = {
+            font: { bold: true, size: 14, color: { rgb: "F00480" } },
+            alignment: { horizontal: "center", vertical: "center" }
+        };
+        
+        // Add worksheets to workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Liste des Produits');
+        XLSX.utils.book_append_sheet(wb, summaryWs, 'Résumé');
+        
+        // Generate Excel file
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        
+        // Download file
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Liste_Produits_${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Export Excel', `Fichier Excel téléchargé avec succès (${products.length} produits)`, 'success');
+    }
+
+    async function exportToPDF(products) {
+        // Prepare PDF data
+        const pdfData = products.map((product, index) => [
+            index + 1,
+            product.name || 'N/A',
+            product.code || '-',
+            getCategoryName(product),
+            formatCurrency(product.unit_price || 0),
+            product.is_active ? 'Actif' : 'Inactif',
+            product.created_at ? formatDate(product.created_at) : '-'
+        ]);
+
+        // PDF configuration - Version simplifiée
+        const docDefinition = {
+            pageSize: 'A4',
+            pageMargins: [40, 60, 40, 60],
+            
+            content: [
+                // Titre principal
+                {
+                    text: 'LISTE DES PRODUITS',
+                    fontSize: 18,
+                    bold: true,
+                    alignment: 'center',
+                    color: '#f00480',
+                    margin: [0, 0, 0, 30]
+                },
+                
+                // Informations entreprise et date
+                {
+                    columns: [
+                        {
+                            text: 'TOURE DISTRIBUTION',
+                            fontSize: 14,
+                            bold: true,
+                            color: '#010768'
+                        },
+                        {
+                            text: `Export généré le: ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}`,
+                            fontSize: 10,
+                            color: '#666666',
+                            alignment: 'right'
+                        }
+                    ],
+                    margin: [0, 0, 0, 20]
+                },
+                
+                // Statistiques résumé
+                {
+                    text: [
+                        { text: 'Total: ', bold: true },
+                        { text: `${products.length} produit(s)`, bold: true },
+                        { text: ' | Actifs: ', bold: true },
+                        { text: `${products.filter(p => p.is_active).length}`, bold: true },
+                        { text: ' | Inactifs: ', bold: true },
+                        { text: `${products.filter(p => !p.is_active).length}`, bold: true }
+                    ],
+                    fontSize: 10,
+                    margin: [0, 0, 0, 20]
+                },
+                
+                // Tableau des produits
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['8%', '25%', '12%', '20%', '15%', '12%', '8%'],
+                        body: [
+                            // En-tête du tableau
+                            [
+                                { text: 'N°', style: 'tableHeader', alignment: 'center' },
+                                { text: 'Nom du Produit', style: 'tableHeader' },
+                                { text: 'Code', style: 'tableHeader' },
+                                { text: 'Catégorie', style: 'tableHeader' },
+                                { text: 'Prix Unitaire', style: 'tableHeader', alignment: 'center' },
+                                { text: 'Statut', style: 'tableHeader', alignment: 'center' },
+                                { text: 'Créé le', style: 'tableHeader', alignment: 'center' }
+                            ],
+                            // Données des produits
+                            ...pdfData.map(row => [
+                                { text: row[0].toString(), alignment: 'center', fontSize: 9 },
+                                { text: row[1], fontSize: 9 },
+                                { text: row[2], fontSize: 9 },
+                                { text: row[3], fontSize: 9 },
+                                { text: row[4], alignment: 'center', fontSize: 9 },
+                                { 
+                                    text: row[5], 
+                                    alignment: 'center',
+                                    fontSize: 9,
+                                    bold: true,
+                                    color: row[5] === 'Actif' ? '#28a745' : '#6c757d'
+                                },
+                                { text: row[6], alignment: 'center', fontSize: 9 }
+                            ])
+                        ]
+                    },
+                    layout: 'lightHorizontalLines'
+                }
+            ],
+            
+            styles: {
+                tableHeader: {
+                    fontSize: 10,
+                    bold: true,
+                    color: '#ffffff',
+                    fillColor: '#f00480'
+                }
+            },
+            
+            defaultStyle: {
+                fontSize: 10
+            }
+        };
+
+        // Generate and download PDF
+        pdfMake.createPdf(docDefinition).download(`Liste_Produits_${new Date().toISOString().split('T')[0]}.pdf`);
+        
+        showToast('Export PDF', `Fichier PDF téléchargé avec succès (${products.length} produits)`, 'success');
+    }
+
+    function getCategoryName(product) {
+        if (product.category && product.category.label) {
+            return product.category.label;
+        } else if (product.category_name) {
+            return product.category_name;
+        }
+        return 'Non défini';
+    }
+
+    function getCurrentFiltersString() {
+        const search = document.getElementById('searchInput').value;
+        const category = document.getElementById('categoryFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        const stock = document.getElementById('stockFilter').value;
+        
+        const filters = [];
+        if (search) filters.push(`Recherche: ${search}`);
+        if (category) filters.push(`Catégorie: ${document.getElementById('categoryFilter').selectedOptions[0]?.textContent || category}`);
+        if (status) filters.push(`Statut: ${status === '1' ? 'Actifs' : 'Inactifs'}`);
+        if (stock) filters.push(`Stock: ${stock === 'low' ? 'Faible' : 'Rupture'}`);
+        
+        return filters.length > 0 ? filters.join(', ') : 'Aucun filtre';
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        return new Date(dateString).toLocaleDateString('fr-FR');
+    }
+
+    // Toast notification system
+    function showToast(title, message, type = 'info', duration = 5000) {
+        const toastContainer = document.getElementById('toastContainer');
+        const toastId = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        
+        const icons = {
+            success: '✓',
+            error: '✕',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+        
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = `toast toast-${type}`;
+        
+        toast.innerHTML = `
+            <div class="toast-icon">${icons[type] || icons.info}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="closeToast('${toastId}')">×</button>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+        
+        // Auto close
+        if (duration > 0) {
+            setTimeout(() => {
+                closeToast(toastId);
+            }, duration);
+        }
+        
+        return toastId;
+    }
+    
+    function closeToast(toastId) {
+        const toast = document.getElementById(toastId);
+        if (toast) {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 400);
+        }
     }
 
     function showError(message) {
         const tbody = document.getElementById('productsTableBody');
         tbody.innerHTML = `
         <tr>
-            <td colspan="8" class="text-center py-5">
+            <td colspan="7" class="text-center py-5">
                 <i class="bi-exclamation-triangle fs-1 text-danger"></i>
                 <p class="mt-3 text-danger">${message}</p>
                 <button class="btn btn-sm btn-primary-custom" onclick="loadProducts()">

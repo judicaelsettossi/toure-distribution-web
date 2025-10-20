@@ -1,9 +1,16 @@
-const $layouts = document.querySelectorAll('[name="layout"]')
-const cutElement = (wrapper) => {
-  const $wrapper = document.createElement('div')
-  $wrapper.innerHTML = wrapper.children[0].outerHTML
+// Utiliser une variable globale pour éviter les conflits
+if (typeof window.$layouts === 'undefined') {
+    window.$layouts = document.querySelectorAll('[name="layout"]');
+}
+// Utiliser var au lieu de const/let pour éviter les erreurs de redéclaration
+var $layouts = window.$layouts;
+if (typeof cutElement === 'undefined') {
+    window.cutElement = (wrapper) => {
+        const $wrapper = document.createElement('div')
+        $wrapper.innerHTML = wrapper.children[0].outerHTML
 
-  return $wrapper.children[0]
+        return $wrapper.children[0]
+    }
 }
 
 new Promise((resolve, reject) => {
@@ -171,5 +178,5 @@ new Promise((resolve, reject) => {
     window.localStorage.setItem('builderFluidSwitch', false)
     window.localStorage.setItem('sidebarNavOptions', 'pills')
     location.reload()
-  })
-})
+  });
+});

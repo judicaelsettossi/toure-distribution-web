@@ -90,44 +90,6 @@
 
                         <!-- Collapse -->
                         <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUserProfileMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUserProfileMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUserProfileMenu">
-                                <i class="bi-person nav-icon"></i>
-                                <span class="nav-link-title">Produits</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesUserProfileMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/produit/liste">Liste des produits</a>
-                                <a class="nav-link " href="/produit/ajouter">Créer un produit</a>
-                                <a class="nav-link " href="/categorie-produit-add">Créer une categorie</a>
-                                <a class="nav-link " href="/categories-produits-liste">Liste des catégories</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesStock" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesStock" aria-expanded="false" aria-controls="navbarVerticalMenuPagesStock">
-                                <i class="bi-boxes nav-icon"></i>
-                                <span class="nav-link-title">Gestion de Stock</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesStock" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/entree-sortie-stock">Tableau de bord</a>
-                                <a class="nav-link " href="/stock/gestion">Gestion des stocks</a>
-                                <a class="nav-link " href="/stock/entree">Entrée de stock</a>
-                                <a class="nav-link " href="/stock/sortie">Sortie de stock</a>
-                                <a class="nav-link " href="/stock/mouvements">Mouvements</a>
-                                <a class="nav-link " href="/stock/types-mouvements">Types de mouvements</a>
-                                <a class="nav-link " href="/stock/par-produit">Stocks par produit</a>
-                                <a class="nav-link " href="/stock/par-entrepot">Stocks par entrepôt</a>
-                                <a class="nav-link " href="/stock/ajustement">Ajustements</a>
-                                <a class="nav-link " href="/stock/reservation">Réservations</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
                             <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesCamions" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesCamions" aria-expanded="false" aria-controls="navbarVerticalMenuPagesCamions">
                                 <i class="bi-truck nav-icon"></i>
                                 <span class="nav-link-title">Gestion des Camions</span>
@@ -136,8 +98,6 @@
                             <div id="navbarVerticalMenuPagesCamions" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                 <a class="nav-link " href="/camions">Liste des camions</a>
                                 <a class="nav-link " href="/camion/creer">Nouveau camion</a>
-                                <a class="nav-link " href="/camions/supprimes">Camions supprimés</a>
-                                <a class="nav-link " href="/camions/statistiques">Statistiques</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
@@ -152,8 +112,36 @@
                             <div id="navbarVerticalMenuPagesChauffeurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                 <a class="nav-link " href="/chauffeurs">Liste des chauffeurs</a>
                                 <a class="nav-link " href="/chauffeur/creer">Nouveau chauffeur</a>
-                                <a class="nav-link " href="/chauffeurs/supprimes">Chauffeurs supprimés</a>
-                                <a class="nav-link " href="/chauffeurs/statistiques">Statistiques</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUtilisateurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUtilisateurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUtilisateurs">
+                                <i class="bi-people nav-icon"></i>
+                                <span class="nav-link-title">Gestion des Utilisateurs</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesUtilisateurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/utilisateurs">Liste des utilisateurs</a>
+                                <a class="nav-link " href="/utilisateur/creer">Nouvel utilisateur</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUserProfileMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUserProfileMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUserProfileMenu">
+                                <i class="bi-person nav-icon"></i>
+                                <span class="nav-link-title">Produits</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesUserProfileMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
+                                <a class="nav-link " href="/produit/liste">Liste des produits</a>
+                                <a class="nav-link " href="/produit/ajouter">Créer un produit</a>
+                                <a class="nav-link " href="/categorie-produit-add">Créer une categorie</a>
+                                <a class="nav-link " href="/categories-produits-liste">Liste des catégories</a>
                             </div>
                         </div>
                         <!-- End Collapse -->
@@ -174,133 +162,17 @@
                         </div>
                         <!-- End Collapse -->
 
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAccountMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAccountMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAccountMenu">
-                                <i class="bi-credit-card nav-icon"></i>
-                                <span class="nav-link-title">Paiements</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesAccountMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/paiement-commande">Liste des paiements</a>
-                                <a class="nav-link " href="/paiement-commande/creer">Nouveau paiement</a>
-                                <a class="nav-link " href="/subscription-list">Abonnements</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesCommandes" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesCommandes" aria-expanded="false" aria-controls="navbarVerticalMenuPagesCommandes">
-                                <i class="bi-cart nav-icon"></i>
-                                <span class="nav-link-title">Commandes</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesCommandes" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/commandes">Liste des commandes</a>
-                                <a class="nav-link " href="/commande/creer">Nouvelle commande</a>
-                                <a class="nav-link " href="/commandes/attente">En attente</a>
-                                <a class="nav-link " href="/commandes/livrees">Livrées</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesFactures" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesFactures" aria-expanded="false" aria-controls="navbarVerticalMenuPagesFactures">
-                                <i class="bi-receipt nav-icon"></i>
-                                <span class="nav-link-title">Factures</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesFactures" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/factures">Liste des factures</a>
-                                <a class="nav-link " href="/facture/creer">Nouvelle facture</a>
-                                <a class="nav-link " href="/factures/impayees">Impayées</a>
-                                <a class="nav-link " href="/factures/relances">Relances</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesRapports" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesRapports" aria-expanded="false" aria-controls="navbarVerticalMenuPagesRapports">
-                                <i class="bi-graph-up nav-icon"></i>
-                                <span class="nav-link-title">Rapports</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesRapports" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/rapports/ventes">Rapport de ventes</a>
-                                <a class="nav-link " href="/rapports/stock">Rapport de stock</a>
-                                <a class="nav-link " href="/rapports/fournisseurs">Rapport fournisseurs</a>
-                                <a class="nav-link " href="/rapports/clients">Rapport clients</a>
-                                <a class="nav-link " href="/rapports/financier">Rapport financier</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesMaintenance" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesMaintenance" aria-expanded="false" aria-controls="navbarVerticalMenuPagesMaintenance">
-                                <i class="bi-tools nav-icon"></i>
-                                <span class="nav-link-title">Maintenance</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesMaintenance" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/maintenance/backup">Sauvegarde</a>
-                                <a class="nav-link " href="/maintenance/logs">Logs système</a>
-                                <a class="nav-link " href="/maintenance/cache">Cache</a>
-                                <a class="nav-link " href="/maintenance/optimisation">Optimisation</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAccountMenu1" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAccountMenu1" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAccountMenu1">
-                                <i class="bi-person-badge nav-icon"></i>
-                                <span class="nav-link-title">Offre d'emploi</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesAccountMenu1" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/offres-emploi/creer">Ajouter une offre</a>
-                                <a class="nav-link " href="/job-liste">Liste des offres</a>
-                                <a class="nav-link " href="/candidature-list">Candidatures</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
                         <span class="dropdown-header mt-4">Paramètres</span>
                         <small class="bi-three-dots nav-subtitle-replacer"></small>
-
-                        <!-- Collapse -->
-                        <div class="nav-item">
-                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesParametres" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesParametres" aria-expanded="false" aria-controls="navbarVerticalMenuPagesParametres">
-                                <i class="bi-gear nav-icon"></i>
-                                <span class="nav-link-title">Paramètres</span>
-                            </a>
-
-                            <div id="navbarVerticalMenuPagesParametres" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/parametres/general">Général</a>
-                                <a class="nav-link " href="/parametres/entreprise">Entreprise</a>
-                                <a class="nav-link " href="/parametres/notifications">Notifications</a>
-                                <a class="nav-link " href="/parametres/securite">Sécurité</a>
-                                <a class="nav-link " href="/parametres/integrations">Intégrations</a>
-                            </div>
-                        </div>
-                        <!-- End Collapse -->
-
                         <!-- Collapse -->
                         <div class="nav-item">
                             <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUtilisateurs" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUtilisateurs" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUtilisateurs">
                                 <i class="bi-person-gear nav-icon"></i>
-                                <span class="nav-link-title">Utilisateurs</span>
+                                <span class="nav-link-title">Mon compte</span>
                             </a>
 
                             <div id="navbarVerticalMenuPagesUtilisateurs" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="/utilisateurs">Liste des utilisateurs</a>
-                                <a class="nav-link " href="/utilisateur/creer">Créer un utilisateur</a>
-                                <a class="nav-link " href="/roles">Rôles et permissions</a>
-                                <a class="nav-link " href="/activite">Activité utilisateurs</a>
+                                <a class="nav-link " href="/profil">Mon Profil</a>
                             </div>
                         </div>
                         <!-- End Collapse -->

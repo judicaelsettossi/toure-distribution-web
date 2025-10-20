@@ -47,14 +47,14 @@
         border: none;
     }
 
-    .product-header {
+    .category-header {
         background: linear-gradient(135deg, var(--primary-color) 0%, #d1036d 100%);
         color: white;
         padding: 2rem;
         border-radius: 12px 12px 0 0;
     }
 
-    .product-avatar-large {
+    .category-avatar-large {
         width: 100px;
         height: 100px;
         border-radius: 50%;
@@ -364,11 +364,11 @@
             max-width: none;
         }
         
-        .product-header {
+        .category-header {
             padding: 1.5rem;
         }
         
-        .product-avatar-large {
+        .category-avatar-large {
             width: 80px;
             height: 80px;
             font-size: 2rem;
@@ -385,8 +385,8 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadcrumb-no-gutter">
                             <li class="breadcrumb-item"><a class="breadcrumb-link text-primary-custom" href="/">Tableau de Bord</a></li>
-                            <li class="breadcrumb-item"><a class="breadcrumb-link text-primary-custom" href="/produit/liste">Produits</a></li>
-                            <li class="breadcrumb-item active" id="productNameBreadcrumb">Détails</li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link text-primary-custom" href="/categories-produits-liste">Catégories</a></li>
+                            <li class="breadcrumb-item active" id="categoryNameBreadcrumb">Détails</li>
                         </ol>
                     </nav>
                 </div>
@@ -394,7 +394,7 @@
                     <button class="btn btn-outline-secondary me-2" onclick="window.history.back()">
                         <i class="bi-arrow-left me-1"></i> Retour
                     </button>
-                    <button class="btn btn-primary-custom" onclick="editProduct()">
+                    <button class="btn btn-primary-custom" onclick="editCategory()">
                         <i class="bi-pencil me-1"></i> Modifier
                     </button>
                 </div>
@@ -405,34 +405,33 @@
             <div class="spinner-border text-primary-custom" role="status">
                 <span class="visually-hidden">Chargement...</span>
             </div>
-            <p class="mt-3 text-muted">Chargement des informations du produit...</p>
+            <p class="mt-3 text-muted">Chargement des informations de la catégorie...</p>
         </div>
 
-        <div id="productContent" style="display: none;">
-            <!-- Product Header Card -->
+        <div id="categoryContent" style="display: none;">
+            <!-- Category Header Card -->
             <div class="card card-custom mb-4">
-                <div class="product-header">
+                <div class="category-header">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <div class="product-avatar-large" id="productAvatar">PR</div>
+                            <div class="category-avatar-large" id="categoryAvatar">CA</div>
                         </div>
                         <div class="col">
-                            <h2 class="mb-1" id="productName">-</h2>
+                            <h2 class="mb-1" id="categoryName">-</h2>
                             <p class="mb-2 opacity-75">
                                 <i class="bi-tag me-2"></i>
-                                <span id="productCode">-</span>
+                                <span id="categoryCode">-</span>
                             </p>
                             <div class="d-flex align-items-center gap-3">
-                                <span class="badge badge-type" id="productStatusBadge">-</span>
-                                <span class="badge badge-type" id="productCategoryBadge">-</span>
+                                <span class="badge badge-type" id="categoryStatusBadge">-</span>
                             </div>
                         </div>
                         <div class="col-auto text-end">
                             <div class="btn-group">
-                                <button class="btn btn-light" onclick="toggleProductStatus()" id="toggleStatusBtn">
+                                <button class="btn btn-light" onclick="toggleCategoryStatus()" id="toggleStatusBtn">
                                     <i class="bi-toggle-off me-1"></i> Activer/Désactiver
                                 </button>
-                                <button class="btn btn-danger" onclick="confirmDeleteProduct()">
+                                <button class="btn btn-danger" onclick="confirmDeleteCategory()">
                                     <i class="bi-trash me-1"></i> Supprimer
                                 </button>
                             </div>
@@ -454,80 +453,20 @@
                         </div>
                         <div class="card-body p-0">
                             <div class="info-item">
-                                <div class="info-label">ID Produit</div>
-                                <div class="info-value" id="productId">-</div>
+                                <div class="info-label">ID Catégorie</div>
+                                <div class="info-value" id="categoryId">-</div>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">Nom du Produit</div>
-                                <div class="info-value" id="productNameDetail">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Code</div>
-                                <div class="info-value" id="productCodeDetail">-</div>
+                                <div class="info-label">Nom de la Catégorie</div>
+                                <div class="info-value" id="categoryLabel">-</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Description</div>
-                                <div class="info-value" id="productDescription">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Catégorie</div>
-                                <div class="info-value" id="productCategory">-</div>
+                                <div class="info-value" id="categoryDescription">-</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Statut</div>
-                                <div class="info-value" id="productStatus">-</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Prix et Coûts -->
-                    <div class="card card-custom mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi-currency-exchange me-2 text-primary-custom"></i>
-                                Prix et Coûts
-                            </h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="info-item">
-                                <div class="info-label">Prix Unitaire</div>
-                                <div class="info-value" id="unitPrice">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Coût d'Achat</div>
-                                <div class="info-value" id="productCost">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Coût Minimum</div>
-                                <div class="info-value" id="minimumCost">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Marge Bénéficiaire</div>
-                                <div class="info-value" id="profitMargin">-</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Gestion du Stock -->
-                    <div class="card card-custom mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi-box-seam me-2 text-primary-custom"></i>
-                                Gestion du Stock
-                            </h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="info-item">
-                                <div class="info-label">Stock Minimum</div>
-                                <div class="info-value" id="minStockLevel">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Stock Actuel</div>
-                                <div class="info-value" id="currentStock">-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Statut du Stock</div>
-                                <div class="info-value" id="stockStatus">-</div>
+                                <div class="info-value" id="categoryStatus">-</div>
                             </div>
                         </div>
                     </div>
@@ -543,15 +482,33 @@
                         <div class="card-body p-0">
                             <div class="info-item">
                                 <div class="info-label">Date de Création</div>
-                                <div class="info-value" id="productCreatedAt">-</div>
+                                <div class="info-value" id="categoryCreatedAt">-</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Dernière Modification</div>
-                                <div class="info-value" id="productUpdatedAt">-</div>
+                                <div class="info-value" id="categoryUpdatedAt">-</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Durée d'Existence</div>
-                                <div class="info-value" id="productAge">-</div>
+                                <div class="info-value" id="categoryAge">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produits de cette Catégorie -->
+                    <div class="card card-custom mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi-box-seam me-2 text-primary-custom"></i>
+                                Produits de cette Catégorie
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="productsList">
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi-box fs-1"></i>
+                                    <p class="mt-2">Chargement des produits...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -569,8 +526,8 @@
                         </div>
                         <div class="card-body">
                             <div class="stat-box mb-3">
-                                <div class="stat-value" id="profitPercentage">-</div>
-                                <div class="stat-label">Marge %</div>
+                                <div class="stat-value" id="totalProducts">-</div>
+                                <div class="stat-label">Produits Total</div>
                             </div>
                             <div class="stat-box mb-3">
                                 <div class="stat-value" id="daysSinceCreation">-</div>
@@ -638,14 +595,14 @@
                     <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                         <i class="bi-trash-fill text-danger" style="font-size: 2rem;"></i>
                     </div>
-                    <h6 class="text-dark mb-2">Êtes-vous sûr de vouloir supprimer ce produit ?</h6>
-                    <p class="text-muted mb-0" id="deleteProductName">-</p>
+                    <h6 class="text-dark mb-2">Êtes-vous sûr de vouloir supprimer cette catégorie ?</h6>
+                    <p class="text-muted mb-0" id="deleteCategoryName">-</p>
                 </div>
                 <div class="alert alert-warning border-0">
                     <div class="d-flex align-items-start">
                         <i class="bi-info-circle-fill text-warning me-2 mt-1"></i>
                         <div>
-                            <strong>Attention :</strong> Cette action est irréversible. Toutes les données associées à ce produit seront définitivement supprimées.
+                            <strong>Attention :</strong> Cette action est irréversible. Toutes les données associées à cette catégorie seront définitivement supprimées.
                         </div>
                     </div>
                 </div>
@@ -679,13 +636,13 @@
                         <i class="bi-toggle-on text-warning" id="toggleStatusIcon" style="font-size: 2rem;"></i>
                     </div>
                     <h6 class="text-dark mb-2" id="toggleStatusMessage">Êtes-vous sûr de vouloir effectuer cette action ?</h6>
-                    <p class="text-muted mb-0" id="toggleProductName">-</p>
+                    <p class="text-muted mb-0" id="toggleCategoryName">-</p>
                 </div>
                 <div class="alert alert-info border-0">
                     <div class="d-flex align-items-start">
                         <i class="bi-info-circle-fill text-info me-2 mt-1"></i>
                         <div>
-                            <strong>Information :</strong> <span id="toggleStatusInfo">Cette action modifiera le statut du produit dans le système.</span>
+                            <strong>Information :</strong> <span id="toggleStatusInfo">Cette action modifiera le statut de la catégorie dans le système.</span>
                         </div>
                     </div>
                 </div>
@@ -706,27 +663,26 @@
 <div id="toastContainer" class="toast-container"></div>
 
 <script>
-    let productData = null;
-    let currentProductId = null;
+    let categoryData = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Récupérer l'ID du produit depuis l'URL
+        // Récupérer l'ID de la catégorie depuis l'URL
         const urlParts = window.location.pathname.split('/');
-        currentProductId = urlParts[urlParts.length - 2]; // Assuming URL is /produit/{id}/details
+        currentCategoryId = urlParts[urlParts.length - 2]; // Assuming URL is /categorie/{id}/details
         
         console.log('URL parts:', urlParts);
-        console.log('Product ID:', currentProductId);
+        console.log('Category ID:', currentCategoryId);
         
-        if (currentProductId && currentProductId !== 'details') {
-            loadProductDetails();
+        if (currentCategoryId && currentCategoryId !== 'details') {
+            loadCategoryDetails();
         } else {
-            showError('ID de produit manquant');
+            showError('ID de catégorie manquant');
         }
     });
 
-    async function loadProductDetails() {
-        if (!currentProductId) {
-            showError('ID de produit manquant');
+    async function loadCategoryDetails() {
+        if (!currentCategoryId) {
+            showError('ID de catégorie manquant');
             return;
         }
 
@@ -737,8 +693,36 @@
                 throw new Error('Token d\'accès manquant');
             }
 
-            // Charger les détails du produit
-            const response = await fetch(`https://toure.gestiem.com/api/products/${currentProductId}`, {
+            // Charger les détails de la catégorie
+            const response = await fetch(`https://toure.gestiem.com/api/product-categories/${currentCategoryId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const category = await response.json();
+
+            if (response.ok) {
+                categoryData = category;
+                displayCategoryDetails(category);
+                loadCategoryProducts();
+            } else {
+                throw new Error(category.message || 'Erreur lors du chargement de la catégorie');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            showError(error.message);
+        }
+    }
+
+    async function loadCategoryProducts() {
+        try {
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+            
+            const response = await fetch(`https://toure.gestiem.com/api/products/category/${currentCategoryId}`, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Accept': 'application/json',
@@ -749,101 +733,59 @@
             const result = await response.json();
 
             if (response.ok) {
-                productData = result.data;
-                displayProductDetails(productData);
+                displayProducts(result.data || []);
             } else {
-                throw new Error(result.message || 'Erreur lors du chargement du produit');
+                console.warn('Erreur lors du chargement des produits:', result.message);
+                displayProducts([]);
             }
 
         } catch (error) {
-            console.error('Error:', error);
-            showError(error.message);
+            console.warn('Erreur lors du chargement des produits:', error);
+            displayProducts([]);
         }
     }
 
-    function displayProductDetails(product) {
+    function displayCategoryDetails(category) {
         document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('productContent').style.display = 'block';
+        document.getElementById('categoryContent').style.display = 'block';
 
         // Header
-        document.getElementById('productAvatar').textContent = getInitials(product.name);
-        document.getElementById('productName').textContent = product.name || 'Produit sans nom';
-        document.getElementById('productCode').textContent = product.code || 'N/A';
-        document.getElementById('productNameBreadcrumb').textContent = product.name || 'Produit sans nom';
+        document.getElementById('categoryAvatar').textContent = getInitials(category.label);
+        document.getElementById('categoryName').textContent = category.label || 'Catégorie sans nom';
+        document.getElementById('categoryCode').textContent = category.product_category_id;
+        document.getElementById('categoryNameBreadcrumb').textContent = category.label || 'Catégorie sans nom';
 
         // Status
-        const statusBadge = document.getElementById('productStatusBadge');
-        if (product.is_active) {
-            statusBadge.textContent = 'Actif';
+        const statusBadge = document.getElementById('categoryStatusBadge');
+        if (category.is_active) {
+            statusBadge.textContent = 'Active';
             statusBadge.className = 'badge badge-type badge-active';
         } else {
-            statusBadge.textContent = 'Inactif';
+            statusBadge.textContent = 'Inactive';
             statusBadge.className = 'badge badge-type badge-inactive';
         }
 
-        // Category
-        const categoryBadge = document.getElementById('productCategoryBadge');
-        if (product.category && product.category.label) {
-            categoryBadge.textContent = product.category.label;
-            categoryBadge.className = 'badge badge-type';
-            categoryBadge.style.backgroundColor = '#e3f2fd';
-            categoryBadge.style.color = '#1976d2';
-        } else {
-            categoryBadge.textContent = 'Non catégorisé';
-            categoryBadge.className = 'badge badge-type badge-inactive';
-        }
-
         // Informations
-        document.getElementById('productId').textContent = product.product_id;
-        document.getElementById('productNameDetail').textContent = product.name || 'Non renseigné';
-        document.getElementById('productCodeDetail').textContent = product.code || 'Non renseigné';
-        document.getElementById('productDescription').textContent = product.description || 'Aucune description';
-        document.getElementById('productCategory').textContent = product.category ? product.category.label : 'Non défini';
-        document.getElementById('productStatus').textContent = product.is_active ? 'Actif' : 'Inactif';
-
-        // Prix et coûts
-        document.getElementById('unitPrice').textContent = formatCurrency(product.unit_price || 0);
-        document.getElementById('productCost').textContent = formatCurrency(product.cost || 0);
-        document.getElementById('minimumCost').textContent = formatCurrency(product.minimum_cost || 0);
-
-        // Marge
-        const unitPrice = parseFloat(product.unit_price) || 0;
-        const cost = parseFloat(product.cost) || 0;
-        const profitAmount = unitPrice - cost;
-        const profitPercentage = cost > 0 ? ((profitAmount / cost) * 100).toFixed(1) : 0;
-
-        document.getElementById('profitMargin').textContent = `${formatCurrency(profitAmount)} (${profitPercentage >= 0 ? '+' : ''}${profitPercentage}%)`;
-
-        // Stock
-        const minStock = product.min_stock_level || 0;
-        document.getElementById('minStockLevel').textContent = `${minStock} unités`;
-        document.getElementById('currentStock').textContent = '0 unités'; // À implémenter si disponible dans l'API
-        
-        // Statut du stock
-        const stockStatus = document.getElementById('stockStatus');
-        if (minStock === 0) {
-            stockStatus.innerHTML = '<span class="badge bg-danger">Rupture</span>';
-        } else if (minStock < 10) {
-            stockStatus.innerHTML = '<span class="badge bg-warning">Stock faible</span>';
-        } else {
-            stockStatus.innerHTML = '<span class="badge bg-success">Stock normal</span>';
-        }
+        document.getElementById('categoryId').textContent = category.product_category_id;
+        document.getElementById('categoryLabel').textContent = category.label || 'Non renseigné';
+        document.getElementById('categoryDescription').textContent = category.description || 'Aucune description';
+        document.getElementById('categoryStatus').textContent = category.is_active ? 'Active' : 'Inactive';
 
         // Dates
-        document.getElementById('productCreatedAt').textContent = formatDate(product.created_at);
-        document.getElementById('productUpdatedAt').textContent = formatDate(product.updated_at);
+        document.getElementById('categoryCreatedAt').textContent = formatDate(category.created_at);
+        document.getElementById('categoryUpdatedAt').textContent = formatDate(category.updated_at);
         
-        // Calculer l'âge du produit
-        const createdAt = new Date(product.created_at);
+        // Calculer l'âge de la catégorie
+        const createdAt = new Date(category.created_at);
         const now = new Date();
         const daysDiff = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
-        document.getElementById('productAge').textContent = `${daysDiff} jours`;
+        document.getElementById('categoryAge').textContent = `${daysDiff} jours`;
 
         // Stats
-        document.getElementById('profitPercentage').textContent = `${profitPercentage >= 0 ? '+' : ''}${profitPercentage}%`;
+        document.getElementById('totalProducts').textContent = '0'; // Will be updated when products load
         document.getElementById('daysSinceCreation').textContent = daysDiff;
         
-        const updatedAt = new Date(product.updated_at);
+        const updatedAt = new Date(category.updated_at);
         const hoursDiff = Math.floor((now - updatedAt) / (1000 * 60 * 60));
         if (hoursDiff < 24) {
             document.getElementById('lastUpdate').textContent = `${hoursDiff}h`;
@@ -852,21 +794,57 @@
         }
     }
 
-    function toggleProductStatus() {
-        if (!productData) return;
+    function displayProducts(products) {
+        const productsList = document.getElementById('productsList');
+        const totalProductsElement = document.getElementById('totalProducts');
+        
+        totalProductsElement.textContent = products.length;
 
-        const newStatus = !productData.is_active;
+        if (products.length === 0) {
+            productsList.innerHTML = `
+                <div class="text-center text-muted py-4">
+                    <i class="bi-box fs-1"></i>
+                    <h5 class="mt-3">Aucun produit trouvé</h5>
+                    <p class="text-muted">Cette catégorie ne contient actuellement aucun produit.</p>
+                </div>
+            `;
+        } else {
+            productsList.innerHTML = `
+                <div class="row">
+                    ${products.map(product => `
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">${product.name || 'Produit sans nom'}</h6>
+                                    <p class="card-text text-muted small">${product.description || 'Aucune description'}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-info">${product.price || 'N/A'} FCFA</span>
+                                        <small class="text-muted">Stock: ${product.stock || 0}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    }
+
+    function toggleCategoryStatus() {
+        if (!categoryData) return;
+
+        const newStatus = !categoryData.is_active;
         const isActivating = newStatus;
         
         // Mettre à jour le contenu de la modal
-        document.getElementById('toggleStatusTitle').textContent = isActivating ? 'Activer le produit' : 'Désactiver le produit';
+        document.getElementById('toggleStatusTitle').textContent = isActivating ? 'Activer la catégorie' : 'Désactiver la catégorie';
         document.getElementById('toggleStatusMessage').textContent = isActivating ? 
-            'Êtes-vous sûr de vouloir activer ce produit ?' : 
-            'Êtes-vous sûr de vouloir désactiver ce produit ?';
-        document.getElementById('toggleProductName').textContent = productData.name;
+            'Êtes-vous sûr de vouloir activer cette catégorie ?' : 
+            'Êtes-vous sûr de vouloir désactiver cette catégorie ?';
+        document.getElementById('toggleCategoryName').textContent = categoryData.label;
         document.getElementById('toggleStatusInfo').textContent = isActivating ? 
-            'Le produit sera visible dans toutes les listes et pourra être vendu.' :
-            'Le produit ne sera plus visible dans les listes et ne pourra plus être vendu.';
+            'La catégorie sera visible dans toutes les listes et pourra être utilisée pour créer des produits.' :
+            'La catégorie ne sera plus visible dans les listes et ne pourra plus être utilisée pour créer des produits.';
         document.getElementById('toggleConfirmText').textContent = isActivating ? 'Activer' : 'Désactiver';
         
         // Changer l'icône selon l'action
@@ -896,36 +874,39 @@
 
     async function performToggleStatus(newStatus) {
         try {
-            const response = await fetch(`/api/products/${currentProductId}/toggle-status`, {
-                method: 'PATCH',
+            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+            
+            const response = await fetch(`https://toure.gestiem.com/api/product-categories/${currentCategoryId}`, {
+                method: 'PUT',
                 headers: {
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
+                    ...categoryData,
                     is_active: newStatus
                 })
             });
 
             const result = await response.json();
 
-            if (response.ok && result.success) {
+            if (response.ok) {
                 showToast('Succès', result.message || 'Statut mis à jour avec succès', 'success');
-                loadProductDetails();
+                loadCategoryDetails();
             } else {
                 showToast('Erreur', result.message || 'Erreur lors de la mise à jour', 'error');
             }
         } catch (error) {
-            console.error('Erreur toggle status:', error);
             showToast('Erreur', 'Erreur de connexion au serveur', 'error');
         }
     }
 
-    function confirmDeleteProduct() {
-        if (!productData) return;
+    function confirmDeleteCategory() {
+        if (!categoryData) return;
         
-        // Afficher le nom du produit dans la modal
-        document.getElementById('deleteProductName').textContent = productData.name;
+        // Afficher le nom de la catégorie dans la modal
+        document.getElementById('deleteCategoryName').textContent = categoryData.label;
         
         // Afficher la modal
         const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
@@ -934,15 +915,15 @@
         // Ajouter l'événement de confirmation
         document.getElementById('confirmDeleteBtn').onclick = async function() {
             modal.hide();
-            await deleteProduct();
+            await deleteCategory();
         };
     }
 
-    async function deleteProduct() {
+    async function deleteCategory() {
         try {
             const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
             
-            const response = await fetch(`https://toure.gestiem.com/api/products/${currentProductId}`, {
+            const response = await fetch(`https://toure.gestiem.com/api/product-categories/${currentCategoryId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -954,11 +935,11 @@
             const result = await response.json();
 
             if (response.ok) {
-                showToast('Suppression réussie', 'Le produit a été supprimé avec succès', 'success');
+                showToast('Suppression réussie', 'La catégorie a été supprimée avec succès', 'success');
                 
                 // Redirection après 2 secondes
                 setTimeout(() => {
-                    window.location.href = '/produit/liste';
+                    window.location.href = '/categories-produits-liste';
                 }, 2000);
             } else {
                 showToast('Erreur', result.message || 'Erreur lors de la suppression', 'error');
@@ -970,21 +951,13 @@
         }
     }
 
-    function editProduct() {
-        window.location.href = `/produit/${currentProductId}/edit`;
+    function editCategory() {
+        window.location.href = `/categorie/${currentCategoryId}/edit`;
     }
 
-    function getInitials(name) {
-        if (!name) return 'PR';
-        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-    }
-
-    function formatCurrency(amount) {
-        return new Intl.NumberFormat('fr-FR', {
-            style: 'currency',
-            currency: 'XOF',
-            minimumFractionDigits: 0
-        }).format(amount).replace('XOF', 'FCFA');
+    function getInitials(label) {
+        if (!label) return 'CA';
+        return label.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
     }
 
     function formatDate(dateString) {
@@ -1006,7 +979,7 @@
             <button class="btn btn-primary-custom" onclick="location.reload()">
                 <i class="bi-arrow-clockwise me-1"></i> Réessayer
             </button>
-            <button class="btn btn-outline-secondary" onclick="window.location.href='/produit/liste'">
+            <button class="btn btn-outline-secondary" onclick="window.location.href='/categories-produits-liste'">
                 <i class="bi-arrow-left me-1"></i> Retour à la liste
             </button>
         </div>
