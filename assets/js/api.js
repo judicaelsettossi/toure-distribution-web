@@ -2,11 +2,47 @@
 if (typeof window.API_CONFIG === 'undefined') {
     window.API_CONFIG = {
         baseUrl: 'https://toure.gestiem.com/api',
-        timeout: 30000
+        timeout: 30000,
+        maxRetries: 3,
+        retryDelay: 1000,
+        exponentialBackoff: true
     };
 }
 // Utiliser var au lieu de const/let pour éviter les erreurs de redéclaration
 var API_CONFIG = window.API_CONFIG;
+
+// État de connexion réseau
+if (typeof window.NetworkState === 'undefined') {
+    window.NetworkState = {
+        isOnline: navigator.onLine,
+        listeners: [],
+        
+        addListener: function(callback) {
+            this.listeners.push(callback);
+        },
+        
+        removeListener: function(callback) {
+            this.listeners = this.listeners.filter(cb => cb !== callback);
+        },
+        
+        notifyListeners: function() {
+            this.listeners.forEach(callback => callback(this.isOnline));
+        }
+    };
+    
+    // Écouter les changements de connexion réseau
+    window.addEventListener('online', function() {
+        window.NetworkState.isOnline = true;
+        window.NetworkState.notifyListeners();
+        console.log('[Network] Connection restored');
+    });
+    
+    window.addEventListener('offline', function() {
+        window.NetworkState.isOnline = false;
+        window.NetworkState.notifyListeners();
+        console.log('[Network] Connection lost');
+    });
+}
 
 // Fonction utilitaire pour récupérer les cookies
 if (typeof getCookie === 'undefined') {
@@ -18,53 +54,154 @@ if (typeof getCookie === 'undefined') {
     }
 }
 
-// Fonction utilitaire pour faire des appels API
+// Fonction utilitaire pour faire des appels API avec retry et gestion d'erreurs améliorée
 if (typeof apiCall === 'undefined') {
     window.apiCall = async function(endpoint, method = 'GET', data = null, options = {}) {
-    const url = API_CONFIG.baseUrl + endpoint;
-    
-    const defaultOptions = {
-        method: method,
-        headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${getCookie('access_token')}`
-        },
-        timeout: API_CONFIG.timeout
-    };
-
-    // Ajouter Content-Type pour les données JSON
-    if (data && method !== 'GET') {
-        if (data instanceof FormData) {
-            // Pour FormData, ne pas définir Content-Type, laissez le navigateur le faire
-            defaultOptions.body = data;
-        } else {
-            defaultOptions.headers['Content-Type'] = 'application/json';
-            defaultOptions.body = JSON.stringify(data);
+        const maxRetries = options.maxRetries !== undefined ? options.maxRetries : API_CONFIG.maxRetries;
+        const retryDelay = options.retryDelay !== undefined ? options.retryDelay : API_CONFIG.retryDelay;
+        const exponentialBackoff = options.exponentialBackoff !== undefined ? options.exponentialBackoff : API_CONFIG.exponentialBackoff;
+        
+        let lastError = null;
+        
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                // Vérifier la connexion réseau avant de faire l'appel
+                if (!window.NetworkState.isOnline) {
+                    throw new Error('Network disconnected');
+                }
+                
+                const result = await apiCallSingle(endpoint, method, data, options);
+                
+                // Si succès, retourner le résultat
+                if (result.success || !isRetriableError(result)) {
+                    return result;
+                }
+                
+                lastError = result;
+                
+            } catch (error) {
+                lastError = {
+                    success: false,
+                    error: error.message,
+                    status: 0,
+                    isNetworkError: true
+                };
+                
+                // Ne pas réessayer si ce n'est pas une erreur réseau retriable
+                if (!isRetriableError(lastError)) {
+                    return lastError;
+                }
+            }
+            
+            // Si ce n'est pas la dernière tentative, attendre avant de réessayer
+            if (attempt < maxRetries) {
+                const delay = exponentialBackoff ? retryDelay * Math.pow(2, attempt) : retryDelay;
+                console.log(`[API] Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms for ${endpoint}`);
+                await sleep(delay);
+            }
         }
-    }
-
-    // Fusionner les options personnalisées
-    const finalOptions = { ...defaultOptions, ...options };
-
-    try {
-        const response = await fetch(url, finalOptions);
-        const result = await response.json();
-
-        return {
-            success: response.ok,
-            status: response.status,
-            data: result,
-            response: response
+        
+        // Toutes les tentatives ont échoué
+        console.error(`[API] All retry attempts failed for ${endpoint}`, lastError);
+        return lastError;
+    };
+    
+    // Fonction pour faire un seul appel API (sans retry)
+    window.apiCallSingle = async function(endpoint, method = 'GET', data = null, options = {}) {
+        const url = API_CONFIG.baseUrl + endpoint;
+        const timeout = options.timeout !== undefined ? options.timeout : API_CONFIG.timeout;
+        
+        const defaultOptions = {
+            method: method,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${getCookie('access_token')}`
+            }
         };
-    } catch (error) {
-        console.error('API Call Error:', error);
-        return {
-            success: false,
-            error: error.message,
-            status: 0
-        };
-    }
-    }
+
+        // Ajouter Content-Type pour les données JSON
+        if (data && method !== 'GET') {
+            if (data instanceof FormData) {
+                // Pour FormData, ne pas définir Content-Type, laissez le navigateur le faire
+                defaultOptions.body = data;
+            } else {
+                defaultOptions.headers['Content-Type'] = 'application/json';
+                defaultOptions.body = JSON.stringify(data);
+            }
+        }
+
+        // Fusionner les options personnalisées
+        const finalOptions = { ...defaultOptions, ...options };
+        delete finalOptions.timeout; // Remove timeout from fetch options
+        delete finalOptions.maxRetries;
+        delete finalOptions.retryDelay;
+        delete finalOptions.exponentialBackoff;
+
+        try {
+            // Créer un AbortController pour gérer le timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            finalOptions.signal = controller.signal;
+            
+            const response = await fetch(url, finalOptions);
+            clearTimeout(timeoutId);
+            
+            const result = await response.json();
+
+            return {
+                success: response.ok,
+                status: response.status,
+                data: result,
+                response: response
+            };
+        } catch (error) {
+            console.error('API Call Error:', error);
+            
+            // Déterminer le type d'erreur
+            let errorType = 'unknown';
+            let isNetworkError = false;
+            
+            if (error.name === 'AbortError') {
+                errorType = 'timeout';
+                isNetworkError = true;
+            } else if (error.message.includes('Failed to fetch') || 
+                       error.message.includes('Network request failed') ||
+                       error.message.includes('Network disconnected')) {
+                errorType = 'network';
+                isNetworkError = true;
+            } else if (error.message.includes('JSON')) {
+                errorType = 'parse';
+            }
+            
+            return {
+                success: false,
+                error: error.message,
+                errorType: errorType,
+                isNetworkError: isNetworkError,
+                status: 0
+            };
+        }
+    };
+    
+    // Vérifier si une erreur est retriable
+    window.isRetriableError = function(error) {
+        // Erreurs réseau sont retriables
+        if (error.isNetworkError) return true;
+        
+        // Status codes retriables
+        const retriableStatuses = [408, 429, 500, 502, 503, 504];
+        if (error.status && retriableStatuses.includes(error.status)) return true;
+        
+        // Timeout errors
+        if (error.errorType === 'timeout' || error.errorType === 'network') return true;
+        
+        return false;
+    };
+    
+    // Fonction utilitaire pour attendre
+    window.sleep = function(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
 }
 
 // Fonctions spécifiques pour les produits
@@ -207,24 +344,55 @@ if (typeof handleApiError === 'undefined') {
     console.error('API Error:', error);
     
     let message = defaultMessage;
+    let shouldRedirect = false;
     
-    if (error.data && error.data.message) {
+    // Gérer les erreurs réseau spécifiques
+    if (error.isNetworkError || error.errorType === 'network') {
+        if (!window.NetworkState.isOnline) {
+            message = 'Vous êtes hors ligne. Veuillez vérifier votre connexion internet.';
+        } else {
+            message = 'Erreur de connexion au serveur. Veuillez réessayer.';
+        }
+    } else if (error.errorType === 'timeout') {
+        message = 'Le serveur met trop de temps à répondre. Veuillez réessayer.';
+    } else if (error.data && error.data.message) {
         message = error.data.message;
     } else if (error.error) {
-        message = error.error;
+        // Nettoyer les messages d'erreur techniques
+        if (error.error.includes('Failed to fetch')) {
+            message = 'Impossible de contacter le serveur. Veuillez vérifier votre connexion.';
+        } else if (error.error.includes('Network request failed')) {
+            message = 'Erreur de connexion réseau. Veuillez réessayer.';
+        } else if (error.error.includes('Network disconnected')) {
+            message = 'Connexion réseau perdue. Veuillez vérifier votre connexion internet.';
+        } else {
+            message = error.error;
+        }
     } else if (error.status === 401) {
         message = 'Session expirée. Veuillez vous reconnecter.';
-        // Rediriger vers la page de connexion
-        setTimeout(() => {
-            window.location.href = '/login';
-        }, 2000);
+        shouldRedirect = true;
+    } else if (error.status === 403) {
+        message = 'Vous n\'avez pas les permissions nécessaires pour cette opération.';
     } else if (error.status === 404) {
         message = 'Ressource non trouvée.';
+    } else if (error.status === 408) {
+        message = 'Délai d\'attente dépassé. Veuillez réessayer.';
+    } else if (error.status === 429) {
+        message = 'Trop de requêtes. Veuillez patienter un moment avant de réessayer.';
     } else if (error.status === 500) {
         message = 'Erreur serveur. Veuillez réessayer plus tard.';
+    } else if (error.status === 502 || error.status === 503 || error.status === 504) {
+        message = 'Le serveur est temporairement indisponible. Veuillez réessayer plus tard.';
     }
     
     showNotification('error', message);
+    
+    // Rediriger vers la page de connexion si nécessaire
+    if (shouldRedirect) {
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 2000);
+    }
     }
 }
 
