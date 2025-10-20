@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page Modification Vente</title>
+</head>
+<body>
+    <h1>Test Page Modification Vente</h1>
+    <p>URL actuelle: <span id="currentUrl"></span></p>
+    <p>ID de vente extrait: <span id="venteId"></span></p>
+    
+    <script>
+        function getVenteId() {
+            const path = window.location.pathname;
+            console.log('🔍 Chemin actuel:', path);
+            const matches = path.match(/\/vente\/([^\/]+)\/edit/);
+            console.log('🎯 Matches trouvés:', matches);
+            return matches ? matches[1] : null;
+        }
+        
+        document.getElementById('currentUrl').textContent = window.location.pathname;
+        document.getElementById('venteId').textContent = getVenteId() || 'Aucun ID trouvé';
+    </script>
+</body>
+</html>

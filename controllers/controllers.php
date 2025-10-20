@@ -13,3 +13,6 @@ require 'chauffeur-controller.php';
 require 'user-controller.php';
 require 'commande-controller.php';
 require 'paiement-commande-controller.php';
+require 'vente-controller.php';
+require 'livraison-controller.php';
+require 'help-controller.php';

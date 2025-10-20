@@ -1,6 +1,6 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
+// Configuration pour l'hébergement mutualisé
+require_once __DIR__ . '/configs/hosting-config.php';
 
 session_start();
 
@@ -10,7 +10,7 @@ $parsedUrl = parse_url($requestUri);
 $path = $parsedUrl['path'];
 
 // Exclure les routes d'application qui ne sont pas des fichiers statiques
-$appRoutes = ['/camion/', '/client/', '/fournisseur/', '/entrepot/', '/produit/', '/stock/', '/facture/', '/chauffeur/', '/commande/'];
+$appRoutes = ['/camion/', '/client/', '/fournisseur/', '/entrepot/', '/produit/', '/stock/', '/facture/', '/chauffeur/', '/commande/', '/vente/'];
 $isAppRoute = false;
 foreach ($appRoutes as $route) {
     if (strpos($path, $route) === 0) {
@@ -67,6 +67,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     // Routes principale
     $r->addRoute('GET', '/', 'HomeController@home');
+
+    // Routes pour le centre d'aide
+    $r->addRoute('GET', '/help', 'HelpController@index');
+    $r->addRoute('GET', '/help/faq', 'HelpController@faq');
+    $r->addRoute('GET', '/help/guides', 'HelpController@guides');
+    $r->addRoute('GET', '/help/contact', 'HelpController@contact');
+    $r->addRoute('GET', '/help/search', 'HelpController@search');
 
     // Routes pour les entrepots
     $r->addRoute('GET', '/creer-un-entrepot', 'EntrepotController@addEntrepot');
@@ -136,6 +143,34 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/fournisseur/{id}/details', 'FournisseurController@detailsFournisseur');
     $r->addRoute('GET', '/fournisseur/{id}/edit', 'FournisseurController@editFournisseur');
 
+    // Routes pour la gestion des achats (base de données locale)
+    $r->addRoute('GET', '/achats', 'PurchaseController@listeAchats');
+    $r->addRoute('GET', '/achat/creer', 'PurchaseController@creerAchat');
+    $r->addRoute('POST', '/achat/creer', 'PurchaseController@creerAchat');
+    $r->addRoute('GET', '/achat/{id}/details', 'PurchaseController@detailsAchat');
+    $r->addRoute('GET', '/achat/{id}/modifier-statut', 'PurchaseController@modifierStatut');
+    $r->addRoute('POST', '/achat/{id}/modifier-statut', 'PurchaseController@modifierStatut');
+
+    // Routes pour la gestion des ventes (base de données locale)
+    $r->addRoute('GET', '/ventes', 'SaleController@listeVentes');
+    $r->addRoute('GET', '/vente/creer', 'SaleController@creerVente');
+    $r->addRoute('POST', '/vente/creer', 'SaleController@creerVente');
+    $r->addRoute('GET', '/vente/{id}/details', 'SaleController@detailsVente');
+    $r->addRoute('GET', '/vente/{id}/modifier-statut', 'SaleController@modifierStatut');
+    $r->addRoute('POST', '/vente/{id}/modifier-statut', 'SaleController@modifierStatut');
+
+    // Routes pour la gestion des stocks (base de données locale)
+    $r->addRoute('GET', '/stock', 'StockController@stockParEntrepot');
+    $r->addRoute('GET', '/stock/par-entrepot', 'StockController@stockParEntrepot');
+    $r->addRoute('GET', '/stock/par-entrepot/{id}', 'StockController@stockParEntrepot');
+    $r->addRoute('GET', '/stock/par-produit', 'StockController@stockParProduit');
+    $r->addRoute('GET', '/stock/par-produit/{id}', 'StockController@stockParProduit');
+    $r->addRoute('GET', '/stock/transfert', 'StockController@transfertStock');
+    $r->addRoute('POST', '/stock/transfert', 'StockController@transfertStock');
+    $r->addRoute('GET', '/stock/transferts', 'StockController@listeTransferts');
+    $r->addRoute('GET', '/stock/transfert/{id}/details', 'StockController@detailsTransfert');
+    $r->addRoute('GET', '/stock/transfert/{id}/confirmer', 'StockController@confirmerTransfert');
+
     // Routes pour les transferts entre entrepôts
     $r->addRoute('GET', '/entrepot/transfert', 'EntrepotController@transfertEntrepot');
 
@@ -184,6 +219,24 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/utilisateur/{id}/modifier', 'UserController@modifierUtilisateur');
     $r->addRoute('POST', '/utilisateur/{id}/modifier', 'UserController@modifierUtilisateur');
 
+    // Routes pour la gestion des ventes
+    $r->addRoute('GET', '/vente', 'VenteController@index');
+    $r->addRoute('GET', '/vente/creer', 'VenteController@create');
+    $r->addRoute('POST', '/vente/creer', 'VenteController@store');
+    $r->addRoute('GET', '/vente/{id}', 'VenteController@show');
+    $r->addRoute('GET', '/vente/{id}/edit', 'VenteController@edit');
+    $r->addRoute('POST', '/vente/{id}/edit', 'VenteController@update');
+    $r->addRoute('POST', '/vente/{id}/delete', 'VenteController@destroy');
+
+    // Routes pour la gestion des livraisons
+    $r->addRoute('GET', '/livraison', 'LivraisonController@index');
+    $r->addRoute('GET', '/livraison/creer', 'LivraisonController@create');
+    $r->addRoute('POST', '/livraison/creer', 'LivraisonController@store');
+    $r->addRoute('GET', '/livraison/{id}', 'LivraisonController@show');
+    $r->addRoute('GET', '/livraison/{id}/edit', 'LivraisonController@edit');
+    $r->addRoute('POST', '/livraison/{id}/edit', 'LivraisonController@update');
+    $r->addRoute('POST', '/livraison/{id}/delete', 'LivraisonController@destroy');
+
     // API Routes utilisateurs
     $r->addRoute('GET', '/api/users', 'UserController@getUsersList');
     $r->addRoute('GET', '/api/users/statistics', 'UserController@getUsersStatistics');
@@ -192,22 +245,130 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/api/users/{id}/unlock', 'UserController@unlockUser');
     $r->addRoute('PUT', '/api/users/{id}', 'UserController@updateUser');
 
+    // API Routes commandes
+    $r->addRoute('GET', '/api/commandes', 'CommandeController@getCommandesList');
+    $r->addRoute('GET', '/api/commandes/{id}', 'CommandeController@getCommandeDetails');
+    $r->addRoute('GET', '/api/commandes/{id}/pdf', 'CommandeController@downloadCommandePDF');
+    $r->addRoute('POST', '/api/commandes', 'CommandeController@createCommande');
+    $r->addRoute('PUT', '/api/commandes/{id}', 'CommandeController@updateCommande');
+    $r->addRoute('DELETE', '/api/commandes/{id}', 'CommandeController@deleteCommande');
+    $r->addRoute('GET', '/api/commandes/trashed/list', 'CommandeController@getTrashedCommandes');
+    $r->addRoute('POST', '/api/commandes/{id}/restore', 'CommandeController@restoreCommande');
+
+    // API Routes mouvements de stock
+    $r->addRoute('POST', '/api/stock-movements/receipt/supplier', 'StockMovementController@createSupplierReceipt');
+    $r->addRoute('POST', '/api/stock-movements/transfer', 'StockMovementController@createTransfer');
+    $r->addRoute('POST', '/api/stock-movements/{id}/validate', 'StockMovementController@validateMovement');
+    $r->addRoute('GET', '/api/entrepots', 'EntrepotController@getEntrepotsList');
+    
+    // API Routes paiements commandes
+    $r->addRoute('POST', '/api/paiement-commandes', 'PaiementCommandeController@createPaiement');
+    $r->addRoute('GET', '/api/paiement-commandes/commande/{id}', 'PaiementCommandeController@getPaiementsByCommande');
+
+    // API Routes détails de commandes
+    $r->addRoute('GET', '/api/detail-commandes', 'CommandeController@getDetailCommandesList');
+    $r->addRoute('POST', '/api/detail-commandes', 'CommandeController@createDetailCommande');
+    $r->addRoute('GET', '/api/detail-commandes/{id}', 'CommandeController@getDetailCommande');
+    $r->addRoute('PUT', '/api/detail-commandes/{id}', 'CommandeController@updateDetailCommande');
+    $r->addRoute('DELETE', '/api/detail-commandes/{id}', 'CommandeController@deleteDetailCommande');
+    $r->addRoute('GET', '/api/detail-commandes/commande/{commandeId}', 'CommandeController@getCommandeDetailsItems');
+
+    // API Routes ventes
+    $r->addRoute('GET', '/api/ventes', 'VenteController@getVentesList');
+    $r->addRoute('POST', '/api/ventes', 'VenteController@createVente');
+    $r->addRoute('GET', '/api/ventes/{id}', 'VenteController@getVenteDetails');
+    $r->addRoute('PUT', '/api/ventes/{id}', 'VenteController@updateVente');
+    $r->addRoute('PATCH', '/api/ventes/{id}', 'VenteController@updateVente');
+    $r->addRoute('DELETE', '/api/ventes/{id}', 'VenteController@deleteVente');
+    $r->addRoute('GET', '/api/ventes/trashed/list', 'VenteController@getTrashedVentes');
+    $r->addRoute('POST', '/api/ventes/{id}/restore', 'VenteController@restoreVente');
+
+    // API Routes détails de ventes
+    $r->addRoute('GET', '/api/detail-ventes', 'VenteController@getDetailVentesList');
+    $r->addRoute('POST', '/api/detail-ventes', 'VenteController@createDetailVente');
+    $r->addRoute('POST', '/api/detail-ventes/multiple', 'VenteController@createMultipleDetailVentes');
+    $r->addRoute('GET', '/api/detail-ventes/{id}', 'VenteController@getDetailVente');
+    $r->addRoute('PUT', '/api/detail-ventes/{id}', 'VenteController@updateDetailVente');
+    $r->addRoute('PATCH', '/api/detail-ventes/{id}', 'VenteController@updateDetailVente');
+    $r->addRoute('DELETE', '/api/detail-ventes/{id}', 'VenteController@deleteDetailVente');
+    $r->addRoute('GET', '/api/detail-ventes/trashed/list', 'VenteController@getTrashedDetailVentes');
+    $r->addRoute('POST', '/api/detail-ventes/{id}/restore', 'VenteController@restoreDetailVente');
+    $r->addRoute('GET', '/api/detail-ventes/vente/{id}', 'VenteController@getVenteDetails');
+
+    // API Routes paiements de ventes
+    $r->addRoute('GET', '/api/paiement-ventes', 'VenteController@getPaiementVentesList');
+    $r->addRoute('POST', '/api/paiement-ventes', 'VenteController@createPaiementVente');
+    $r->addRoute('GET', '/api/paiement-ventes/{id}', 'VenteController@getPaiementVente');
+    $r->addRoute('PUT', '/api/paiement-ventes/{id}', 'VenteController@updatePaiementVente');
+    $r->addRoute('DELETE', '/api/paiement-ventes/{id}', 'VenteController@deletePaiementVente');
+
+    // API Routes livraisons
+    $r->addRoute('GET', '/api/livraisons', 'LivraisonController@getLivraisonsList');
+    $r->addRoute('POST', '/api/livraisons', 'LivraisonController@createLivraison');
+    $r->addRoute('GET', '/api/livraisons/{id}', 'LivraisonController@getLivraisonDetails');
+    $r->addRoute('PUT', '/api/livraisons/{id}', 'LivraisonController@updateLivraison');
+    $r->addRoute('PATCH', '/api/livraisons/{id}', 'LivraisonController@updateLivraison');
+    $r->addRoute('DELETE', '/api/livraisons/{id}', 'LivraisonController@deleteLivraison');
+    $r->addRoute('POST', '/api/livraisons/{id}/start', 'LivraisonController@startLivraison');
+    $r->addRoute('POST', '/api/livraisons/{id}/complete', 'LivraisonController@completeLivraison');
+    $r->addRoute('POST', '/api/livraisons/{id}/cancel', 'LivraisonController@cancelLivraison');
+    $r->addRoute('GET', '/api/livraisons/statistics/overview', 'LivraisonController@getLivraisonsStatistics');
+
+    // API Routes détails de livraison
+    $r->addRoute('GET', '/api/delivery-details', 'LivraisonController@getDeliveryDetailsList');
+    $r->addRoute('GET', '/api/delivery-details/{id}', 'LivraisonController@getDeliveryDetail');
+    $r->addRoute('PUT', '/api/delivery-details/{id}', 'LivraisonController@updateDeliveryDetail');
+    $r->addRoute('PATCH', '/api/delivery-details/{id}', 'LivraisonController@updateDeliveryDetail');
+    $r->addRoute('POST', '/api/delivery-details/{id}/preparer', 'LivraisonController@prepareProduct');
+    $r->addRoute('POST', '/api/delivery-details/{id}/livrer', 'LivraisonController@deliverProduct');
+    $r->addRoute('POST', '/api/delivery-details/{id}/retourner', 'LivraisonController@returnProduct');
+    $r->addRoute('GET', '/api/delivery-details/delivery/{deliveryId}', 'LivraisonController@getDeliveryDetailsByDelivery');
+    $r->addRoute('POST', '/api/delivery-details/delivery/{deliveryId}/preparer-tout', 'LivraisonController@prepareAllProducts');
+
+    // API Routes fournisseurs
+    $r->addRoute('GET', '/api/fournisseur', 'FournisseurController@getFournisseursList');
+    $r->addRoute('GET', '/api/fournisseur/{id}', 'FournisseurController@getFournisseurDetails');
+    $r->addRoute('POST', '/api/fournisseur', 'FournisseurController@createFournisseur');
+    $r->addRoute('PUT', '/api/fournisseur/{id}', 'FournisseurController@updateFournisseur');
+    $r->addRoute('DELETE', '/api/fournisseur/{id}', 'FournisseurController@deleteFournisseur');
+
+    // API Routes clients
+    $r->addRoute('GET', '/api/clients', 'ClientController@getClientsList');
+    $r->addRoute('GET', '/api/clients/{id}', 'ClientController@getClientDetails');
+    $r->addRoute('POST', '/api/clients', 'ClientController@createClient');
+    $r->addRoute('PUT', '/api/clients/{id}', 'ClientController@updateClient');
+    $r->addRoute('DELETE', '/api/clients/{id}', 'ClientController@deleteClient');
+
+    // API Routes produits
+    $r->addRoute('GET', '/api/produits', 'ProduitController@getProduitsList');
+    $r->addRoute('GET', '/api/produits/{id}', 'ProduitController@getProduitDetails');
+    $r->addRoute('POST', '/api/produits', 'ProduitController@createProduit');
+    $r->addRoute('PUT', '/api/produits/{id}', 'ProduitController@updateProduit');
+    $r->addRoute('DELETE', '/api/produits/{id}', 'ProduitController@deleteProduit');
+
+    // API Routes camions
+    $r->addRoute('GET', '/api/camions', 'CamionController@getCamionsList');
+    $r->addRoute('GET', '/api/camions/{id}', 'CamionController@getCamionDetails');
+    $r->addRoute('POST', '/api/camions', 'CamionController@createCamion');
+    $r->addRoute('PUT', '/api/camions/{id}', 'CamionController@updateCamion');
+    $r->addRoute('DELETE', '/api/camions/{id}', 'CamionController@deleteCamion');
+
+    // API Routes chauffeurs
+    $r->addRoute('GET', '/api/chauffeurs', 'ChauffeurController@getChauffeursList');
+    $r->addRoute('GET', '/api/chauffeurs/{id}', 'ChauffeurController@getChauffeurDetails');
+    $r->addRoute('POST', '/api/chauffeurs', 'ChauffeurController@createChauffeur');
+    $r->addRoute('PUT', '/api/chauffeurs/{id}', 'ChauffeurController@updateChauffeur');
+    $r->addRoute('DELETE', '/api/chauffeurs/{id}', 'ChauffeurController@deleteChauffeur');
+
     // Routes pour le profil utilisateur
     $r->addRoute('GET', '/profil', 'UserController@profilUtilisateur');
     $r->addRoute('POST', '/profil', 'UserController@profilUtilisateur');
 
     // Routes pour la gestion des commandes
     $r->addRoute('GET', '/commandes', 'CommandeController@listeCommandes');
-    $r->addRoute('GET', '/commandes/supprimees', 'CommandeController@commandesSupprimees');
-    $r->addRoute('GET', '/commandes/statistiques', 'CommandeController@statistiquesCommandes');
     $r->addRoute('GET', '/commande/creer', 'CommandeController@creerCommande');
-    $r->addRoute('POST', '/commande/creer', 'CommandeController@creerCommande');
     $r->addRoute('GET', '/commande/{id}', 'CommandeController@detailsCommande');
     $r->addRoute('GET', '/commande/{id}/modifier', 'CommandeController@modifierCommande');
-    $r->addRoute('POST', '/commande/{id}/modifier', 'CommandeController@modifierCommande');
-    $r->addRoute('GET', '/commande/{id}/supprimer', 'CommandeController@supprimerCommande');
-    $r->addRoute('POST', '/commande/{id}/supprimer', 'CommandeController@supprimerCommande');
-    $r->addRoute('GET', '/commande/{id}/restaurer', 'CommandeController@restaurerCommande');
     $r->addRoute('POST', '/commande/{id}/restaurer', 'CommandeController@restaurerCommande');
     
     // Routes pour la gestion des détails de commandes

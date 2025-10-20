@@ -1,26 +1,63 @@
+# Configuration Apache pour Toure Distribution
+# Optimisé pour l'hébergement mutualisé
+
+# Activer la réécriture d'URL
 RewriteEngine On
 
-# Rediriger toutes les requêtes vers index.php sauf pour les fichiers existants
+# Rediriger vers HTTPS si disponible
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Gérer les routes de l'application
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 
-# Sécurité - Empêcher l'accès aux fichiers sensibles
-<Files "composer.json">
+# Sécurité - Bloquer l'accès aux fichiers sensibles
+<Files "*.sql">
     Order Allow,Deny
     Deny from all
 </Files>
 
-<Files "composer.lock">
+<Files "*.log">
     Order Allow,Deny
     Deny from all
 </Files>
 
-# Headers de sécurité
+<Files "*.md">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "init_database.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "sync_products.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "test_achats.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Bloquer l'accès aux dossiers sensibles
+RedirectMatch 403 ^/configs/.*$
+RedirectMatch 403 ^/database/.*$
+RedirectMatch 403 ^/logs/.*$
+RedirectMatch 403 ^/vendor/.*$
+
+# Configuration des en-têtes de sécurité
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options nosniff
     Header always set X-Frame-Options DENY
     Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 </IfModule>
 
 # Compression GZIP
@@ -38,12 +75,36 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Cache des fichiers statiques
 <IfModule mod_expires.c>
-    ExpiresActive on
-    ExpiresByType text/css "access plus 1 year"
-    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType image/png "access plus 1 year"
     ExpiresByType image/jpg "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
+
+# Limiter la taille des uploads
+LimitRequestBody 10485760
+
+# Configuration PHP via .htaccess
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value memory_limit 256M
+    php_value max_execution_time 30
+    php_value max_input_time 60
+    php_value max_input_vars 3000
+</IfModule>
+
+# Pages d'erreur personnalisées
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php
+
+# Désactiver l'affichage des erreurs PHP
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log /logs/php_errors.log

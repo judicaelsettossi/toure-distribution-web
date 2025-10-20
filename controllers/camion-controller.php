@@ -133,5 +133,179 @@ class CamionController
         header('Location: /camions');
         exit;
     }
+
+    // Méthodes API pour les camions
+    public function getCamionsList()
+    {
+        // Vérifier l'authentification
+        if (!isset($_COOKIE['access_token']) && !isset($_COOKIE['connected'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié']);
+            return;
+        }
+
+        try {
+            $queryParams = $_GET;
+            $apiUrl = 'https://toure.gestiem.com/api/camions?' . http_build_query($queryParams);
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . ($_COOKIE['access_token'] ?? ''),
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            http_response_code($httpCode);
+            echo $response;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
+    }
+
+    public function getCamionDetails($id)
+    {
+        // Vérifier l'authentification
+        if (!isset($_COOKIE['access_token']) && !isset($_COOKIE['connected'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié']);
+            return;
+        }
+
+        try {
+            $apiUrl = 'https://toure.gestiem.com/api/camions/' . $id;
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . ($_COOKIE['access_token'] ?? ''),
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            http_response_code($httpCode);
+            echo $response;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
+    }
+
+    public function createCamion()
+    {
+        // Vérifier l'authentification
+        if (!isset($_COOKIE['access_token']) && !isset($_COOKIE['connected'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié']);
+            return;
+        }
+
+        try {
+            $input = json_decode(file_get_contents('php://input'), true);
+            $apiUrl = 'https://toure.gestiem.com/api/camions';
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($input));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . ($_COOKIE['access_token'] ?? ''),
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            http_response_code($httpCode);
+            echo $response;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
+    }
+
+    public function updateCamion($id)
+    {
+        // Vérifier l'authentification
+        if (!isset($_COOKIE['access_token']) && !isset($_COOKIE['connected'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié']);
+            return;
+        }
+
+        try {
+            $input = json_decode(file_get_contents('php://input'), true);
+            $apiUrl = 'https://toure.gestiem.com/api/camions/' . $id;
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($input));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . ($_COOKIE['access_token'] ?? ''),
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            http_response_code($httpCode);
+            echo $response;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
+    }
+
+    public function deleteCamion($id)
+    {
+        // Vérifier l'authentification
+        if (!isset($_COOKIE['access_token']) && !isset($_COOKIE['connected'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié']);
+            return;
+        }
+
+        try {
+            $apiUrl = 'https://toure.gestiem.com/api/camions/' . $id;
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . ($_COOKIE['access_token'] ?? ''),
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            http_response_code($httpCode);
+            echo $response;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
+    }
 }
 ?>

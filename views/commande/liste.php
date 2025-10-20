@@ -7,693 +7,740 @@
         --accent-color: #010068;
         --light-primary: rgba(240, 4, 128, 0.1);
         --light-secondary: rgba(1, 7, 104, 0.1);
-        --success-color: #10b981;
-        --warning-color: #f59e0b;
-        --danger-color: #ef4444;
-        --info-color: #3b82f6;
     }
 
     .font-public-sans {
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Fix chevauchement */
-    .commandes-wrapper {
-        margin-left: 250px;
-        margin-top: 70px;
-        padding: 2rem;
-        min-height: calc(100vh - 70px);
-        background: #f8f9fa;
+    .text-primary-custom {
+        color: var(--primary-color) !important;
     }
 
-    @media (max-width: 991px) {
-        .commandes-wrapper {
-            margin-left: 0;
-            margin-top: 60px;
-            padding: 1rem;
-        }
+    .text-secondary-custom {
+        color: var(--secondary-color) !important;
     }
 
-    /* Header */
-    .commandes-header {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
+    .bg-primary-custom {
+        background-color: var(--primary-color) !important;
     }
 
-    .commandes-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(135deg, var(--info-color) 0%, #2563eb 100%);
+    .bg-light-primary {
+        background-color: var(--light-primary) !important;
     }
 
-    .commandes-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--secondary-color);
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .commandes-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 15px;
-        background: linear-gradient(135deg, var(--info-color), #2563eb);
+    .btn-primary-custom {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
         color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
     }
 
-    /* Filters */
-    .filters-container {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 2rem;
+    .btn-primary-custom:hover {
+        background-color: #d1036d;
+        border-color: #d1036d;
+        color: white;
     }
 
-    .filters-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--secondary-color);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+    .card-custom {
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        border: none;
     }
 
-    .filters-grid {
+    .filter-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+    }
+
+    .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
 
-    .filter-group {
+    .stats-item {
         display: flex;
-        flex-direction: column;
     }
 
-    .filter-label {
-        font-weight: 600;
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
+    .stats-card {
+        height: 100%;
+        min-height: 50px;
+        padding: 0.5rem;
+        flex: 1;
     }
 
-    .filter-control {
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .filter-control:focus {
-        outline: none;
-        border-color: var(--info-color);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .filter-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: flex-end;
-    }
-
-    /* Data table */
-    .data-container {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
-
-    .data-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-
-    .data-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--secondary-color);
-        margin: 0;
-    }
-
-    .data-actions {
-        display: flex;
-        gap: 1rem;
-    }
-
-    /* Table */
     .table-modern {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
     }
 
-    .table-modern th,
-    .table-modern td {
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 1px solid #f0f0f0;
+    .table-modern thead {
+        background-color: #f8f9fa;
     }
 
     .table-modern th {
-        background: #f8f9fa;
-        font-weight: 700;
-        color: var(--secondary-color);
+        border: none;
+        font-weight: 600;
+        color: #000;
+        padding: 1rem;
         font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
     .table-modern tbody tr {
-        transition: background-color 0.2s ease;
+        transition: all 0.2s ease;
+    }
+
+    .table-modern tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
     }
 
     .table-modern tbody tr:hover {
-        background: var(--light-primary);
+        background-color: var(--light-primary);
+        transform: scale(1.01);
     }
 
-    /* Status badges */
-    .status-badge {
-        padding: 0.4rem 0.8rem;
-        border-radius: 15px;
-        font-size: 0.75rem;
+    .badge-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        display: inline-block;
     }
 
-    .status-en_attente {
-        background: rgba(245, 158, 11, 0.1);
-        color: var(--warning-color);
+    .badge-en-attente {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
     }
 
-    .status-validee {
-        background: rgba(59, 130, 246, 0.1);
-        color: var(--info-color);
+    .badge-validee {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
     }
 
-    .status-en_cours {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success-color);
+    .badge-en-cours {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
     }
 
-    .status-livree {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success-color);
+    .badge-livree {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
     }
 
-    .status-partiellement_livree {
-        background: rgba(245, 158, 11, 0.1);
-        color: var(--warning-color);
+    .badge-partiellement-livree {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
     }
 
-    .status-annulee {
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger-color);
+    .badge-annulee {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
     }
 
-    /* Retard badge */
-    .retard-badge {
-        padding: 0.3rem 0.6rem;
-        border-radius: 12px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: inline-block;
-        margin-top: 0.5rem;
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger-color);
+    /* Modal de confirmation personnalisé */
+    .modal.show {
+        z-index: 1055;
     }
-
-    /* Action buttons */
-    .action-buttons {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .btn-action {
-        padding: 0.4rem 0.6rem;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-view {
-        background: rgba(59, 130, 246, 0.1);
-        color: var(--info-color);
-    }
-
-    .btn-view:hover {
-        background: var(--info-color);
-        color: white;
-    }
-
-    .btn-edit {
-        background: rgba(245, 158, 11, 0.1);
-        color: var(--warning-color);
-    }
-
-    .btn-edit:hover {
-        background: var(--warning-color);
-        color: white;
-    }
-
-    .btn-delete {
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger-color);
-    }
-
-    .btn-delete:hover {
-        background: var(--danger-color);
-        color: white;
-    }
-
-    /* Buttons */
-    .btn-modern {
-        padding: 0.75rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.95rem;
+    
+    .modal-content {
         border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-decoration: none;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .modal-title {
+        font-weight: 600;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        opacity: 0.7;
+    }
+    
+    .btn-close:hover {
+        opacity: 1;
     }
 
-    .btn-primary-modern {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        box-shadow: 0 4px 15px rgba(240, 4, 128, 0.3);
+    .action-btn {
+        padding: 0.375rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
     }
 
-    .btn-primary-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(240, 4, 128, 0.4);
-    }
-
-    .btn-outline-modern {
-        background: white;
-        color: var(--secondary-color);
-        border: 2px solid var(--secondary-color);
-    }
-
-    .btn-outline-modern:hover {
-        background: var(--secondary-color);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary-modern {
-        background: #6b7280;
-        color: white;
-    }
-
-    .btn-secondary-modern:hover {
-        background: #4b5563;
-        transform: translateY(-2px);
-    }
-
-    /* Loading */
-    .loading-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 400px;
-        flex-direction: column;
-        gap: 1rem;
+    .action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .loading-spinner {
-        width: 60px;
-        height: 60px;
-        border: 4px solid #f0f0f0;
-        border-top-color: var(--info-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
+        display: none;
     }
 
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
+    .error-message {
+        display: none;
     }
 
-    .loading-text {
-        color: var(--secondary-color);
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-
-    /* Empty state */
-    .empty-state {
-        text-align: center;
-        padding: 3rem;
-        color: #6b7280;
-    }
-
-    .empty-state-icon {
-        font-size: 4rem;
-        color: #d1d5db;
-        margin-bottom: 1rem;
-    }
-
-    .empty-state h3 {
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    /* Pagination */
-    .pagination-modern {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 2rem;
-    }
-
-    .pagination-btn {
-        padding: 0.5rem 1rem;
-        border: 2px solid #e5e7eb;
-        background: white;
-        color: var(--secondary-color);
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 600;
-    }
-
-    .pagination-btn:hover:not(:disabled) {
-        border-color: var(--info-color);
-        background: var(--light-primary);
-    }
-
-    .pagination-btn.active {
-        background: var(--info-color);
-        border-color: var(--info-color);
-        color: white;
-    }
-
-    .pagination-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    /* Animations */
-    .fade-in {
-        animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .filters-grid {
+    /* Responsive for stats cards */
+    @media (max-width: 576px) {
+        .stats-grid {
             grid-template-columns: 1fr;
         }
-        
-        .data-header {
-            flex-direction: column;
-            gap: 1rem;
-            align-items: stretch;
+    }
+
+    @media (min-width: 577px) and (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
-        
-        .table-modern {
-            font-size: 0.85rem;
-        }
-        
-        .table-modern th,
-        .table-modern td {
-            padding: 0.75rem 0.5rem;
-        }
-        
-        .commandes-title {
-            font-size: 2rem;
+    }
+
+    @media (min-width: 769px) {
+        .stats-grid {
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 </style>
 
-<div class="commandes-wrapper font-public-sans">
-    <!-- Header -->
-    <div class="commandes-header fade-in">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="commandes-title">
-                <div class="commandes-icon">
-                    <i class="bi bi-cart-check"></i>
+<main class="main">
+    <div class="content px-4 py-4">
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-title text-primary-custom font-public-sans">
+                        <i class="bi-cart-check me-2"></i>
+                        Gestion des Commandes
+                    </h1>
+                    <p class="page-description text-muted">Gérez les commandes d'achat auprès des fournisseurs</p>
                 </div>
-                Gestion des Commandes
-            </h1>
-            <a href="/commande/creer" class="btn-modern btn-primary-modern">
-                <i class="bi bi-plus-circle"></i> Nouvelle Commande
-            </a>
-        </div>
-        <p class="text-muted mb-0">Gérez vos commandes auprès des fournisseurs</p>
-    </div>
-
-    <!-- Filters -->
-    <div class="filters-container fade-in">
-        <h3 class="filters-title">
-            <i class="bi bi-funnel"></i>
-            Filtres
-        </h3>
-        
-        <div class="filters-grid">
-            <div class="filter-group">
-                <label class="filter-label">Recherche</label>
-                <input type="text" id="searchFilter" class="filter-control" placeholder="Numéro de commande...">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Statut</label>
-                <select id="statusFilter" class="filter-control">
-                    <option value="">Tous les statuts</option>
-                    <option value="en_attente">En attente</option>
-                    <option value="validee">Validée</option>
-                    <option value="en_cours">En cours</option>
-                    <option value="livree">Livrée</option>
-                    <option value="partiellement_livree">Partiellement livrée</option>
-                    <option value="annulee">Annulée</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Fournisseur</label>
-                <input type="text" id="fournisseurFilter" class="filter-control" placeholder="Nom du fournisseur...">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Date d'achat - Début</label>
-                <input type="date" id="dateAchatDebutFilter" class="filter-control">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Date d'achat - Fin</label>
-                <input type="date" id="dateAchatFinFilter" class="filter-control">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Montant min</label>
-                <input type="number" id="montantMinFilter" class="filter-control" placeholder="0" min="0" step="0.01">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Montant max</label>
-                <input type="number" id="montantMaxFilter" class="filter-control" placeholder="100000" min="0" step="0.01">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">En retard</label>
-                <select id="enRetardFilter" class="filter-control">
-                    <option value="">Toutes</option>
-                    <option value="1">En retard</option>
-                    <option value="0">À jour</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="filter-actions">
-            <button type="button" class="btn-modern btn-secondary-modern" onclick="resetFilters()">
-                <i class="bi bi-arrow-clockwise"></i>
-                Réinitialiser
-            </button>
-            <button type="button" class="btn-modern btn-primary-modern" onclick="applyFilters()">
-                <i class="bi bi-search"></i>
-                Filtrer
-            </button>
-        </div>
-    </div>
-
-    <!-- Data container -->
-    <div class="data-container fade-in">
-        <div class="data-header">
-            <h3 class="data-title">
-                <span id="commandesCount">0</span> commandes trouvées
-            </h3>
-            <div class="data-actions">
-                <a href="/commandes/supprimees" class="btn-modern btn-outline-modern">
-                    <i class="bi bi-trash"></i>
-                    Commandes supprimées
-                </a>
-                <a href="/commandes/statistiques" class="btn-modern btn-outline-modern">
-                    <i class="bi bi-bar-chart"></i>
-                    Statistiques
-                </a>
-                <button type="button" class="btn-modern btn-secondary-modern" onclick="refreshData()">
-                    <i class="bi bi-arrow-clockwise"></i>
-                    Actualiser
-                </button>
+                <div class="col-sm-auto">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary-custom" onclick="window.location.href='/commande/creer'">
+                            <i class="bi-plus-circle me-1"></i> Nouvelle Commande
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="window.location.href='/commandes/supprimees'">
+                            <i class="bi-trash me-1"></i> Commandes Supprimées
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Loading -->
-        <div id="loadingContainer" class="loading-container">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Chargement des commandes...</div>
+        <!-- Loading State -->
+        <div class="loading-spinner text-center py-5" id="loadingState">
+            <div class="spinner-border text-primary-custom" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-3 text-muted">Chargement des commandes...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-message alert alert-danger" id="errorState">
+            <i class="bi-exclamation-triangle me-2"></i>
+            <span id="errorMessage">Une erreur est survenue lors du chargement des commandes.</span>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid mb-4" id="statsContainer">
+            <div class="stats-item">
+                <div class="card stats-card card-custom">
+                    <div class="card-body text-center">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="bi-cart-check text-primary-custom fs-2"></i>
+                        </div>
+                        <h3 class="mb-1 text-primary-custom" id="totalCommandes">-</h3>
+                        <p class="text-muted mb-0">Total Commandes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-item">
+                <div class="card stats-card card-custom">
+                    <div class="card-body text-center">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="bi-clock text-warning fs-2"></i>
+                        </div>
+                        <h3 class="mb-1 text-warning" id="commandesEnAttente">-</h3>
+                        <p class="text-muted mb-0">En Attente</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-item">
+                <div class="card stats-card card-custom">
+                    <div class="card-body text-center">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="bi-truck text-success fs-2"></i>
+                        </div>
+                        <h3 class="mb-1 text-success" id="commandesLivrees">-</h3>
+                        <p class="text-muted mb-0">Livrées</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-item">
+                <div class="card stats-card card-custom">
+                    <div class="card-body text-center">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="bi-currency-dollar text-info fs-2"></i>
+                        </div>
+                        <h3 class="mb-1 text-info" id="montantTotal">-</h3>
+                        <p class="text-muted mb-0">Montant Total</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card filter-card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Recherche</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Numéro de commande...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Statut</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Tous les statuts</option>
+                            <option value="en_attente">En Attente</option>
+                            <option value="validee">Validée</option>
+                            <option value="en_cours">En Cours</option>
+                            <option value="livree">Livrée</option>
+                            <option value="partiellement_livree">Partiellement Livrée</option>
+                            <option value="annulee">Annulée</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Date Début</label>
+                        <input type="date" class="form-control" id="dateDebutFilter">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Date Fin</label>
+                        <input type="date" class="form-control" id="dateFinFilter">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Montant Min</label>
+                        <input type="number" class="form-control" id="montantMinFilter" placeholder="0">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label fw-semibold">&nbsp;</label>
+                        <div class="d-grid">
+                            <button class="btn btn-primary-custom" onclick="applyFilters()">
+                                <i class="bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <button class="btn btn-outline-secondary me-2" onclick="clearFilters()">
+                            <i class="bi-arrow-clockwise me-1"></i> Réinitialiser
+                        </button>
+                        <button class="btn btn-outline-success me-2" onclick="exportToExcel()">
+                            <i class="bi-file-earmark-excel me-1"></i> Export Excel
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="exportToPDF()">
+                            <i class="bi-file-earmark-pdf me-1"></i> Export PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Table -->
-        <div id="dataTableContainer" style="display: none;">
-            <table class="table-modern">
-                <thead>
-                    <tr>
-                        <th>N° Commande</th>
-                        <th>Fournisseur</th>
-                        <th>Date d'achat</th>
-                        <th>Livraison prévue</th>
-                        <th>Montant</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="commandesTableBody">
-                    <!-- Les données seront chargées ici -->
-                </tbody>
-            </table>
+        <div class="card card-custom mb-4">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-modern mb-0" id="commandesTable">
+                        <thead>
+                            <tr>
+                                <th>Numéro</th>
+                                <th>Fournisseur</th>
+                                <th>Date Achat</th>
+                                <th>Date Livraison</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commandesTableBody">
+                            <!-- Les données seront chargées ici -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-            <!-- Pagination -->
-            <div class="pagination-modern" id="paginationContainer">
+        <!-- Pagination -->
+        <nav aria-label="Pagination des commandes" class="mt-4">
+            <ul class="pagination justify-content-center" id="paginationContainer">
                 <!-- La pagination sera générée ici -->
-            </div>
-        </div>
-
-        <!-- Empty state -->
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <div class="empty-state-icon">
-                <i class="bi bi-cart-check"></i>
-            </div>
-            <h3>Aucune commande trouvée</h3>
-            <p>Aucune commande ne correspond à vos critères de recherche.</p>
-        </div>
+            </ul>
+        </nav>
     </div>
-</div>
+</main>
 
 <script>
+    // Variables globales
+    let currentCommandes = [];
     let currentPage = 1;
     let totalPages = 1;
     let perPage = 15;
-    let commandes = [];
-    let filteredCommandes = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Charger les données
-        loadCommandes();
-        
-        // Event listeners
-        setupEventListeners();
-    });
-
-    function setupEventListeners() {
-        // Filtres
-        document.getElementById('searchFilter').addEventListener('input', debounce(applyFilters, 300));
-        document.getElementById('statusFilter').addEventListener('change', applyFilters);
-        document.getElementById('fournisseurFilter').addEventListener('input', debounce(applyFilters, 300));
-        document.getElementById('dateAchatDebutFilter').addEventListener('change', applyFilters);
-        document.getElementById('dateAchatFinFilter').addEventListener('change', applyFilters);
-        document.getElementById('montantMinFilter').addEventListener('change', applyFilters);
-        document.getElementById('montantMaxFilter').addEventListener('change', applyFilters);
-        document.getElementById('enRetardFilter').addEventListener('change', applyFilters);
+    // Fonction pour récupérer un cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
     }
 
-    async function loadCommandes() {
+    // Fonction pour afficher le loading
+    function showLoading() {
+        const loadingSpinner = document.getElementById('loadingState');
+        const commandesTable = document.getElementById('commandesTable');
+        const errorState = document.getElementById('errorState');
+        
+        if (loadingSpinner) loadingSpinner.style.display = 'block';
+        if (commandesTable) commandesTable.style.display = 'none';
+        if (errorState) errorState.style.display = 'none';
+    }
+
+    // Fonction pour masquer le loading
+    function hideLoading() {
+        const loadingSpinner = document.getElementById('loadingState');
+        const commandesTable = document.getElementById('commandesTable');
+        
+        if (loadingSpinner) loadingSpinner.style.display = 'none';
+        if (commandesTable) commandesTable.style.display = 'table';
+    }
+
+    // Fonction pour afficher une erreur
+    function showError(message) {
+        const errorState = document.getElementById('errorState');
+        const errorMessage = document.getElementById('errorMessage');
+        const loadingSpinner = document.getElementById('loadingState');
+        const commandesTable = document.getElementById('commandesTable');
+        
+        if (errorState) errorState.style.display = 'block';
+        if (errorMessage) errorMessage.textContent = message;
+        if (loadingSpinner) loadingSpinner.style.display = 'none';
+        if (commandesTable) commandesTable.style.display = 'none';
+    }
+
+    // Fonction pour charger les commandes
+    async function loadCommandes(page = 1) {
+        showLoading();
+        
         try {
-            const accessToken = '<?php echo $_COOKIE['access_token'] ?? ''; ?>';
+            const accessToken = getCookie('access_token') || localStorage.getItem('access_token');
             
             if (!accessToken) {
-                console.error('Token d\'accès manquant');
+                showError('Token d\'authentification manquant');
                 return;
             }
 
-            // Construire les paramètres de requête basés sur les filtres
-            const params = new URLSearchParams();
-            params.append('per_page', perPage);
-            params.append('page', currentPage);
-            
-            // Ajouter les filtres depuis l'URL PHP
-            <?php if (!empty($filters['search'])): ?>
-            params.append('search', '<?php echo htmlspecialchars($filters['search']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['status'])): ?>
-            params.append('status', '<?php echo htmlspecialchars($filters['status']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['fournisseur_id'])): ?>
-            params.append('fournisseur_id', '<?php echo htmlspecialchars($filters['fournisseur_id']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['date_achat_debut'])): ?>
-            params.append('date_achat_debut', '<?php echo htmlspecialchars($filters['date_achat_debut']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['date_achat_fin'])): ?>
-            params.append('date_achat_fin', '<?php echo htmlspecialchars($filters['date_achat_fin']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['montant_min'])): ?>
-            params.append('montant_min', '<?php echo htmlspecialchars($filters['montant_min']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['montant_max'])): ?>
-            params.append('montant_max', '<?php echo htmlspecialchars($filters['montant_max']); ?>');
-            <?php endif; ?>
-            <?php if (!empty($filters['en_retard'])): ?>
-            params.append('en_retard', '<?php echo htmlspecialchars($filters['en_retard']); ?>');
-            <?php endif; ?>
+            const params = new URLSearchParams({
+                page: page,
+                per_page: perPage,
+                search: document.getElementById('searchInput').value,
+                status: document.getElementById('statusFilter').value,
+                date_achat_debut: document.getElementById('dateDebutFilter').value,
+                date_achat_fin: document.getElementById('dateFinFilter').value,
+                montant_min: document.getElementById('montantMinFilter').value
+            });
 
-            const response = await fetch(`https://toure.gestiem.com/api/commandes?${params.toString()}`, {
+            const response = await fetch(`/api/commandes?${params}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                currentCommandes = data.data.data || [];
+                currentPage = data.data.current_page || 1;
+                totalPages = data.data.last_page || 1;
+                
+                displayCommandes();
+                updatePagination();
+                updateStats(data.data);
+                hideLoading();
+            } else {
+                throw new Error(data.message || 'Erreur lors du chargement des commandes');
+            }
+
+        } catch (error) {
+            console.error('Erreur lors du chargement des commandes:', error);
+            showError('Erreur lors du chargement des commandes: ' + error.message);
+        }
+    }
+
+    // Fonction pour afficher les commandes
+    function displayCommandes() {
+        const tbody = document.getElementById('commandesTableBody');
+        if (!tbody) return;
+
+        if (currentCommandes.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center py-4">
+                        <i class="bi-inbox text-muted fs-1"></i>
+                        <p class="text-muted mt-2">Aucune commande trouvée</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = currentCommandes.map(commande => `
+            <tr>
+                <td>
+                    <div class="fw-semibold text-primary-custom">${commande.numero_commande || 'N/A'}</div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="me-2">
+                            <div class="bg-light-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="bi-truck text-primary-custom"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="fw-semibold">${commande.fournisseur?.name || 'N/A'}</div>
+                            <small class="text-muted">${commande.fournisseur?.code || ''}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="text-nowrap">${formatDate(commande.date_achat)}</div>
+                </td>
+                <td>
+                    <div class="text-nowrap">
+                        ${commande.date_livraison_effective ? formatDate(commande.date_livraison_effective) : formatDate(commande.date_livraison_prevue)}
+                        ${commande.date_livraison_effective ? '<small class="text-success">✓</small>' : '<small class="text-warning">⏳</small>'}
+                    </div>
+                </td>
+                <td>
+                    <div class="fw-semibold text-success">${formatPrice(commande.montant)}</div>
+                </td>
+                <td>
+                    <span class="badge-status badge-${getStatusClass(commande.status)}">
+                        ${getStatusText(commande.status)}
+                    </span>
+                </td>
+                <td>
+                    <div class="d-flex gap-1 justify-content-end">
+                        <button class="btn btn-outline-primary btn-sm action-btn" onclick="viewCommande('${commande.commande_id}')" title="Voir détails">
+                            <i class="bi-eye"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm action-btn" onclick="editCommande('${commande.commande_id}')" title="Modifier">
+                            <i class="bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm action-btn" onclick="deleteCommande('${commande.commande_id}')" title="Supprimer">
+                            <i class="bi-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Fonction pour obtenir la classe CSS du statut
+    function getStatusClass(status) {
+        const statusMap = {
+            'en_attente': 'en-attente',
+            'validee': 'validee',
+            'en_cours': 'en-cours',
+            'livree': 'livree',
+            'partiellement_livree': 'partiellement-livree',
+            'annulee': 'annulee'
+        };
+        return statusMap[status] || 'en-attente';
+    }
+
+    // Fonction pour obtenir le texte du statut
+    function getStatusText(status) {
+        const statusMap = {
+            'en_attente': 'En Attente',
+            'validee': 'Validée',
+            'en_cours': 'En Cours',
+            'livree': 'Livrée',
+            'partiellement_livree': 'Partiellement Livrée',
+            'annulee': 'Annulée'
+        };
+        return statusMap[status] || status;
+    }
+
+    // Fonction pour formater la date
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR');
+    }
+
+    // Fonction pour formater le prix
+    function formatPrice(price) {
+        if (!price) return '0 F CFA';
+        return new Intl.NumberFormat('fr-FR').format(parseFloat(price)) + ' F CFA';
+    }
+
+    // Fonction pour mettre à jour les statistiques
+    function updateStats(data) {
+        document.getElementById('totalCommandes').textContent = data.total || 0;
+        
+        // Compter les commandes par statut
+        const enAttente = currentCommandes.filter(c => c.status === 'en_attente').length;
+        const livrees = currentCommandes.filter(c => c.status === 'livree').length;
+        
+        document.getElementById('commandesEnAttente').textContent = enAttente;
+        document.getElementById('commandesLivrees').textContent = livrees;
+        
+        // Calculer le montant total
+        const montantTotal = currentCommandes.reduce((sum, c) => sum + parseFloat(c.montant || 0), 0);
+        document.getElementById('montantTotal').textContent = formatPrice(montantTotal);
+    }
+
+    // Fonction pour mettre à jour la pagination
+    function updatePagination() {
+        const container = document.getElementById('paginationContainer');
+        if (!container) return;
+
+        let paginationHTML = '';
+
+        // Bouton précédent
+        if (currentPage > 1) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="loadCommandes(${currentPage - 1})">
+                        <i class="bi-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+        }
+
+        // Pages
+        for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+            paginationHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="loadCommandes(${i})">${i}</a>
+                </li>
+            `;
+        }
+
+        // Bouton suivant
+        if (currentPage < totalPages) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="loadCommandes(${currentPage + 1})">
+                        <i class="bi-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+        }
+
+        container.innerHTML = paginationHTML;
+    }
+
+    // Fonctions d'action
+    function viewCommande(commandeId) {
+        window.location.href = `http://localhost:5000/commande/${commandeId}`;
+    }
+
+    function editCommande(commandeId) {
+        window.location.href = `/commande/${commandeId}/modifier`;
+    }
+
+    async function deleteCommande(commandeId) {
+        showDeleteConfirmation(commandeId);
+    }
+
+    function showDeleteConfirmation(commandeId) {
+        const modal = document.createElement('div');
+        modal.className = 'modal fade show';
+        modal.style.display = 'block';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title text-danger">
+                            <i class="bi-exclamation-triangle me-2"></i>
+                            Confirmer la suppression
+                        </h5>
+                        <button type="button" class="btn-close" onclick="closeDeleteModal()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-3">Êtes-vous sûr de vouloir supprimer cette commande ?</p>
+                        <div class="alert alert-warning d-flex align-items-center">
+                            <i class="bi-info-circle me-2"></i>
+                            <small>Cette action est irréversible. La commande sera marquée comme supprimée.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+                            <i class="bi-x-circle me-1"></i>
+                            Annuler
+                        </button>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete('${commandeId}')">
+                            <i class="bi-trash me-1"></i>
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDeleteModal() {
+        const modal = document.querySelector('.modal.show');
+        if (modal) {
+            modal.remove();
+            document.body.style.overflow = '';
+        }
+    }
+
+    async function confirmDelete(commandeId) {
+        closeDeleteModal();
+        
+        try {
+            const accessToken = getCookie('access_token') || localStorage.getItem('access_token');
+            const response = await fetch(`/api/commandes/${commandeId}`, {
+                method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Accept': 'application/json'
@@ -701,282 +748,181 @@
             });
 
             if (response.ok) {
-                const result = await response.json();
-                console.log('Réponse API commandes:', result);
-                
-                // Gérer la structure de réponse avec pagination
-                if (result.data && result.data.data) {
-                    commandes = result.data.data || [];
-                    totalPages = Math.ceil(result.data.total / perPage);
-                } else {
-                    commandes = result.data || [];
-                }
-                
-                applyFilters();
-                
-                document.getElementById('loadingContainer').style.display = 'none';
-                document.getElementById('dataTableContainer').style.display = 'block';
+                showToast('Commande supprimée avec succès', 'success');
+                loadCommandes(currentPage);
             } else {
-                console.error('Erreur API:', response.status, response.statusText);
-                const errorResult = await response.json();
-                console.error('Détails erreur:', errorResult);
-                throw new Error('Erreur lors du chargement des commandes');
+                const data = await response.json();
+                throw new Error(data.message || 'Erreur lors de la suppression');
             }
         } catch (error) {
-            console.error('Erreur:', error);
-            document.getElementById('loadingContainer').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'block';
+            console.error('Erreur lors de la suppression:', error);
+            showToast('Erreur lors de la suppression: ' + error.message, 'error');
         }
     }
 
+    // Fonctions de filtrage
     function applyFilters() {
-        const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
-        const statusFilter = document.getElementById('statusFilter').value;
-        const fournisseurFilter = document.getElementById('fournisseurFilter').value.toLowerCase();
-        const dateAchatDebut = document.getElementById('dateAchatDebutFilter').value;
-        const dateAchatFin = document.getElementById('dateAchatFinFilter').value;
-        const montantMin = parseFloat(document.getElementById('montantMinFilter').value) || 0;
-        const montantMax = parseFloat(document.getElementById('montantMaxFilter').value) || Infinity;
-        const enRetardFilter = document.getElementById('enRetardFilter').value;
-
-        filteredCommandes = commandes.filter(commande => {
-            // Filtre par recherche
-            if (searchFilter && 
-                !commande.numero_commande?.toLowerCase().includes(searchFilter)) {
-                return false;
-            }
-
-            // Filtre par statut
-            if (statusFilter && commande.status !== statusFilter) {
-                return false;
-            }
-
-            // Filtre par fournisseur
-            if (fournisseurFilter && 
-                !commande.fournisseur?.name?.toLowerCase().includes(fournisseurFilter)) {
-                return false;
-            }
-
-            // Filtre par date d'achat
-            if (dateAchatDebut && commande.date_achat < dateAchatDebut) {
-                return false;
-            }
-            if (dateAchatFin && commande.date_achat > dateAchatFin) {
-                return false;
-            }
-
-            // Filtre par montant
-            const montant = parseFloat(commande.montant) || 0;
-            if (montant < montantMin || montant > montantMax) {
-                return false;
-            }
-
-            // Filtre par retard
-            if (enRetardFilter !== '') {
-                const isEnRetard = isCommandeEnRetard(commande);
-                if (enRetardFilter === '1' && !isEnRetard) {
-                    return false;
-                }
-                if (enRetardFilter === '0' && isEnRetard) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        currentPage = 1;
-        totalPages = Math.ceil(filteredCommandes.length / perPage);
-        displayCommandes();
-        updatePagination();
-        updateCount();
+        loadCommandes(1);
     }
 
-    function displayCommandes() {
-        const tbody = document.getElementById('commandesTableBody');
-        const startIndex = (currentPage - 1) * perPage;
-        const endIndex = startIndex + perPage;
-        const commandesToShow = filteredCommandes.slice(startIndex, endIndex);
-
-        if (commandesToShow.length === 0) {
-            document.getElementById('dataTableContainer').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'block';
-            return;
-        }
-
-        document.getElementById('dataTableContainer').style.display = 'block';
-        document.getElementById('emptyState').style.display = 'none';
-
-        tbody.innerHTML = commandesToShow.map(commande => `
-            <tr>
-                <td><strong>${commande.numero_commande || 'N/A'}</strong></td>
-                <td>${commande.fournisseur?.name || 'N/A'}</td>
-                <td class="date-cell">${formatDate(commande.date_achat)}</td>
-                <td class="date-cell">
-                    ${formatDate(commande.date_livraison_prevue)}
-                    ${isCommandeEnRetard(commande) ? '<span class="retard-badge">En retard</span>' : ''}
-                </td>
-                <td>${formatCurrency(commande.montant)}</td>
-                <td>
-                    <span class="status-badge status-${commande.status || 'en_attente'}">
-                        ${getStatusLabel(commande.status)}
-                    </span>
-                </td>
-                <td class="actions-cell">
-                    <div class="action-buttons">
-                        <a href="/commande/${commande.commande_id || commande.id}" 
-                           class="btn-action btn-view" title="Voir les détails">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <a href="/commande/${commande.commande_id || commande.id}/items" 
-                           class="btn-action btn-view" title="Voir les articles">
-                            <i class="bi bi-list"></i>
-                        </a>
-                        <a href="/commande/${commande.commande_id || commande.id}/modifier" 
-                           class="btn-action btn-edit" title="Modifier">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a href="/commande/${commande.commande_id || commande.id}/supprimer" 
-                           class="btn-action btn-delete" title="Supprimer">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    function updatePagination() {
-        const container = document.getElementById('paginationContainer');
-        
-        if (totalPages <= 1) {
-            container.style.display = 'none';
-            return;
-        }
-
-        container.style.display = 'flex';
-        
-        let paginationHTML = '';
-        
-        // Bouton précédent
-        paginationHTML += `
-            <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
-                <i class="bi bi-chevron-left"></i>
-            </button>
-        `;
-        
-        // Pages
-        const startPage = Math.max(1, currentPage - 2);
-        const endPage = Math.min(totalPages, currentPage + 2);
-        
-        for (let i = startPage; i <= endPage; i++) {
-            paginationHTML += `
-                <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
-                    ${i}
-                </button>
-            `;
-        }
-        
-        // Bouton suivant
-        paginationHTML += `
-            <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
-                <i class="bi bi-chevron-right"></i>
-            </button>
-        `;
-        
-        container.innerHTML = paginationHTML;
-    }
-
-    function changePage(page) {
-        if (page < 1 || page > totalPages) return;
-        currentPage = page;
-        displayCommandes();
-        updatePagination();
-    }
-
-    function updateCount() {
-        document.getElementById('commandesCount').textContent = filteredCommandes.length;
-    }
-
-    function resetFilters() {
-        document.getElementById('searchFilter').value = '';
+    function clearFilters() {
+        document.getElementById('searchInput').value = '';
         document.getElementById('statusFilter').value = '';
-        document.getElementById('fournisseurFilter').value = '';
-        document.getElementById('dateAchatDebutFilter').value = '';
-        document.getElementById('dateAchatFinFilter').value = '';
+        document.getElementById('dateDebutFilter').value = '';
+        document.getElementById('dateFinFilter').value = '';
         document.getElementById('montantMinFilter').value = '';
-        document.getElementById('montantMaxFilter').value = '';
-        document.getElementById('enRetardFilter').value = '';
-        
-        applyFilters();
+        loadCommandes(1);
     }
 
-    function refreshData() {
-        document.getElementById('loadingContainer').style.display = 'flex';
-        document.getElementById('dataTableContainer').style.display = 'none';
-        document.getElementById('emptyState').style.display = 'none';
+    // Fonctions d'export
+    function exportToExcel() {
+        if (!currentCommandes || currentCommandes.length === 0) {
+            showToast('Aucune donnée à exporter', 'warning');
+            return;
+        }
         
+        let csvContent = "Numéro,Fournisseur,Date Achat,Date Livraison,Montant,Statut\n";
+        currentCommandes.forEach(commande => {
+            const numero = commande.numero_commande || 'N/A';
+            const fournisseur = commande.fournisseur?.name || 'N/A';
+            const dateAchat = formatDate(commande.date_achat);
+            const dateLivraison = commande.date_livraison_effective ? formatDate(commande.date_livraison_effective) : formatDate(commande.date_livraison_prevue);
+            const montant = commande.montant || '0';
+            const statut = getStatusText(commande.status);
+            
+            csvContent += `"${numero}","${fournisseur}","${dateAchat}","${dateLivraison}","${montant}","${statut}"\n`;
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `commandes_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('Export Excel réussi', 'success');
+    }
+
+    function exportToPDF() {
+        if (!currentCommandes || currentCommandes.length === 0) {
+            showToast('Aucune donnée à exporter', 'warning');
+            return;
+        }
+        
+        let htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Liste des Commandes</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h1 { color: #f00480; text-align: center; margin-bottom: 30px; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                    th { background-color: #f00480; color: white; }
+                    tr:nth-child(even) { background-color: #f2f2f2; }
+                    .header { text-align: center; margin-bottom: 20px; }
+                    .date { color: #666; font-size: 12px; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Liste des Commandes</h1>
+                    <p class="date">Généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Fournisseur</th>
+                            <th>Date Achat</th>
+                            <th>Date Livraison</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        currentCommandes.forEach(commande => {
+            const numero = commande.numero_commande || 'N/A';
+            const fournisseur = commande.fournisseur?.name || 'N/A';
+            const dateAchat = formatDate(commande.date_achat);
+            const dateLivraison = commande.date_livraison_effective ? formatDate(commande.date_livraison_effective) : formatDate(commande.date_livraison_prevue);
+            const montant = formatPrice(commande.montant);
+            const statut = getStatusText(commande.status);
+            
+            htmlContent += `
+                <tr>
+                    <td>${numero}</td>
+                    <td>${fournisseur}</td>
+                    <td>${dateAchat}</td>
+                    <td>${dateLivraison}</td>
+                    <td>${montant}</td>
+                    <td>${statut}</td>
+                </tr>
+            `;
+        });
+        
+        htmlContent += `
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+        
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.onload = function() {
+            printWindow.print();
+            printWindow.close();
+        };
+        showToast('Export PDF lancé', 'success');
+    }
+
+    // Fonction pour afficher les toasts
+    function showToast(message, type = 'info') {
+        const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+        
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">${message}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+        
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
+    }
+
+    function createToastContainer() {
+        const container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container position-fixed top-0 end-0 p-3';
+        container.style.zIndex = '9999';
+        document.body.appendChild(container);
+        return container;
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
         loadCommandes();
-    }
-
-    function getStatusLabel(status) {
-        const labels = {
-            'en_attente': 'En attente',
-            'validee': 'Validée',
-            'en_cours': 'En cours',
-            'livree': 'Livrée',
-            'partiellement_livree': 'Partiellement livrée',
-            'annulee': 'Annulée'
-        };
-        return labels[status] || status;
-    }
-
-    function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('fr-FR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        }).format(date);
-    }
-
-    function formatCurrency(amount) {
-        if (!amount) return '0,00 FCFA';
-        return new Intl.NumberFormat('fr-FR', {
-            style: 'currency',
-            currency: 'XOF',
-            minimumFractionDigits: 2
-        }).format(amount).replace('XOF', 'FCFA');
-    }
-
-    function isCommandeEnRetard(commande) {
-        if (!commande.date_livraison_prevue) return false;
-        const dateLivraisonPrevue = new Date(commande.date_livraison_prevue);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        // Une commande est en retard si la date de livraison prévue est dépassée
-        // et qu'elle n'est pas encore livrée
-        return dateLivraisonPrevue < today && 
-               commande.status !== 'livree' && 
-               commande.status !== 'annulee';
-    }
-
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
+    });
 </script>
 
-<?php
-$content = ob_get_clean();
-require './views/layouts/app-layout.php';
-?>
+<?php $content = ob_get_clean(); ?>
+<?php require './views/layouts/app-layout.php'; ?>
