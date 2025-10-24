@@ -124,6 +124,7 @@ class PurchaseController {
     public function creerAchat() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                csrfValidateOrFail();
                 $this->processCreatePurchase();
             } catch (Exception $e) {
                 $this->handleError('Erreur lors de la création de l\'achat: ' . $e->getMessage());
@@ -424,6 +425,9 @@ class PurchaseController {
             $detail['id_purchase'],
             $_COOKIE['user_id'] ?? null
         ]);
+
+        // Mettre à jour les alertes après réception d'achat
+        try { generateStockAlerts(); } catch (Exception $e) {}
     }
     
     // Rendu des vues

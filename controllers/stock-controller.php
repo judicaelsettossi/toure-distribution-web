@@ -161,6 +161,7 @@ class StockController {
     public function transfertStock() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                csrfValidateOrFail();
                 $this->processTransfer();
             } catch (Exception $e) {
                 $this->handleError('Erreur transfert: ' . $e->getMessage());
@@ -261,6 +262,9 @@ class StockController {
             }
             
             commitLocalTransaction();
+
+            // Mettre à jour alertes de stock
+            try { generateStockAlerts(); } catch (Exception $e) {}
             
             $_SESSION['success_message'] = 'Transfert créé avec succès';
             header('Location: /stock/transfert');
@@ -468,6 +472,9 @@ class StockController {
                 );
                 
                 commitLocalTransaction();
+
+                // MAJ alertes
+                try { generateStockAlerts(); } catch (Exception $e) {}
                 
                 $_SESSION['success_message'] = 'Transfert confirmé et traité';
                 header('Location: /stock/transfert/' . $id . '/details');

@@ -1,7 +1,7 @@
 <?php
 
 // Configuration de la base de données locale
-define('DB_HOST', 'localhost');
+define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'toure');
 define('DB_USER', 'root');
 define('DB_PASS', '');
@@ -337,6 +337,71 @@ function createTestProducts() {
         } catch (Exception $e) {
             error_log("Erreur création produit test: " . $e->getMessage());
         }
+    }
+}
+
+// Générer les alertes de stock
+function generateStockAlerts() {
+    try {
+        // Supprimer les anciennes alertes non résolues
+        executeLocalQuery("DELETE FROM stock_alerts WHERE is_resolved = 0");
+        
+        // Récupérer tous les stocks
+        $sql = "SELECT 
+                    ws.*,
+                    p.product_name,
+                    p.product_code,
+                    p.min_stock_level,
+                    p.max_stock_level
+                FROM warehouse_stock ws
+                JOIN products p ON ws.id_product = p.id_product
+                JOIN warehouses w ON ws.id_warehouse = w.id_warehouse
+                WHERE p.is_active = 1 AND w.is_active = 1";
+        
+        $stocks = fetchLocalAll($sql);
+        
+        $alertsCreated = 0;
+        
+        foreach ($stocks as $stock) {
+            $currentQuantity = (int)$stock['current_quantity'];
+            $minLevel = (int)$stock['min_stock_level'];
+            $maxLevel = (int)$stock['max_stock_level'];
+            
+            // Stock faible
+            if ($currentQuantity <= $minLevel && $currentQuantity > 0) {
+                executeLocalQuery(
+                    "INSERT INTO stock_alerts (id_warehouse, id_product, alert_type, current_quantity, threshold_quantity, is_resolved) 
+                     VALUES (?, ?, 'low_stock', ?, ?, 0)",
+                    [$stock['id_warehouse'], $stock['id_product'], $currentQuantity, $minLevel]
+                );
+                $alertsCreated++;
+            }
+            
+            // Rupture de stock
+            if ($currentQuantity <= 0) {
+                executeLocalQuery(
+                    "INSERT INTO stock_alerts (id_warehouse, id_product, alert_type, current_quantity, threshold_quantity, is_resolved) 
+                     VALUES (?, ?, 'out_of_stock', ?, ?, 0)",
+                    [$stock['id_warehouse'], $stock['id_product'], $currentQuantity, 0]
+                );
+                $alertsCreated++;
+            }
+            
+            // Surstock
+            if ($maxLevel > 0 && $currentQuantity >= $maxLevel) {
+                executeLocalQuery(
+                    "INSERT INTO stock_alerts (id_warehouse, id_product, alert_type, current_quantity, threshold_quantity, is_resolved) 
+                     VALUES (?, ?, 'overstock', ?, ?, 0)",
+                    [$stock['id_warehouse'], $stock['id_product'], $currentQuantity, $maxLevel]
+                );
+                $alertsCreated++;
+            }
+        }
+        
+        return $alertsCreated;
+    } catch (Exception $e) {
+        error_log("Erreur génération alertes: " . $e->getMessage());
+        return 0;
     }
 }
 

@@ -5,10 +5,10 @@
  */
 
 // Configuration de la base de données locale
-define('DB_HOST', 'localhost');                    // Adresse du serveur MySQL
-define('DB_NAME', 'toure_distribution');           // Nom de la base de données
-define('DB_USER', 'votre_utilisateur');            // Nom d'utilisateur MySQL
-define('DB_PASS', 'votre_mot_de_passe');          // Mot de passe MySQL
+define('DB_HOST', '127.0.0.1');                    // Adresse du serveur MySQL
+define('DB_NAME', 'toure');           // Nom de la base de données
+define('DB_USER', 'root');            // Nom d'utilisateur MySQL
+define('DB_PASS', '');          // Mot de passe MySQL
 define('DB_CHARSET', 'utf8mb4');
 
 // Flag pour vérifier si la base de données est initialisée

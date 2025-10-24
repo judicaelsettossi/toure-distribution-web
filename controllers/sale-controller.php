@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../configs/database-config.php';
 require_once __DIR__ . '/../configs/utils.php';
 require_once __DIR__ . '/../configs/api-config.php';
+require_once __DIR__ . '/../services/invoice-service.php';
 
 class SaleController {
 
@@ -83,6 +84,7 @@ class SaleController {
     }
 
     private function processCreateSale() {
+        csrfValidateOrFail();
         beginLocalTransaction();
         try {
             $clientId = sanitizeInput($_POST['client_api_id']);
@@ -122,9 +124,9 @@ class SaleController {
             $saleNumber = generateSaleNumber();
             $userId = $_COOKIE['user_id'] ?? null;
             $saleId = insertLocalAndGetId(
-                "INSERT INTO sales (sale_number, client_api_id, client_name, sale_date, delivery_date, total_amount, paid_amount, discount_amount, tax_rate, transport_cost, statut, notes, user_id)
-                 VALUES (?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 'pending', ?, ?)",
-                [$saleNumber, $clientId, $clientName, $saleDate, $deliveryDate, $totalAmount, $notes, $userId]
+                "INSERT INTO sales (sale_number, warehouse_id, client_api_id, client_name, sale_date, delivery_date, total_amount, paid_amount, discount_amount, tax_rate, transport_cost, statut, notes, user_id)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 'pending', ?, ?)",
+                [$saleNumber, $warehouseId, $clientId, $clientName, $saleDate, $deliveryDate, $totalAmount, $notes, $userId]
             );
 
             // Créer les détails et réserver le stock
@@ -210,8 +212,8 @@ class SaleController {
             if ($newStatus === 'delivered' || $newStatus === 'partially_delivered') {
                 $this->applyDeliveryStockImpact($sale['id_sale']);
                 if ($newStatus === 'delivered') {
-                    // Tenter de créer une facture via l'API (meilleure-effort)
-                    $this->createInvoiceForSale($sale['id_sale']);
+                    // Facture via service unifié (meilleure-effort)
+                    createInvoiceForSaleId($sale['id_sale']);
                 }
             } elseif ($newStatus === 'cancelled') {
                 $this->releaseReservations($sale['id_sale']);
@@ -229,14 +231,14 @@ class SaleController {
 
     private function applyDeliveryStockImpact($saleId) {
         // For simplicity, deliver all ordered that isn't yet delivered
-        $details = fetchLocalAll("SELECT sd.*, s.client_api_id FROM sale_details sd JOIN sales s ON s.id_sale = sd.id_sale WHERE sd.id_sale = ?", [$saleId]);
-        // Determine warehouse by movement reference: we need warehouse; ask user selected at creation stored only in sales. Not stored; fallback to the first matching stock line per product
+        $details = fetchLocalAll("SELECT sd.*, s.client_api_id, s.warehouse_id FROM sale_details sd JOIN sales s ON s.id_sale = sd.id_sale WHERE sd.id_sale = ?", [$saleId]);
+        // Use sale.warehouse_id to decrement the right warehouse stock
         foreach ($details as $d) {
             $qtyDeliver = max(0, ((int)$d['quantity_ordered']) - ((int)($d['quantity_delivered'] ?? 0)));
             if ($qtyDeliver <= 0) continue;
 
-            // Find a warehouse stock record with reserved qty
-            $stockLine = fetchLocalOne("SELECT * FROM warehouse_stock WHERE id_product = ? AND reserved_quantity >= ? ORDER BY id_warehouse_stock LIMIT 1", [$d['id_product'], $qtyDeliver]);
+            // Find the stock line in the sale's warehouse
+            $stockLine = fetchLocalOne("SELECT * FROM warehouse_stock WHERE id_warehouse = ? AND id_product = ?", [$d['warehouse_id'], $d['id_product']]);
             if (!$stockLine) {
                 // Fallback: find any warehouse with enough current to ship
                 $stockLine = fetchLocalOne("SELECT * FROM warehouse_stock WHERE id_product = ? AND current_quantity >= ? ORDER BY id_warehouse_stock LIMIT 1", [$d['id_product'], $qtyDeliver]);

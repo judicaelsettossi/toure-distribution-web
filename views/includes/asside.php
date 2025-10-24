@@ -45,6 +45,13 @@
 
                     </div>
                     <div id="navbarVerticalMenuPagesMenu">
+                        <!-- Dashboard link -->
+                        <div class="nav-item">
+                            <a class="nav-link" href="/">
+                                <i class="bi-speedometer2 nav-icon"></i>
+                                <span class="nav-link-title">Tableau de bord</span>
+                            </a>
+                        </div>
                         <!-- Collapse -->
                         <div class="nav-item">
                             <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUsersMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUsersMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
@@ -129,6 +136,39 @@
                                 <a class="nav-link " href="/stock/par-produit">Par produit</a>
                                 <a class="nav-link " href="/stock/transfert">Transfert</a>
                                 <a class="nav-link " href="/stock/transferts">Liste transferts</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesAlerts" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesAlerts" aria-expanded="false" aria-controls="navbarVerticalMenuPagesAlerts">
+                                <i class="bi-exclamation-triangle nav-icon"></i>
+                                <span class="nav-link-title">Alertes</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesAlerts" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesAlerts">
+                                <a class="nav-link " href="/alerts">Dashboard</a>
+                                <a class="nav-link " href="/alerts/mouvements">Historique Mouvements</a>
+                                <a class="nav-link " href="/alerts/stock">Alertes Stock</a>
+                                <a class="nav-link " href="/alerts/generer">Générer Alertes</a>
+                            </div>
+                        </div>
+                        <!-- End Collapse -->
+
+                        <!-- Collapse -->
+                        <div class="nav-item">
+                            <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesSync" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesSync" aria-expanded="false" aria-controls="navbarVerticalMenuPagesSync">
+                                <i class="bi-cloud-arrow-down nav-icon"></i>
+                                <span class="nav-link-title">Synchronisation</span>
+                            </a>
+
+                            <div id="navbarVerticalMenuPagesSync" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesSync">
+                                <a class="nav-link " href="/sync">Dashboard</a>
+                                <a class="nav-link " href="/sync/products">Sync Produits</a>
+                                <a class="nav-link " href="/sync/clients">Sync Clients</a>
+                                <a class="nav-link " href="/sync/invoices">Créer Factures</a>
+                                <a class="nav-link " href="/sync/factures">Liste Factures</a>
                             </div>
                         </div>
                         <!-- End Collapse -->

@@ -16,3 +16,8 @@ require 'paiement-commande-controller.php';
 require 'vente-controller.php';
 require 'livraison-controller.php';
 require 'help-controller.php';
+require 'purchase-controller.php';
+require 'sale-controller.php';
+require 'alerts-controller.php';
+require 'sync-controller.php';
+require 'dashboard-controller.php';

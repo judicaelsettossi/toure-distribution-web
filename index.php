@@ -66,7 +66,7 @@ require 'controllers/controllers.php';
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
 
     // Routes principale
-    $r->addRoute('GET', '/', 'HomeController@home');
+    // $r->addRoute('GET', '/', 'HomeController@home'); // Remplacé par DashboardController@index
 
     // Routes pour le centre d'aide
     $r->addRoute('GET', '/help', 'HelpController@index');
@@ -129,13 +129,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/stock/type-mouvement/creer', 'StockController@createMovementType');
     $r->addRoute('GET', '/stock/type-mouvement/{id}/edit', 'StockController@editMovementType');
     
-    // Routes pour la gestion avancée des stocks
-    $r->addRoute('GET', '/stock/par-produit', 'StockController@stockByProduct');
-    $r->addRoute('GET', '/stock/par-produit/{id}', 'StockController@stockByProduct');
-    $r->addRoute('GET', '/stock/par-entrepot', 'StockController@stockByWarehouse');
-    $r->addRoute('GET', '/stock/par-entrepot/{id}', 'StockController@stockByWarehouse');
-    $r->addRoute('GET', '/stock/ajustement', 'StockController@stockAdjustment');
-    $r->addRoute('GET', '/stock/reservation', 'StockController@stockReservation');
+    // Routes pour la gestion avancée des stocks (désactivées: doublons)
+    // $r->addRoute('GET', '/stock/par-produit', 'StockController@stockByProduct');
+    // $r->addRoute('GET', '/stock/par-produit/{id}', 'StockController@stockByProduct');
+    // $r->addRoute('GET', '/stock/par-entrepot', 'StockController@stockByWarehouse');
+    // $r->addRoute('GET', '/stock/par-entrepot/{id}', 'StockController@stockByWarehouse');
+    // $r->addRoute('GET', '/stock/ajustement', 'StockController@stockAdjustment');
+    // $r->addRoute('GET', '/stock/reservation', 'StockController@stockReservation');
 
     // Routes pour la gestion des fournisseurs
     $r->addRoute('GET', '/fournisseurs', 'FournisseurController@listeFournisseurs');
@@ -171,8 +171,28 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/stock/transfert/{id}/details', 'StockController@detailsTransfert');
     $r->addRoute('GET', '/stock/transfert/{id}/confirmer', 'StockController@confirmerTransfert');
 
+    // Routes pour la gestion des alertes (base de données locale)
+    $r->addRoute('GET', '/alerts', 'AlertsController@dashboardAlertes');
+    $r->addRoute('GET', '/alerts/mouvements', 'AlertsController@historiqueMouvements');
+    $r->addRoute('GET', '/alerts/stock', 'AlertsController@alertesStock');
+    $r->addRoute('GET', '/alerts/generer', 'AlertsController@genererAlertes');
+    $r->addRoute('GET', '/alerts/{id}/resoudre', 'AlertsController@resoudreAlerte');
+
+    // Routes pour la synchronisation API
+    $r->addRoute('GET', '/sync', 'SyncController@dashboardSync');
+    $r->addRoute('GET', '/sync/products', 'SyncController@syncProducts');
+    $r->addRoute('GET', '/sync/clients', 'SyncController@syncClients');
+    $r->addRoute('GET', '/sync/invoices', 'SyncController@creerFactures');
+    $r->addRoute('GET', '/sync/factures', 'SyncController@listeFactures');
+    $r->addRoute('GET', '/sync/facture/{id}/details', 'SyncController@detailsFacture');
+    $r->addRoute('GET', '/sync/complete', 'SyncController@syncComplete');
+
     // Routes pour les transferts entre entrepôts
     $r->addRoute('GET', '/entrepot/transfert', 'EntrepotController@transfertEntrepot');
+
+    // Tableau de bord d'ensemble
+    $r->addRoute('GET', '/', 'DashboardController@index');
+    $r->addRoute('GET', '/dashboard', 'DashboardController@index');
 
     // Routes pour la gestion des factures
     $r->addRoute('GET', '/factures', 'FactureController@listeFactures');
@@ -220,13 +240,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/utilisateur/{id}/modifier', 'UserController@modifierUtilisateur');
 
     // Routes pour la gestion des ventes
-    $r->addRoute('GET', '/vente', 'VenteController@index');
-    $r->addRoute('GET', '/vente/creer', 'VenteController@create');
-    $r->addRoute('POST', '/vente/creer', 'VenteController@store');
-    $r->addRoute('GET', '/vente/{id}', 'VenteController@show');
-    $r->addRoute('GET', '/vente/{id}/edit', 'VenteController@edit');
-    $r->addRoute('POST', '/vente/{id}/edit', 'VenteController@update');
-    $r->addRoute('POST', '/vente/{id}/delete', 'VenteController@destroy');
+    // Anciennes routes VenteController désactivées au profit du module local SaleController
+    // $r->addRoute('GET', '/vente', 'VenteController@index');
+    // $r->addRoute('GET', '/vente/{id}', 'VenteController@show');
+    // $r->addRoute('GET', '/vente/{id}/edit', 'VenteController@edit');
+    // $r->addRoute('POST', '/vente/{id}/edit', 'VenteController@update');
+    // $r->addRoute('POST', '/vente/{id}/delete', 'VenteController@destroy');
 
     // Routes pour la gestion des livraisons
     $r->addRoute('GET', '/livraison', 'LivraisonController@index');
@@ -274,33 +293,26 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/api/detail-commandes/commande/{commandeId}', 'CommandeController@getCommandeDetailsItems');
 
     // API Routes ventes
-    $r->addRoute('GET', '/api/ventes', 'VenteController@getVentesList');
-    $r->addRoute('POST', '/api/ventes', 'VenteController@createVente');
-    $r->addRoute('GET', '/api/ventes/{id}', 'VenteController@getVenteDetails');
-    $r->addRoute('PUT', '/api/ventes/{id}', 'VenteController@updateVente');
-    $r->addRoute('PATCH', '/api/ventes/{id}', 'VenteController@updateVente');
-    $r->addRoute('DELETE', '/api/ventes/{id}', 'VenteController@deleteVente');
-    $r->addRoute('GET', '/api/ventes/trashed/list', 'VenteController@getTrashedVentes');
-    $r->addRoute('POST', '/api/ventes/{id}/restore', 'VenteController@restoreVente');
+    // API ventes de l’ancien module désactivée
+    // $r->addRoute('GET', '/api/ventes', 'VenteController@getVentesList');
+    // $r->addRoute('POST', '/api/ventes', 'VenteController@createVente');
+    // $r->addRoute('GET', '/api/ventes/{id}', 'VenteController@getVenteDetails');
+    // $r->addRoute('PUT', '/api/ventes/{id}', 'VenteController@updateVente');
+    // $r->addRoute('PATCH', '/api/ventes/{id}', 'VenteController@updateVente');
+    // $r->addRoute('DELETE', '/api/ventes/{id}', 'VenteController@deleteVente');
+    // $r->addRoute('GET', '/api/ventes/trashed/list', 'VenteController@getTrashedVentes');
+    // $r->addRoute('POST', '/api/ventes/{id}/restore', 'VenteController@restoreVente');
 
     // API Routes détails de ventes
-    $r->addRoute('GET', '/api/detail-ventes', 'VenteController@getDetailVentesList');
-    $r->addRoute('POST', '/api/detail-ventes', 'VenteController@createDetailVente');
-    $r->addRoute('POST', '/api/detail-ventes/multiple', 'VenteController@createMultipleDetailVentes');
-    $r->addRoute('GET', '/api/detail-ventes/{id}', 'VenteController@getDetailVente');
-    $r->addRoute('PUT', '/api/detail-ventes/{id}', 'VenteController@updateDetailVente');
-    $r->addRoute('PATCH', '/api/detail-ventes/{id}', 'VenteController@updateDetailVente');
-    $r->addRoute('DELETE', '/api/detail-ventes/{id}', 'VenteController@deleteDetailVente');
-    $r->addRoute('GET', '/api/detail-ventes/trashed/list', 'VenteController@getTrashedDetailVentes');
-    $r->addRoute('POST', '/api/detail-ventes/{id}/restore', 'VenteController@restoreDetailVente');
-    $r->addRoute('GET', '/api/detail-ventes/vente/{id}', 'VenteController@getVenteDetails');
+    // API détail-ventes ancien module désactivée
+    // $r->addRoute('GET', '/api/detail-ventes', 'VenteController@getDetailVentesList');
+    // ...
+    // $r->addRoute('GET', '/api/detail-ventes/vente/{id}', 'VenteController@getVenteDetails');
 
     // API Routes paiements de ventes
-    $r->addRoute('GET', '/api/paiement-ventes', 'VenteController@getPaiementVentesList');
-    $r->addRoute('POST', '/api/paiement-ventes', 'VenteController@createPaiementVente');
-    $r->addRoute('GET', '/api/paiement-ventes/{id}', 'VenteController@getPaiementVente');
-    $r->addRoute('PUT', '/api/paiement-ventes/{id}', 'VenteController@updatePaiementVente');
-    $r->addRoute('DELETE', '/api/paiement-ventes/{id}', 'VenteController@deletePaiementVente');
+    // API paiements ventes ancien module désactivée
+    // $r->addRoute('GET', '/api/paiement-ventes', 'VenteController@getPaiementVentesList');
+    // ...
 
     // API Routes livraisons
     $r->addRoute('GET', '/api/livraisons', 'LivraisonController@getLivraisonsList');

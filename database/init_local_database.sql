@@ -75,6 +75,23 @@ CREATE TABLE IF NOT EXISTS suppliers (
     INDEX idx_name (supplier_name)
 );
 
+-- TABLE DES CLIENTS
+CREATE TABLE IF NOT EXISTS clients (
+    id_client INT PRIMARY KEY AUTO_INCREMENT,
+    client_name VARCHAR(255) NOT NULL,
+    client_code VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    address TEXT,
+    city VARCHAR(100),
+    country VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_name (client_name),
+    INDEX idx_code (client_code)
+);
+
 -- TABLE DES ACHATS (Commandes fournisseurs)
 CREATE TABLE IF NOT EXISTS purchases (
     id_purchase INT PRIMARY KEY AUTO_INCREMENT,
@@ -120,6 +137,7 @@ CREATE TABLE IF NOT EXISTS purchase_details (
 CREATE TABLE IF NOT EXISTS sales (
     id_sale INT PRIMARY KEY AUTO_INCREMENT,
     sale_number VARCHAR(50) UNIQUE NOT NULL,
+    warehouse_id INT,
     client_api_id VARCHAR(36) NOT NULL,  -- UUID du client via l'API
     client_name VARCHAR(100),
     sale_date DATE NOT NULL,
@@ -131,6 +149,8 @@ CREATE TABLE IF NOT EXISTS sales (
     transport_cost DECIMAL(15,2) DEFAULT 0,
     statut ENUM('pending', 'confirmed', 'partially_delivered', 'delivered', 'cancelled', 'returned') DEFAULT 'pending',
     notes TEXT,
+    invoice_created BOOLEAN DEFAULT FALSE,
+    invoice_id VARCHAR(50),
     user_id VARCHAR(36),  -- UUID de l'utilisateur API
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

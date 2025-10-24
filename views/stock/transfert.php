@@ -21,6 +21,7 @@ include __DIR__ . '/../layouts/app-layout.php';
     </div>
 
     <form method="POST" id="transferForm">
+        <input type="hidden" name="csrf_token" value="<?= csrfTokenEnsure(); ?>">
         <div class="row">
             <!-- Informations générales -->
             <div class="col-lg-4">
